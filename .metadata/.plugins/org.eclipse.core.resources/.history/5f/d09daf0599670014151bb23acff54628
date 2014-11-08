@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 public class GameFrame extends JFrame{
 	public GameFrame(){
 		setSize(1200,800);
-		setLocation(100, 200);
+		setLocation(200, 300);
 		
 		
 		setVisible(true);
