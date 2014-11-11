@@ -19,7 +19,7 @@ public class Player extends Thread {
 		alive = true;
 		coins = 0;
 		combo = 0;
-		multiplier = 0;
+		multiplier = 1;
 		threadHandler = new NullHandler();
 	}
 	
@@ -37,5 +37,15 @@ public class Player extends Thread {
 	
 	private void deductMoney(double amount) {
 		coins -= amount;
+	}
+	
+	public double getCoins() {
+		return coins;
+	}
+	
+	public void incrementFromButtonClick() {
+		double amount = Constants.BASE_COINS_PER_CLICK + combo;
+		coins += amount;
+		combo += Constants.COMBO_INCREMENT_AMOUNT;
 	}
 }
