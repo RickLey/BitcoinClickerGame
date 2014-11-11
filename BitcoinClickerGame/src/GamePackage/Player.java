@@ -10,7 +10,7 @@ public class Player extends Thread {
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
 	private ArrayList<String> opponentAliases;
-	private Iterable<Item> activeItems;
+	private ArrayList<Item> activeItems;
 	private IOHandler threadHandler;
 	private Item currentSelectedItem;
 	
@@ -31,12 +31,19 @@ public class Player extends Thread {
 		deductMoney(item.getCost());
 	}
 	
-	public Iterable<Item> getActiveItems() {
+	public ArrayList<Item> getActiveItems() {
 		return activeItems;
 	}
 	
 	private void deductMoney(double amount) {
 		coins -= amount;
+	}
+	
+	public void takeItem(Item item) {
+		if(item instanceof Virus) {
+			activeItems.add(item);
+		}
+		item.run();
 	}
 	
 	public double getCoins() {
