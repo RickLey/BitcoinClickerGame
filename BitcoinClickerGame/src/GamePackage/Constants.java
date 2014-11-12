@@ -1,7 +1,7 @@
 package GamePackage;
 
-public class Constants {
-	public static void main(String [] args) {
-		System.out.println("Hello World");
-	}
+class Constants {
+	//Class for constants, a lot of them
+	
+	public static final int bitcoinButtonSize = 200;
 }
