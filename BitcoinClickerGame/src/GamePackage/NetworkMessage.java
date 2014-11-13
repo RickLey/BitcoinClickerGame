@@ -2,7 +2,8 @@ package GamePackage;
 
 public class NetworkMessage {
 	
-	public static final String INITIALIZE_GAME_MESSAGE = "Initialize Game";
+	public static final String GAME_INITIALIZATION_MESSAGE = "Initialization Steps";
+	public static final String DRAW_WINDOW_MESSAGE = "Draw Window";
 	public static final String START_GAME_MESSAGE = "Start Game";
 	public static final String END_GAME_MESSAGE = "End Game";
 	public static final String UPDATE_MESSAGE = "Update";
@@ -18,6 +19,10 @@ public class NetworkMessage {
 	String messageType;
 	String itemType;
 	Object value;
+	
+	public NetworkMessage(){
+		
+	}
 	
 	public String getSender() {
 		return sender;
