@@ -3,6 +3,7 @@ package GamePackage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
@@ -33,16 +34,16 @@ public class Server {
 			
 			gameplayOutputs = new HashMap<String, ObjectOutputStream>();
 			chatOutputs = new HashMap<String, ObjectOutputStream>();
+			ArrayList<ObjectInputStream> iis = new ArrayList<ObjectInputStream>();
 			
 			//Connect gameplay sockets and create threads
 			for(int i=0; i<4; i++){
 				Socket tempSocket = gameplaySS.accept();
-				System.out.println("accepted socket");
+				
 				ObjectOutputStream tempOutput = new ObjectOutputStream(tempSocket.getOutputStream());
 				ObjectInputStream tempInput = new ObjectInputStream(tempSocket.getInputStream());
-				System.out.println("here");
+				iis.add(tempInput);
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
-				System.out.println(alias);
 				gameplayOutputs.put(alias, tempOutput);
 				gpThreads.add(new GamePlayThread(tempSocket, this));
 				playerSockets.add(tempSocket);
@@ -62,17 +63,20 @@ public class Server {
 			//connect chat sockets and create chat threads
 			for(int i=0; i<4; i++){
 				Socket tempSocket = chatSS.accept();
+				ObjectOutputStream tempOutput = new ObjectOutputStream(tempSocket.getOutputStream());
+				tempOutput.flush();
 				ObjectInputStream tempInput = new ObjectInputStream(tempSocket.getInputStream());
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
-				chatOutputs.put(alias, new ObjectOutputStream(tempSocket.getOutputStream()));
+				chatOutputs.put(alias, tempOutput);
 				cThreads.add(new ChatThread(tempSocket, this));
 			}
 			
+			System.out.println("Got chat sockets");
 			//Send list of all players to all players
 			NetworkMessage distributeAliases = new NetworkMessage();
 			distributeAliases.setSender(NetworkMessage.SERVER_ALIAS);
 			distributeAliases.setMessageType(NetworkMessage.GAME_INITIALIZATION_MESSAGE);
-			distributeAliases.setValue(gameplayOutputs.keySet());
+			distributeAliases.setValue(gameplayOutputs.keySet().toArray());
 			
 			sendMessageToAll(distributeAliases);
 			
@@ -86,11 +90,12 @@ public class Server {
 			
 			//wait for response from everyone
 			for(int i=0; i<4; i++){
-				ObjectInputStream ois = new ObjectInputStream(playerSockets.get(i).getInputStream());
-				ois.readObject();
+				iis.get(i).readObject();
 			}
 			
 			//TODO everything disabled until receives start message
+			
+			System.out.println("GUI's loaded");
 			
 			//start threads
 			for(int i=0; i<4; i++){
