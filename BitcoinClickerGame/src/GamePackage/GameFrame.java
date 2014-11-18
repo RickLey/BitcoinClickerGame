@@ -35,6 +35,9 @@ public class GameFrame extends JFrame{
 	private JPanel bitcoinPanel	= new JPanel();
 	private JPanel centerPanel = new JPanel();
 	
+	private GameFrame self = this;
+	private JPanel glass = (JPanel)self.getGlassPane();
+	
 	public GameFrame(){
 		setSize(1200,700);
 		setLocation(100,200);
@@ -49,6 +52,14 @@ public class GameFrame extends JFrame{
 		
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		//Glass
+		glass.setLayout(null);
+		
+	}
+	
+	public JPanel getGlass(){
+		return glass;
 	}
 	
 	//Setup Functions
@@ -74,7 +85,7 @@ public class GameFrame extends JFrame{
 		chatPanel.setBackground(Color.WHITE);
 		
 		//Title
-		chatTitleLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
+		chatTitleLabel.setFont(Constants.getFont(18));
 		
 		//Setup scroller
 		chatArea.setBackground(Color.WHITE);
@@ -207,7 +218,7 @@ public class GameFrame extends JFrame{
 		});
 		
 		//MoneyLabel
-		moneyLabel.setFont(new Font("Helvetica", Font.PLAIN, 24));
+		moneyLabel.setFont(Constants.getFont(24));
 		moneyLabel.setText("$" + testWallet);
 		
 
@@ -238,7 +249,7 @@ public class GameFrame extends JFrame{
 	}
 	
 	//	********************* BitcoinPanel *************************
-	private ShopPanel shopPanel = new ShopPanel();
+	private ShopPanel shopPanel = new ShopPanel(this);
 	private JPanel playerPanels = new JPanel();
 	
 	private void setupCenterPanel(){
