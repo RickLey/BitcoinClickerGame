@@ -57,6 +57,8 @@ public class Server {
 			
 			sendMessageToAll(connectChatSocketsMessage);
 			
+			System.out.println("Send message to connect chat sockets");
+			
 			//connect chat sockets and create chat threads
 			for(int i=0; i<4; i++){
 				Socket tempSocket = chatSS.accept();

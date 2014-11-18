@@ -18,22 +18,18 @@ public class ClientTest {
 		try {
 			gameplaySocket = new Socket("127.0.0.1", 10000);
 			System.out.println("Here");
-			gameplayOOS = new ObjectOutputStream(gameplaySocket.getOutputStream());
-			gameplayOOS.flush();
-			System.out.println("Here 2");
-			InputStream is = gameplaySocket.getInputStream();
-			System.out.println("here 2.5");
-			gameplayOIS = new ObjectInputStream(is);
 			
-			System.out.println("Here 3");
+			gameplayOOS = new ObjectOutputStream(gameplaySocket.getOutputStream());
+			gameplayOIS = new ObjectInputStream(gameplaySocket.getInputStream());
+			
+			System.out.println("Here 2");
 			
 			NetworkMessage aliasMessage = new NetworkMessage();
 			aliasMessage.setSender("Brian");
 			gameplayOOS.writeObject(aliasMessage);
 			gameplayOOS.flush();
 			
-			System.out.println("Here 4");
-			
+			System.out.println("Here 3");
 			
 			NetworkMessage received = (NetworkMessage) gameplayOIS.readObject();
 			System.out.println(received.getMessageType() + ", " + received.getSender());
