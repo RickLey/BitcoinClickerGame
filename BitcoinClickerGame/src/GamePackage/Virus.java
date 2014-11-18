@@ -3,6 +3,7 @@ package GamePackage;
 public class Virus extends AttackItem {
 
 	private final int DPS = 1;
+	private boolean running;
 
 	public Virus(Player target, double cost, double cooldown) {
 		super(target, cost, cooldown);
@@ -11,7 +12,7 @@ public class Virus extends AttackItem {
 
 	@Override
 	public void run() {
-		while(true)
+		while(running)
 		{
 			try {
 				target.deductHealth(DPS);
@@ -22,6 +23,10 @@ public class Virus extends AttackItem {
 			}
 		}
 
+	}
+	
+	public void die() {
+		running = false;
 	}
 
 }

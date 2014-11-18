@@ -12,7 +12,6 @@ public abstract class Item extends Thread implements Serializable {
 	public Item(Player target, double cost) {
 		this.target = target;
 		this.cost = cost;
-		this.joke = "What's worse, the virus or Norton?";
 		cooldown = 0;
 	}
 	
