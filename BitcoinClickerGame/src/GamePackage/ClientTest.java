@@ -12,11 +12,15 @@ public class ClientTest {
 	private	Socket chatSocket;
 	private ObjectInputStream gameplayOIS;
 	private ObjectOutputStream gameplayOOS;
+	private ObjectInputStream chatOIS;
+	private ObjectOutputStream chatOOS;
 	
+	private String name = "A";
 	
 	public ClientTest() {
 		try {
-			gameplaySocket = new Socket("127.0.0.1", 10000);
+			//Gameplay Socket stuff
+			gameplaySocket = new Socket("10.120.71.131", 10000);
 			System.out.println("Here");
 			
 			gameplayOOS = new ObjectOutputStream(gameplaySocket.getOutputStream());
@@ -25,14 +29,45 @@ public class ClientTest {
 			System.out.println("Here 2");
 			
 			NetworkMessage aliasMessage = new NetworkMessage();
-			aliasMessage.setSender("Brian");
+			aliasMessage.setSender(name);
 			gameplayOOS.writeObject(aliasMessage);
 			gameplayOOS.flush();
 			
 			System.out.println("Here 3");
 			
 			NetworkMessage received = (NetworkMessage) gameplayOIS.readObject();
-			System.out.println(received.getMessageType() + ", " + received.getSender());
+			System.out.println(received.getMessageType() + ", From: " + received.getSender());
+			
+			//Connect chat sockets
+			chatSocket = new Socket("10.120.71.131", 20000);
+			System.out.println("Here 4");
+			
+			chatOOS = new ObjectOutputStream(chatSocket.getOutputStream());
+			chatOIS = new ObjectInputStream(chatSocket.getInputStream());
+			
+			System.out.println("Here 5");
+			
+			NetworkMessage aliasMessage2 = new NetworkMessage();
+			aliasMessage2.setSender(name);
+			chatOOS.writeObject(aliasMessage2);
+			chatOOS.flush();
+			
+			System.out.println("Here 6");
+			
+			NetworkMessage received2 = (NetworkMessage) gameplayOIS.readObject();
+			System.out.println(received2.getMessageType() + ", From: " + received2.getSender());
+			
+			
+			//Receive the draw GUI message
+			NetworkMessage received3 = (NetworkMessage) gameplayOIS.readObject();
+			System.out.println(received3.getMessageType() + ", From: " + received3.getSender());
+			
+			gameplayOOS.writeObject(new NetworkMessage());
+			
+			
+			//Receive the start game message
+			NetworkMessage received4 = (NetworkMessage) gameplayOIS.readObject();
+			System.out.println(received4.getMessageType() + ", From: " + received4.getSender());
 			
 			
 		} catch (UnknownHostException e) {
