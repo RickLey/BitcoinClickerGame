@@ -13,6 +13,7 @@ public class Player extends Thread {
 	private ArrayList<Item> activeItems;
 	private IOHandler threadHandler;
 	private Item currentSelectedItem;
+	private Player moneyRecipient;
 	
 	public Player() {
 		health = 100;
@@ -20,6 +21,7 @@ public class Player extends Thread {
 		coins = 0;
 		combo = 0;
 		multiplier = 1;
+		moneyRecipient = this;
 		threadHandler = new NullHandler();
 	}
 	
@@ -39,12 +41,22 @@ public class Player extends Thread {
 		coins -= amount;
 	}
 	
-	public synchronized void deductHealth(double amount) { 
+	public synchronized void loseMoney(double amount) {
+		if(amount < 0) {
+			throw new RuntimeException("loseMoney(): amount " + amount + " is negative.");
+		}
+		deductMoney(amount);
+	}
+	
+	public synchronized void deductHealth(double amount) {
+		if(amount < 0) {
+			throw new RuntimeException("deductHealth(): amount " + amount + " is negative.");
+		}
 		health -= amount;
 	}
 	
-	public void takeItem(Item item) {
-		if(item instanceof Virus) {
+	public void startItem(Item item) {
+		if(item instanceof Virus || item instanceof Leech) {
 			activeItems.add(item);
 		}
 		item.run();
@@ -54,9 +66,24 @@ public class Player extends Thread {
 		return coins;
 	}
 	
+	public synchronized void receiveMoney(double amount) {
+		if(amount < 0) {
+			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
+		}
+		if(moneyRecipient.equals(this)) {
+			coins += amount;
+		} else {
+			//TODO: send information via stream to other player so that they get money.
+		}
+	}
+	
 	public void incrementFromButtonClick() {
 		double amount = Constants.BASE_COINS_PER_CLICK + combo;
-		coins += amount;
+		receiveMoney(amount);
 		combo += Constants.COMBO_INCREMENT_AMOUNT;
+	}
+	
+	public synchronized void setMoneyRecipient(Player player) {
+		moneyRecipient = player;
 	}
 }

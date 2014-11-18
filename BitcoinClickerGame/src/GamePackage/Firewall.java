@@ -14,7 +14,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 		if(item instanceof AttackItem) {
 			hitsRemaining--;
 		} else {
-			target.takeItem(item);
+			target.startItem(item);
 		}
 		if(hitsRemaining <= 0) {
 			target.setHandler(new NullHandler());

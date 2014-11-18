@@ -1,6 +1,8 @@
 package GamePackage;
 
-public abstract class Item extends Thread {
+import java.io.Serializable;
+
+public abstract class Item extends Thread implements Serializable {
 	protected double cost;
 	protected double cooldown;
 	protected String joke;
