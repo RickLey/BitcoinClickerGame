@@ -31,15 +31,24 @@ public class Server {
 			
 			ArrayList<Socket> playerSockets = new ArrayList<Socket>();
 			
+			gameplayOutputs = new HashMap<String, ObjectOutputStream>();
+			chatOutputs = new HashMap<String, ObjectOutputStream>();
+			
 			//Connect gameplay sockets and create threads
 			for(int i=0; i<4; i++){
 				Socket tempSocket = gameplaySS.accept();
+				System.out.println("accepted socket");
+				ObjectOutputStream tempOutput = new ObjectOutputStream(tempSocket.getOutputStream());
 				ObjectInputStream tempInput = new ObjectInputStream(tempSocket.getInputStream());
+				System.out.println("here");
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
-				gameplayOutputs.put(alias, new ObjectOutputStream(tempSocket.getOutputStream()));
+				System.out.println(alias);
+				gameplayOutputs.put(alias, tempOutput);
 				gpThreads.add(new GamePlayThread(tempSocket, this));
 				playerSockets.add(tempSocket);
 			}
+			
+			System.out.println("After 4 sockets");
 			
 			//send message to connect chat sockets
 			NetworkMessage connectChatSocketsMessage = new NetworkMessage();
@@ -109,6 +118,9 @@ public class Server {
 	 * that synchronizes to make sure only one writes at a time.
 	 */
 	public static void main(String[] args) {
+		new Server();
+		
+		while(true);
 	}
 
 	private synchronized void sendMessageToAll(NetworkMessage nm){

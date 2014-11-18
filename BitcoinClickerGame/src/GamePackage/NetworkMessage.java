@@ -4,8 +4,9 @@ import java.io.Serializable;
 
 public class NetworkMessage implements Serializable{
 	
-	
-	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -6672845399058436560L;
 	public static final String GAME_INITIALIZATION_MESSAGE = "Initialization Steps";
 	public static final String DRAW_WINDOW_MESSAGE = "Draw Window";
