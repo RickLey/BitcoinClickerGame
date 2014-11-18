@@ -13,6 +13,7 @@ import java.util.HashSet;
 public class Server {
 	
 	//TODO timeouts?
+	//TODO whisper sends to recipient AND sender
 	
 	private HashMap<String, ObjectOutputStream> gameplayOutputs;
 	private HashMap<String, ObjectOutputStream> chatOutputs;
@@ -79,12 +80,20 @@ public class Server {
 			}
 			
 			//TODO everything disabled until receives start message
-					
+			
 			//start threads
 			for(int i=0; i<4; i++){
 				gpThreads.get(i).start();
 				cThreads.get(i).start();
 			}
+			
+			//send start game message
+			NetworkMessage startGame = new NetworkMessage();
+			startGame.setSender(NetworkMessage.SERVER_ALIAS);
+			startGame.setMessageType(NetworkMessage.START_GAME_MESSAGE);
+			sendMessageToAll(startGame);
+			
+			
 			
 			
 		} catch (IOException e) {
@@ -94,7 +103,15 @@ public class Server {
 		}
 	}
 	
-	private void sendMessageToAll(NetworkMessage nm){
+	/*TODO
+	 * There will be 4 threads for chat and 4 for gameplay. Each is polling a separate input socket.
+	 * When it receives a message, it can still get the recipient, etc. We'll just create a method - send message -
+	 * that synchronizes to make sure only one writes at a time.
+	 */
+	public static void main(String[] args) {
+	}
+
+	private synchronized void sendMessageToAll(NetworkMessage nm){
 		for(ObjectOutputStream oos: gameplayOutputs.values()){
 			try {
 				oos.writeObject(nm);
@@ -106,15 +123,7 @@ public class Server {
 	}
 	
 
-	/*TODO
-	 * There will be 4 threads for chat and 4 for gameplay. Each is polling a separate input socket.
-	 * When it receives a message, it can still get the recipient, etc. We'll just create a method - send message -
-	 * that synchronizes to make sure only one writes at a time.
-	 */
-	public static void main(String[] args) {
-	}
-	
-	public void sendMessageToPlayer(NetworkMessage m, String alias){
+	private void sendMessageToPlayer(NetworkMessage m, String alias){
 		
 	}
 
@@ -147,7 +156,19 @@ class ChatThread extends Thread{
 	}
 	
 	public void run(){
+		try {
+			ObjectInputStream myInput = new ObjectInputStream(mySocket.getInputStream());
+			ObjectOutputStream myOutput = new ObjectOutputStream(mySocket.getOutputStream());
 		
+			while(true){
+				NetworkMessage receivedMessage = (NetworkMessage)myInput.readObject();
+				String messageType = receivedMessage.getMessageType();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
