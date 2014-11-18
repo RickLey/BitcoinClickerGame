@@ -39,6 +39,10 @@ public class Player extends Thread {
 		coins -= amount;
 	}
 	
+	public synchronized void deductHealth(double amount) { 
+		health -= amount;
+	}
+	
 	public void takeItem(Item item) {
 		if(item instanceof Virus) {
 			activeItems.add(item);

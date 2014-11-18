@@ -18,6 +18,11 @@ public abstract class Item extends Thread {
 		this.cost = cost;
 		this.cooldown = cooldown;
 	}
+	
+	public double getCooldown()
+	{
+		return cooldown;
+	}
 
 //	private Animation animation
 
