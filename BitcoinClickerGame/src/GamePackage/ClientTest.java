@@ -17,42 +17,45 @@ public class ClientTest {
 	
 	private String name = "A";
 	
-	public ClientTest() {
+	public ClientTest(String alias) {
 		try {
+			name = alias;
 			//Gameplay Socket stuff
+			System.out.println("started");
+			System.out.println(name);
 			gameplaySocket = new Socket("10.120.71.131", 10000);
-			System.out.println("Here");
+			System.out.println(alias + ": Here");
 			
 			gameplayOOS = new ObjectOutputStream(gameplaySocket.getOutputStream());
 			gameplayOIS = new ObjectInputStream(gameplaySocket.getInputStream());
 			
-			System.out.println("Here 2");
+			System.out.println(alias + "Here 2");
 			
 			NetworkMessage aliasMessage = new NetworkMessage();
 			aliasMessage.setSender(name);
 			gameplayOOS.writeObject(aliasMessage);
 			gameplayOOS.flush();
 			
-			System.out.println("Here 3");
+			System.out.println(alias + "Here 3");
 			
 			NetworkMessage received = (NetworkMessage) gameplayOIS.readObject();
 			System.out.println(received.getMessageType() + ", From: " + received.getSender());
 			
 			//Connect chat sockets
 			chatSocket = new Socket("10.120.71.131", 20000);
-			System.out.println("Here 4");
+			System.out.println(alias + " Here 4");
 			
 			chatOOS = new ObjectOutputStream(chatSocket.getOutputStream());
 			chatOIS = new ObjectInputStream(chatSocket.getInputStream());
 			
-			System.out.println("Here 5");
+			System.out.println(alias + "Here 5");
 			
 			NetworkMessage aliasMessage2 = new NetworkMessage();
 			aliasMessage2.setSender(name);
 			chatOOS.writeObject(aliasMessage2);
 			chatOOS.flush();
 			
-			System.out.println("Here 6");
+			System.out.println(alias + "Here 6");
 			
 			NetworkMessage received2 = (NetworkMessage) gameplayOIS.readObject();
 			System.out.println(received2.getMessageType() + ", From: " + received2.getSender());
@@ -83,6 +86,6 @@ public class ClientTest {
 	}
 	
 	public static void main(String [] args) {
-		new ClientTest();
+		new ClientTest(args[0]);
 	}
 }
