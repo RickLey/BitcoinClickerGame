@@ -34,6 +34,7 @@ public class Server {
 			//Connect gameplay sockets and create threads
 			for(int i=0; i<4; i++){
 				Socket tempSocket = gameplaySS.accept();
+				System.out.println("Accepted");
 				ObjectInputStream tempInput = new ObjectInputStream(tempSocket.getInputStream());
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
 				gameplayOutputs.put(alias, new ObjectOutputStream(tempSocket.getOutputStream()));
@@ -109,6 +110,10 @@ public class Server {
 	 * that synchronizes to make sure only one writes at a time.
 	 */
 	public static void main(String[] args) {
+		Server s = new Server();
+		while(true){
+			
+		}
 	}
 
 	private synchronized void sendMessageToAll(NetworkMessage nm){
