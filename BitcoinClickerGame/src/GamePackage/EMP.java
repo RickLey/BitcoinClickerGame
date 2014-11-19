@@ -1,5 +1,9 @@
 package GamePackage;
 
+import java.util.List;
+
+import javax.swing.JButton;
+
 public class EMP extends AttackItem {
 
 	private final int DURATION = 30;
@@ -9,11 +13,16 @@ public class EMP extends AttackItem {
 
 	@Override
 	public void run() {
-		//get buttons from player
-		//loop through and disable them all
-		//sleep for 30 seconds
-		//loop back through and enable all the button
-		
+		List<JButton> buttonList = target.getButtons();
+		for(int i = 0; i < buttonList.size(); i ++)
+		{
+			buttonList.get(i).disable();
+		}
+		pause(DURATION);
+		for(int i = 0; i < buttonList.size(); i ++)
+		{
+			buttonList.get(i).enable();
+		}
 	}
 
 }

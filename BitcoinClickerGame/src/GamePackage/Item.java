@@ -34,10 +34,8 @@ public abstract class Item extends Thread implements Serializable {
 		return name;
 	}
 	
-	//does the item’s action
-	public abstract void run();
 
-	private void pause(int durationInSeconds) {
+	protected void pause(int durationInSeconds) {
 		try {
 			Thread.sleep(1000 * durationInSeconds);
 		} catch (InterruptedException e) {
