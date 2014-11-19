@@ -37,7 +37,7 @@ public abstract class Item extends Thread implements Serializable {
 		return name;
 	}
 	
-	private void pause(int durationInSeconds) {
+	protected void pause(int durationInSeconds) {
 		try {
 			Thread.sleep(1000 * durationInSeconds);
 		} catch (InterruptedException e) {

@@ -1,6 +1,10 @@
 package GamePackage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JButton;
 
 public class Player extends Thread {
 	private Store myStore;
@@ -94,6 +98,10 @@ public class Player extends Thread {
 		double amount = Constants.BASE_COINS_PER_CLICK + combo;
 		receiveMoney(amount);
 		combo += Constants.COMBO_INCREMENT_AMOUNT;
+	}
+	
+	public List<JButton> getButtons() { 
+		return Collections.synchronizedList(container.getButtons());
 	}
 
 }
