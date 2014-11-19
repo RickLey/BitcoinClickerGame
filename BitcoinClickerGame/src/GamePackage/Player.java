@@ -61,7 +61,7 @@ public class Player extends Thread {
 		health += amount;
 	}
 
-	private void deductMoney(double amount) {
+	public void deductMoney(double amount) {
 		coins -= amount;
 	}
 	

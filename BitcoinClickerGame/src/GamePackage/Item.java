@@ -3,6 +3,7 @@ package GamePackage;
 import java.io.Serializable;
 
 public abstract class Item extends Thread implements Serializable {
+	protected double duration; //set to zero if instantaneous action
 	protected double cost;
 	protected double cooldown;
 	protected String name;
@@ -23,12 +24,8 @@ public abstract class Item extends Thread implements Serializable {
 
 //	private Animation animation
 
-	//set to zero if instantaneous action
-	private double duration;
 
-	//does the item’s action
-	public abstract void run();
-	
+
 	public double getCost() {
 		return cost;
 	}
@@ -37,6 +34,9 @@ public abstract class Item extends Thread implements Serializable {
 		return name;
 	}
 	
+	//does the item’s action
+	public abstract void run();
+
 	private void pause(int durationInSeconds) {
 		try {
 			Thread.sleep(1000 * durationInSeconds);
@@ -45,4 +45,6 @@ public abstract class Item extends Thread implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void incrementCost() {}	//Does nothing. Items that need to inc. their cost after each purchase will override this.
 }
