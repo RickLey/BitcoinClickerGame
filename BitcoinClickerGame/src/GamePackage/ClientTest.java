@@ -15,15 +15,18 @@ public class ClientTest {
 	private ObjectInputStream chatOIS;
 	private ObjectOutputStream chatOOS;
 	
+	private NetworkTestGui gui;
+	
 	private String name = "A";
 	
 	public ClientTest(String alias) {
 		try {
 			name = alias;
+			String hostname = "localhost";
 			//Gameplay Socket stuff
 			System.out.println("started");
 			System.out.println(name);
-			gameplaySocket = new Socket("10.120.71.131", 10000);
+			gameplaySocket = new Socket(hostname, 10000);
 			System.out.println(alias + ": Here");
 			
 			gameplayOOS = new ObjectOutputStream(gameplaySocket.getOutputStream());
@@ -42,7 +45,7 @@ public class ClientTest {
 			System.out.println(received.getMessageType() + ", From: " + received.getSender());
 			
 			//Connect chat sockets
-			chatSocket = new Socket("10.120.71.131", 20000);
+			chatSocket = new Socket(hostname, 20000);
 			System.out.println(alias + " Here 4");
 			
 			chatOOS = new ObjectOutputStream(chatSocket.getOutputStream());
@@ -70,8 +73,11 @@ public class ClientTest {
 			
 			//Receive the start game message
 			NetworkMessage received4 = (NetworkMessage) gameplayOIS.readObject();
-			System.out.println(received4.getMessageType() + ", From: " + received4.getSender());
+			System.out.println(received4.getMessageType() + ", From: " + received4.getSender());	
 			
+			new GUIThread(this, gameplayOOS, chatOOS).start();
+			new readGamePlayMessageThread(this, gameplayOIS).start();
+			new readChatMessageThread(this, chatOIS).start();
 			
 		} catch (UnknownHostException e) {
 			System.out.println("UHE");
@@ -85,7 +91,73 @@ public class ClientTest {
 		}
 	}
 	
+	public String getAlias(){
+		return name;
+	}
+	
 	public static void main(String [] args) {
 		new ClientTest(args[0]);
+	}
+
+	public void displayMessage(String sender) {
+		synchronized(gui){
+			gui.displayMessage(sender);
+		}
+	}
+}
+
+class GUIThread extends Thread{
+	
+	ClientTest client;
+	ObjectOutputStream myGameplayOutput;
+	ObjectOutputStream myChatOutput;
+	
+	public GUIThread(ClientTest ct, ObjectOutputStream go, ObjectOutputStream co){
+		client = ct;
+		myGameplayOutput = go;
+		myChatOutput = co;
+	}
+	
+	public void run(){
+		new NetworkTestGui(client, myGameplayOutput, myChatOutput);
+	}
+}
+
+class readGamePlayMessageThread extends Thread{
+	
+	ClientTest client;
+	ObjectInputStream myInput;
+	
+	
+	public readGamePlayMessageThread(ClientTest ct, ObjectInputStream i){
+		client = ct;
+		myInput = i;
+	}
+	
+	public void run(){
+		while(true){
+			try {
+				NetworkMessage received = (NetworkMessage)myInput.readObject();
+				client.displayMessage(received.getSender());
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
+class readChatMessageThread extends Thread{
+	ClientTest client;
+	ObjectInputStream myInput;
+	
+	public readChatMessageThread(ClientTest ct, ObjectInputStream i){
+		client = ct;
+		myInput = i;
+	}
+	
+	public void run(){
+		while(true){
+			
+		}
 	}
 }

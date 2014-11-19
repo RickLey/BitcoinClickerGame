@@ -46,12 +46,13 @@ public class Server {
 				Socket tempSocket = gameplaySS.accept();
 				
 				ObjectOutputStream tempOutput = new ObjectOutputStream(tempSocket.getOutputStream());
+				tempOutput.flush();
 				ObjectInputStream tempInput = new ObjectInputStream(tempSocket.getInputStream());
 				iis.add(tempInput);
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
 				gameplayOutputs.put(alias, tempOutput);
 				remainingPlayers.add(alias);
-				gpThreads.add(new GamePlayThread(tempSocket, this));
+				gpThreads.add(new GamePlayThread(tempOutput, tempInput, this));
 				playerSockets.add(tempSocket);
 			}
 			
@@ -74,7 +75,7 @@ public class Server {
 				ObjectInputStream tempInput = new ObjectInputStream(tempSocket.getInputStream());
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
 				chatOutputs.put(alias, tempOutput);
-				cThreads.add(new ChatThread(tempSocket, this));
+				cThreads.add(new ChatThread(tempOutput, tempInput, this));
 			}
 			
 			System.out.println("Got chat sockets");
@@ -195,14 +196,9 @@ class GamePlayThread extends Thread{
 	private ObjectInputStream ois;
 	private Server parentServer;
 	
-	public GamePlayThread(Socket socket, Server server){
-		try {
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			oos.flush();
-			ois = new ObjectInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public GamePlayThread(ObjectOutputStream o, ObjectInputStream i, Server server){
+			oos = o;
+			ois = i;
 		
 		parentServer = server;
 	}
@@ -277,14 +273,10 @@ class ChatThread extends Thread{
 	private ObjectInputStream ois;
 	Server parentServer;
 	
-	public ChatThread(Socket socket, Server server){
-		try {
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			oos.flush();
-			ois = new ObjectInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public ChatThread(ObjectOutputStream o, ObjectInputStream i, Server server){
+
+			oos = o;
+			ois = i;
 		
 		parentServer = server;
 	}
