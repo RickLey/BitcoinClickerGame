@@ -7,6 +7,8 @@ public class Virus extends AttackItem {
 
 	public Virus(Player target, double cost, double cooldown) {
 		super(target, cost, cooldown);
+		this.name = "Virus";
+		this.joke = "No Ebola reference here. We're not gonna do it. Nope.";
 		// TODO Auto-generated constructor stub
 	}
 

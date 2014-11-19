@@ -5,15 +5,10 @@ import java.io.Serializable;
 public abstract class Item extends Thread implements Serializable {
 	protected double cost;
 	protected double cooldown;
+	protected String name;
 	protected String joke;
 	protected String description;
 	protected Player target;
-	
-	public Item(Player target, double cost) {
-		this.target = target;
-		this.cost = cost;
-		cooldown = 0;
-	}
 	
 	public Item(Player target, double cost, double cooldown) {
 		this.target = target;
@@ -36,5 +31,18 @@ public abstract class Item extends Thread implements Serializable {
 	
 	public double getCost() {
 		return cost;
+	}
+	
+	public String getItemName() {
+		return name;
+	}
+	
+	private void pause(int durationInSeconds) {
+		try {
+			Thread.sleep(1000 * durationInSeconds);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

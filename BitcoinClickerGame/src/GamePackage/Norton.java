@@ -6,7 +6,9 @@ public class Norton extends DefenseItem {
 
 	public Norton(Player target, double cost, double cooldown) {
 		super(target, cost, cooldown);
+		this.name = "Norton";
 		this.joke = "What's worse, the virus or Norton?";
+		
 	}
 
 	@Override

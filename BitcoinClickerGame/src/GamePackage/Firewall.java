@@ -6,6 +6,8 @@ public class Firewall extends DefenseItem implements IOHandler {
 
 	public Firewall(Player target, double cost, double cooldown) {
 		super(target, cost, cooldown);
+		this.name = "Firewall";
+		this.joke = "A wall built from thousands of copies of the most fire albums of 2014.";
 		hitsRemaining = 3;
 	}
 
