@@ -20,11 +20,11 @@ public class NetworkMessage implements Serializable{
 	public static final String BROADCAST = "All Users"; //for sending to all users
 	public static final String SERVER_ALIAS = "Server";
 	
-	String sender;
-	String recipient;
-	String messageType;
-	String itemType;
-	Object value;
+	private String sender;
+	private String recipient;
+	private String messageType;
+	private String itemType;
+	private Object value;
 	
 	public NetworkMessage(){
 		

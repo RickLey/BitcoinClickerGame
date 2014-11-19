@@ -15,25 +15,30 @@ public class Server {
 	
 	//TODO timeouts?
 	//TODO whisper sends to recipient AND sender
+	//TODO when players die, do they still send updates? Can they be revived?
+	//TODO leech and EMP
 	
 	private HashMap<String, ObjectOutputStream> gameplayOutputs;
 	private HashMap<String, ObjectOutputStream> chatOutputs;
 	private HashSet<String> remainingPlayers;
 	private Connection dbConnection;
 	private HashMap<String, Integer> itemUseCount;
+	private ArrayList<ChatThread> cThreads;
+	private ArrayList<GamePlayThread> gpThreads;
 	
 	public Server(){
 		try {
 			ServerSocket gameplaySS = new ServerSocket(10000);
 			ServerSocket chatSS = new ServerSocket(20000);
 			
-			ArrayList<GamePlayThread> gpThreads = new ArrayList<GamePlayThread>();
-			ArrayList<ChatThread> cThreads = new ArrayList<ChatThread>();
+			gpThreads = new ArrayList<GamePlayThread>();
+			cThreads = new ArrayList<ChatThread>();
 			
 			ArrayList<Socket> playerSockets = new ArrayList<Socket>();
 			
 			gameplayOutputs = new HashMap<String, ObjectOutputStream>();
 			chatOutputs = new HashMap<String, ObjectOutputStream>();
+			remainingPlayers = new HashSet<String>();
 			ArrayList<ObjectInputStream> iis = new ArrayList<ObjectInputStream>();
 			
 			//Connect gameplay sockets and create threads
@@ -45,6 +50,7 @@ public class Server {
 				iis.add(tempInput);
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
 				gameplayOutputs.put(alias, tempOutput);
+				remainingPlayers.add(alias);
 				gpThreads.add(new GamePlayThread(tempSocket, this));
 				playerSockets.add(tempSocket);
 			}
@@ -130,7 +136,7 @@ public class Server {
 		}
 	}
 
-	private synchronized void sendMessageToAll(NetworkMessage nm){
+	public synchronized void sendMessageToAll(NetworkMessage nm){
 		for(ObjectOutputStream oos: gameplayOutputs.values()){
 			try {
 				oos.writeObject(nm);
@@ -142,52 +148,174 @@ public class Server {
 	}
 	
 
-	private void sendMessageToPlayer(NetworkMessage m, String alias){
-		
+	public synchronized void sendMessageToPlayer(NetworkMessage m, String alias){
+		try {
+			gameplayOutputs.get(alias).writeObject(m);
+			gameplayOutputs.get(alias).flush();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void eliminatePlayer(String sender) {
+		remainingPlayers.remove(sender);
+	}
+
+	public boolean onePlayerRemaining() {
+		return remainingPlayers.size() == 1;
+	}
+
+	public void incrementItemCount(String itemType) {
+		itemUseCount.put(itemType, itemUseCount.get(itemType) + 1);
+	}
+
+	public boolean isTrackingItem(String itemType) {
+		return itemUseCount.containsKey(itemType);
+	}
+
+	public void addItemForTracking(String itemType) {
+		itemUseCount.put(itemType, 1);
+	}
+
+	public void endGame() {
+		for(int i=0; i<4; i++){
+			gpThreads.get(i).interrupt();
+			gpThreads.get(i).cleanThread();
+			cThreads.get(i).interrupt();
+			cThreads.get(i).cleanThread();
+		}
 	}
 
 }
 
 class GamePlayThread extends Thread{
 	
-	Socket mySocket;
-	Server parentServer;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	private Server parentServer;
 	
 	public GamePlayThread(Socket socket, Server server){
-		mySocket = socket;
+		try {
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			oos.flush();
+			ois = new ObjectInputStream(socket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		parentServer = server;
 	}
 	
 	public void run(){
-		
+		while(true){
+			try {
+				NetworkMessage received = (NetworkMessage)ois.readObject();
+				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
+					TruncatedPlayer playerUpdate = (TruncatedPlayer)received.getValue();
+					
+					//eliminate player if out of health
+					if(playerUpdate.getHealth() <= 0){
+						parentServer.eliminatePlayer(received.getSender());
+						
+						//one player left- end the game
+						if(parentServer.onePlayerRemaining()){
+							sendEndGame(received);
+							parentServer.endGame();
+						}
+					}
+					
+					//TODO update constant
+					if(playerUpdate.getMoney() == 10000){
+						sendEndGame(received);
+						parentServer.endGame();
+					}
+				}
+				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
+					
+					//update how many times the item has been seen
+					String itemType = received.getItemType();
+					if(parentServer.isTrackingItem(itemType)){
+						parentServer.incrementItemCount(itemType);
+					}
+					else{
+						parentServer.addItemForTracking(itemType);
+					}
+					
+					parentServer.sendMessageToPlayer(received, received.getRecipient());
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void sendEndGame(NetworkMessage received) {
+		NetworkMessage endGame = new NetworkMessage();
+		endGame.setMessageType(NetworkMessage.END_GAME_MESSAGE);
+		endGame.setSender(NetworkMessage.SERVER_ALIAS);
+		endGame.setValue(received.getSender());
+		parentServer.sendMessageToAll(endGame);
+	}
+	
+	public void cleanThread(){
+		try {
+			ois.close();
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
 
 class ChatThread extends Thread{
 	
-	Socket mySocket;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
 	Server parentServer;
 	
 	public ChatThread(Socket socket, Server server){
-		mySocket = socket;
+		try {
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			oos.flush();
+			ois = new ObjectInputStream(socket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		parentServer = server;
 	}
 	
 	public void run(){
-		try {
-			ObjectInputStream myInput = new ObjectInputStream(mySocket.getInputStream());
-			ObjectOutputStream myOutput = new ObjectOutputStream(mySocket.getOutputStream());
-		
-			while(true){
-				NetworkMessage receivedMessage = (NetworkMessage)myInput.readObject();
-				String messageType = receivedMessage.getMessageType();
+		while(true){
+			try{
+				NetworkMessage received = (NetworkMessage)ois.readObject();
+				String messageType = received.getMessageType();
+				
+				if(messageType.equals(NetworkMessage.CHAT_MESSAGE)){
+					parentServer.sendMessageToAll(received);
+				}
+				else if(messageType.equals(NetworkMessage.WHISPER_MESSAGE)){
+					parentServer.sendMessageToPlayer(received, received.getRecipient());
+				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
+	public void cleanThread(){
+		try {
+			ois.close();
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
