@@ -36,8 +36,8 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 		
 		JPanel all = new JPanel();
 		JPanel actionsPanel = new JPanel();
-		JTextField enterRecipient = new JTextField();
-		JTextArea receivedMessages = new JTextArea();
+		enterRecipient = new JTextField();
+		receivedMessages = new JTextArea();
 		
 		enterRecipient = new JTextField();
 		receivedMessages = new JTextArea();
@@ -111,6 +111,7 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 		}
 		try {
 			myGameplayOutput.writeObject(toSend);
+			receivedMessages.append("Sent");
 			myGameplayOutput.flush();
 		} catch (IOException e1) {
 			e1.printStackTrace();

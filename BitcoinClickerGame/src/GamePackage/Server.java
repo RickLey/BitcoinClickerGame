@@ -146,6 +146,7 @@ public class Server {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Sent message to everyone");
 	}
 	
 
@@ -208,6 +209,7 @@ class GamePlayThread extends Thread{
 			try {
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
+					System.out.println("Got update");
 					TruncatedPlayer playerUpdate = (TruncatedPlayer)received.getValue();
 					
 					//eliminate player if out of health
@@ -222,9 +224,13 @@ class GamePlayThread extends Thread{
 					}
 					
 					//TODO update constant
-					if(playerUpdate.getMoney() == 10000){
+					else if(playerUpdate.getMoney() == 10000){
 						sendEndGame(received);
 						parentServer.endGame();
+					}
+					
+					else{
+						parentServer.sendMessageToAll(received);
 					}
 				}
 				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){

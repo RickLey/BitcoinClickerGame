@@ -104,6 +104,10 @@ public class ClientTest {
 			gui.displayMessage(sender);
 		}
 	}
+
+	public void setGui(NetworkTestGui networkTestGui) {
+		gui = networkTestGui;
+	}
 }
 
 class GUIThread extends Thread{
@@ -119,7 +123,7 @@ class GUIThread extends Thread{
 	}
 	
 	public void run(){
-		new NetworkTestGui(client, myGameplayOutput, myChatOutput);
+		client.setGui(new NetworkTestGui(client, myGameplayOutput, myChatOutput));
 	}
 }
 
@@ -138,6 +142,7 @@ class readGamePlayMessageThread extends Thread{
 		while(true){
 			try {
 				NetworkMessage received = (NetworkMessage)myInput.readObject();
+				System.out.println("Read message");
 				client.displayMessage(received.getSender());
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
