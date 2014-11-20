@@ -254,7 +254,7 @@ public class GameFrame extends JFrame{
 		}
 	}
 	
-	//	********************* BitcoinPanel *************************
+	//	********************* ShopPanel *************************
 	private ShopPanel shopPanel = new ShopPanel(this);
 	private JPanel playerPanels = new JPanel();
 	
