@@ -28,12 +28,12 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 	JTextArea receivedMessages;
 	
 	public NetworkTestGui(ClientTest ct, ObjectOutputStream goos, ObjectOutputStream coos){
-		setSize(600,600);
-		
+		setSize(400,300);
 		client = ct;
 		myGameplayOutput = goos;
 		myChatOutput = coos;
 		
+		setTitle(client.getAlias());
 		JPanel all = new JPanel();
 		JPanel actionsPanel = new JPanel();
 		enterRecipient = new JTextField();
@@ -74,28 +74,84 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton)e.getSource();
 		NetworkMessage toSend = new NetworkMessage();
+		toSend.setSender(client.getAlias());
 		
 		if(source.getText().equals("0")){
-			toSend.setSender(client.getAlias());
 			toSend.setMessageType(NetworkMessage.UPDATE_MESSAGE);
 			toSend.setValue(new TruncatedPlayer(5,5));
+			toSend.setRecipient(NetworkMessage.BROADCAST);
+			try {
+				myGameplayOutput.writeObject(toSend);
+				receivedMessages.append("Sent\n");
+				myGameplayOutput.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
 			
 		}
 		if(source.getText().equals("1")){
-			//send chat
+			toSend.setMessageType(NetworkMessage.CHAT_MESSAGE);
+			toSend.setValue("Test chat message\n");
+			toSend.setRecipient(NetworkMessage.BROADCAST);
+			try {
+				myChatOutput.writeObject(toSend);
+				receivedMessages.append("Sent\n");
+				myChatOutput.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		if(source.getText().equals("2")){
-			//send whisper
+			toSend.setMessageType(NetworkMessage.WHISPER_MESSAGE);
+			toSend.setValue("Test whisper message\n");
+			try {
+				int recipient = (Integer.parseInt(client.getAlias())+1)%4;
+				toSend.setRecipient(recipient + "");
+				myChatOutput.writeObject(toSend);
+				receivedMessages.append("Sent\n");
+				myChatOutput.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		if(source.getText().equals("3")){
-			//send update with no health
-			//have 3/4 do this
+			toSend.setMessageType(NetworkMessage.UPDATE_MESSAGE);
+			toSend.setValue(new TruncatedPlayer(0,0));
+			toSend.setRecipient(NetworkMessage.BROADCAST);
+			try {
+				myGameplayOutput.writeObject(toSend);
+				receivedMessages.append("Sent\n");
+				myGameplayOutput.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		if(source.getText().equals("4")){
-			//send update with max money
+			toSend.setMessageType(NetworkMessage.UPDATE_MESSAGE);
+			toSend.setValue(new TruncatedPlayer(10000,10000));
+			toSend.setRecipient(NetworkMessage.BROADCAST);
+			try {
+				myGameplayOutput.writeObject(toSend);
+				receivedMessages.append("Sent\n");
+				myGameplayOutput.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		if(source.getText().equals("5")){
-			//send item
+			toSend.setMessageType(NetworkMessage.ITEM_MESSAGE);
+			int recipient = (Integer.parseInt(client.getAlias())+1)%4;
+			toSend.setRecipient(recipient + "");
+			toSend.setItemType("EMP");
+			//toSend.setValue(new EMP);
+			try {
+				myGameplayOutput.writeObject(toSend);
+				receivedMessages.append("Sent\n");
+				myGameplayOutput.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		if(source.getText().equals("6")){
 			
@@ -109,18 +165,26 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 		if(source.getText().equals("9")){
 			
 		}
-		try {
-			myGameplayOutput.writeObject(toSend);
-			receivedMessages.append("Sent");
-			myGameplayOutput.flush();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
 	}
 
-	public void displayMessage(String sender) {
-		receivedMessages.append(sender);
+	public void displayMessage(NetworkMessage received) {
+		receivedMessages.append("Sender:" + received.getSender());
+		if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
+			TruncatedPlayer update = (TruncatedPlayer)received.getValue();
+			receivedMessages.append("Health: " + update.getHealth());
+			receivedMessages.append(" Money: " + update.getMoney() + "\n");
+		}
+		else if(received.getMessageType().equals(NetworkMessage.CHAT_MESSAGE) ||
+				received.getMessageType().equals(NetworkMessage.WHISPER_MESSAGE)){
+			String message = (String)received.getValue();
+			receivedMessages.append(received.getMessageType() + " " + message + "\n");
+		}
+		else if(received.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)){
+			receivedMessages.append("Winner: " + (String)received.getValue());
+		}
+		else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
+			receivedMessages.append(" Item: " + received.getItemType());
+		}
 	}
 
 }

@@ -99,9 +99,9 @@ public class ClientTest {
 		new ClientTest(args[0]);
 	}
 
-	public void displayMessage(String sender) {
+	public void displayMessage(NetworkMessage m) {
 		synchronized(gui){
-			gui.displayMessage(sender);
+			gui.displayMessage(m);
 		}
 	}
 
@@ -143,7 +143,7 @@ class readGamePlayMessageThread extends Thread{
 			try {
 				NetworkMessage received = (NetworkMessage)myInput.readObject();
 				System.out.println("Read message");
-				client.displayMessage(received.getSender());
+				client.displayMessage(received);
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}

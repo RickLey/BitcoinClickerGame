@@ -25,6 +25,7 @@ public class Server {
 	private HashMap<String, Integer> itemUseCount;
 	private ArrayList<ChatThread> cThreads;
 	private ArrayList<GamePlayThread> gpThreads;
+	ArrayList<Socket> playerSockets; //for closing the sockets
 	
 	public Server(){
 		try {
@@ -34,12 +35,14 @@ public class Server {
 			gpThreads = new ArrayList<GamePlayThread>();
 			cThreads = new ArrayList<ChatThread>();
 			
-			ArrayList<Socket> playerSockets = new ArrayList<Socket>();
+			playerSockets = new ArrayList<Socket>();
 			
 			gameplayOutputs = new HashMap<String, ObjectOutputStream>();
 			chatOutputs = new HashMap<String, ObjectOutputStream>();
 			remainingPlayers = new HashSet<String>();
 			ArrayList<ObjectInputStream> iis = new ArrayList<ObjectInputStream>();
+			
+			itemUseCount = new HashMap<String, Integer>();
 			
 			//Connect gameplay sockets and create threads
 			for(int i=0; i<4; i++){
@@ -76,6 +79,7 @@ public class Server {
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
 				chatOutputs.put(alias, tempOutput);
 				cThreads.add(new ChatThread(tempOutput, tempInput, this));
+				playerSockets.add(tempSocket);
 			}
 			
 			System.out.println("Got chat sockets");
@@ -117,8 +121,6 @@ public class Server {
 			sendMessageToAll(startGame);
 			
 			
-			
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -150,10 +152,10 @@ public class Server {
 	}
 	
 
-	public synchronized void sendMessageToPlayer(NetworkMessage m, String alias){
+	public synchronized void sendMessageToPlayer(NetworkMessage m, String recipientAlias){
 		try {
-			gameplayOutputs.get(alias).writeObject(m);
-			gameplayOutputs.get(alias).flush();
+			gameplayOutputs.get(recipientAlias).writeObject(m);
+			gameplayOutputs.get(recipientAlias).flush();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -183,10 +185,21 @@ public class Server {
 	public void endGame() {
 		for(int i=0; i<4; i++){
 			gpThreads.get(i).interrupt();
-			gpThreads.get(i).cleanThread();
 			cThreads.get(i).interrupt();
+			gpThreads.get(i).cleanThread();
 			cThreads.get(i).cleanThread();
 		}
+		for(int i=0; i<8; i++){
+			try {
+				playerSockets.get(i).close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public String getRemainingPlayer() {
+		return (String)remainingPlayers.toArray()[0];
 	}
 
 }
@@ -207,10 +220,14 @@ class GamePlayThread extends Thread{
 	public void run(){
 		while(true){
 			try {
+				if(Thread.interrupted()){
+					break;
+				}
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 					System.out.println("Got update");
 					TruncatedPlayer playerUpdate = (TruncatedPlayer)received.getValue();
+					parentServer.sendMessageToAll(received);
 					
 					//eliminate player if out of health
 					if(playerUpdate.getHealth() <= 0){
@@ -229,9 +246,6 @@ class GamePlayThread extends Thread{
 						parentServer.endGame();
 					}
 					
-					else{
-						parentServer.sendMessageToAll(received);
-					}
 				}
 				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 					
@@ -258,7 +272,12 @@ class GamePlayThread extends Thread{
 		NetworkMessage endGame = new NetworkMessage();
 		endGame.setMessageType(NetworkMessage.END_GAME_MESSAGE);
 		endGame.setSender(NetworkMessage.SERVER_ALIAS);
-		endGame.setValue(received.getSender());
+		if(((TruncatedPlayer)received.getValue()).getMoney() == 10000){
+			endGame.setValue(received.getSender());
+		}
+		else{
+			endGame.setValue(parentServer.getRemainingPlayer());
+		}
 		parentServer.sendMessageToAll(endGame);
 	}
 	
@@ -288,7 +307,7 @@ class ChatThread extends Thread{
 	}
 	
 	public void run(){
-		while(true){
+		while(!Thread.interrupted()){
 			try{
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				String messageType = received.getMessageType();
