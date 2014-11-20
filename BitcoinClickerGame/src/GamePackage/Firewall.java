@@ -7,6 +7,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 	public Firewall(Player target, double cost, double cooldown) {
 		super(target, cost, cooldown);
 		hitsRemaining = 3;
+		this.name = "Firewall";
 	}
 
 	@Override

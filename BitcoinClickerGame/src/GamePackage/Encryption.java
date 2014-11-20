@@ -6,7 +6,7 @@ public class Encryption extends DefenseItem implements IOHandler {
 	
 	public Encryption(Player target, double cost, double cooldown) {
 		super(target, cost, cooldown);
-		// TODO Auto-generated constructor stub
+		this.name = "Encryption";
 	}
 
 	void handleOutgoingItem() {

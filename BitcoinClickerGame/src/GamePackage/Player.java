@@ -13,8 +13,10 @@ public class Player extends Thread {
 	private ArrayList<Item> activeItems;
 	private IOHandler threadHandler;
 	private Item currentSelectedItem;
+	private Game container;
 	
-	public Player() {
+	public Player(Game container) {
+		this.container = container;  
 		health = 100;
 		alive = true;
 		coins = 0;
@@ -54,5 +56,9 @@ public class Player extends Thread {
 		double amount = Constants.BASE_COINS_PER_CLICK + combo;
 		coins += amount;
 		combo += Constants.COMBO_INCREMENT_AMOUNT;
+	}
+	
+	public void resetCombo() {
+		combo = 0;
 	}
 }
