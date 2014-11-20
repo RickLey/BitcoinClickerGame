@@ -31,6 +31,8 @@ import javax.swing.border.LineBorder;
 
 public class GameFrame extends JFrame{
 	
+	private Player thisPlayer;
+	
 	private JPanel chatPanel	= new JPanel();
 	private JPanel bitcoinPanel	= new JPanel();
 	private JPanel centerPanel = new JPanel();
@@ -39,6 +41,10 @@ public class GameFrame extends JFrame{
 	private JPanel glass = (JPanel)self.getGlassPane();
 	
 	public GameFrame(){
+		
+		//DEBUG: Hardcoding in player
+		thisPlayer = new Player();
+		
 		setSize(1200,700);
 		setLocation(100,200);
 		
@@ -153,7 +159,7 @@ public class GameFrame extends JFrame{
 		private JLabel			healthLabel		= new JLabel("Health");
 		private HealthPanel		healthPanel		= new HealthPanel();
 		
-	private int testWallet = 0;
+//	private int testWallet = 0;
 	
 	private void setupBitcoinPanel(){
 		bitcoinPanel.setLayout(new GridBagLayout());
@@ -188,8 +194,12 @@ public class GameFrame extends JFrame{
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				testWallet += 1;
-				moneyLabel.setText("$" + testWallet);
+//				testWallet += 1;
+//				moneyLabel.setText("$" + testWallet);
+				
+				thisPlayer.incrementFromButtonClick();
+				moneyLabel.setText("$" + thisPlayer.getCoinString());
+				
 			}
 
 			@Override
@@ -219,7 +229,7 @@ public class GameFrame extends JFrame{
 		
 		//MoneyLabel
 		moneyLabel.setFont(Constants.getFont(24));
-		moneyLabel.setText("$" + testWallet);
+		moneyLabel.setText("$" + thisPlayer.getCoins());
 		
 
 		

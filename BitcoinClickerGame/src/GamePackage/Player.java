@@ -51,6 +51,16 @@ public class Player extends Thread {
 	public double getCoins() {
 		return coins;
 	}
+	public String getCoinString(){
+		String coinString = "" + coins;
+		String buildString = "";
+		
+		System.out.println(coinString);
+		
+		return coinString.substring(0, coinString.indexOf('.')+2);
+		
+//		return "Error in getCoinString()";
+	}
 	
 	public void incrementFromButtonClick() {
 		double amount = Constants.BASE_COINS_PER_CLICK + combo;
