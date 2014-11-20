@@ -81,7 +81,7 @@ public class GameFrame extends JFrame{
 	
 	
 	private void setupChatPanel(){
-		chatPanel.setPreferredSize(new Dimension(300,700));
+		chatPanel.setPreferredSize(new Dimension(275,700));
 		chatPanel.setBackground(Color.WHITE);
 		
 		//Title
@@ -92,7 +92,7 @@ public class GameFrame extends JFrame{
 		chatArea.setLineWrap(true);
 		chatArea.setEditable(false);
 		
-		chatScroller.setPreferredSize(new Dimension(280, 500));
+		chatScroller.setPreferredSize(new Dimension(265, 500));
 		chatScroller.setBackground(Color.WHITE);
 		
 		//writing area
@@ -114,7 +114,7 @@ public class GameFrame extends JFrame{
 			}
 		});
 		
-		writeScroller.setPreferredSize(new Dimension(200,125));
+		writeScroller.setPreferredSize(new Dimension(180,125));
 		
 		//Button
 		sendButton.addActionListener(new ActionListener(){
@@ -165,7 +165,7 @@ public class GameFrame extends JFrame{
 		statusPanel.add(healthLabel);
 		statusPanel.add(healthPanel);
 		statusPanel.setBackground(null);
-		statusPanel.setPreferredSize(new Dimension(200, 30));
+		statusPanel.setPreferredSize(new Dimension(250, 30));
 		
 		//Set icon
 		try{
