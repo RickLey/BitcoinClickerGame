@@ -19,11 +19,6 @@ public class Player extends Thread {
 	private Item currentSelectedItem;
 	private Game container;
 	private Player moneyRecipient;
-	private Game container;
-	
-	public Player(Game container) {
-		this.container = container;  
-
 	
 	public Player(Game container) {
 		this.container = container;
@@ -124,5 +119,4 @@ public class Player extends Thread {
 		return Collections.synchronizedList(container.getButtons());
 	}
 
->>>>>>> player
 }

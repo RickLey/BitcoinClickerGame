@@ -6,6 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JButton;
 
 public class Game extends Thread {
 
@@ -103,6 +106,11 @@ public class Game extends Thread {
 	public void endGame()
 	{
 		localPlayer.interrupt();
+	}
+	
+	public List<JButton> getButtons()
+	{
+		return gameFrame.getButtons();
 	}
 		
 	//display request for alias, initialize sockets here… see Networking

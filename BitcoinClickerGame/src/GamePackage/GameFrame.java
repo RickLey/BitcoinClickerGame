@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -268,7 +269,14 @@ public class GameFrame extends JFrame{
 		centerPanel.add(shopPanel, BorderLayout.SOUTH);
 		
 	}
-
+	
+	public List<JButton> getButtons()
+	{
+		List<JButton> buttonList = shopPanel.getButtons();
+		buttonList.add(bitcoinButton);
+		
+		return buttonList;
+	}
 	
 	public static void main(String[] args){
 		new GameFrame();

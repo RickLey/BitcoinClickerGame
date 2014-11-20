@@ -10,6 +10,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -33,6 +35,8 @@ class ShopPanel extends JPanel{
 	private JLabel defenseLabel = new JLabel("Defense");
 	
 	private GameFrame mainFrame;
+	
+	private List<JButton> shopButtons = new ArrayList<JButton>();
 	
 	public ShopPanel(GameFrame main){
 		mainFrame = main;
@@ -72,8 +76,8 @@ class ShopPanel extends JPanel{
 			gbc.gridy = i;
 			JButton newButton = new EconomyButton("Economy " + i, mainFrame.getGlass());
 			economyPanel.add(newButton, gbc);
+			shopButtons.add(newButton);
 		}
-		
 		//AttackPanel
 		gbc.gridy = 0;
 		attackPanel.add(attackLabel);
@@ -81,6 +85,7 @@ class ShopPanel extends JPanel{
 			gbc.gridy = i;
 			JButton newButton = new AttackButton("Attack " + i, mainFrame.getGlass());
 			attackPanel.add(newButton, gbc);
+			shopButtons.add(newButton);
 		}
 		
 		//DefensePanel
@@ -90,6 +95,7 @@ class ShopPanel extends JPanel{
 			gbc.gridy = i;
 			JButton newButton = new DefenseButton("Defense " + i, mainFrame.getGlass());
 			defensePanel.add(newButton, gbc);
+			shopButtons.add(newButton);
 		}
 		
 		add(titleLabel);
@@ -102,6 +108,10 @@ class ShopPanel extends JPanel{
 		super.paintComponent(g);
 	}
 	
+	public List<JButton> getButtons()
+	{
+		return shopButtons;
+	}
 }
 
 abstract class AbstractItem extends JButton{
@@ -206,5 +216,4 @@ class DefenseButton extends AbstractItem{
 
 	}
 }
-
 
