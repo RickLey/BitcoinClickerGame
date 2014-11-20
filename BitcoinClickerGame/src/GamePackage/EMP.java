@@ -16,12 +16,12 @@ public class EMP extends AttackItem {
 		List<JButton> buttonList = target.getButtons();
 		for(int i = 0; i < buttonList.size(); i ++)
 		{
-			buttonList.get(i).disable();
+			buttonList.get(i).setEnabled(false);
 		}
 		pause(DURATION);
 		for(int i = 0; i < buttonList.size(); i ++)
 		{
-			buttonList.get(i).enable();
+			buttonList.get(i).setEnabled(true);
 		}
 	}
 
