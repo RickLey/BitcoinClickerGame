@@ -2,11 +2,13 @@ package GamePackage;
 
 public class Virus extends AttackItem {
 
-	private final int DPS = 1;
+	private final static int COST = 2000;
+	private final static int COOLDOWN = 120;
+	private final static int DPS = 1;
 	private boolean running;
 
-	public Virus(Player target, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	public Virus(Player target) {
+		super(target, COST, COOLDOWN);
 		this.name = "Virus";
 		this.joke = "No Ebola reference here. We're not gonna do it. Nope.";
 		// TODO Auto-generated constructor stub

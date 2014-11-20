@@ -2,10 +2,12 @@ package GamePackage;
 
 public class Encryption extends DefenseItem implements IOHandler {
 
+	private final static int COST = 1000;
+	private final static int COOLDOWN = 120;
 	private long timeLeft;
 	
-	public Encryption(Player target, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	public Encryption(Player target) {
+		super(target, COST, COOLDOWN);
 		this.name = "Encryption";
 		// TODO Auto-generated constructor stub
 	}

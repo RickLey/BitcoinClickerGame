@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 public class Norton extends DefenseItem {
 
-	public Norton(Player target, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	private final static int COST = 500;
+	private final static int COOLDOWN = 0;
+	
+	public Norton(Player target) {
+		super(target, COST, COOLDOWN);
 		this.name = "Norton";
 		this.joke = "What's worse, the virus or Norton?";
 		

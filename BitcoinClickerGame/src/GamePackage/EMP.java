@@ -6,9 +6,12 @@ import javax.swing.JButton;
 
 public class EMP extends AttackItem {
 
-	private final int DURATION = 30;
-	public EMP(Player target, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	private final static int COST = 3500;
+	private final static int COOLDOWN = 240;
+	private final static int DURATION = 30;
+	
+	public EMP(Player target) {
+		super(target, COST, COOLDOWN);
 	}
 
 	@Override

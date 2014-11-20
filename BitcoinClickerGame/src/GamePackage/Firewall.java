@@ -3,9 +3,11 @@ package GamePackage;
 public class Firewall extends DefenseItem implements IOHandler {
 	private int hitsRemaining;
 	
-
-	public Firewall(Player target, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	private final static int COST = 500;
+	private final static int COOLDOWN = 30;
+	
+	public Firewall(Player target) {
+		super(target, COST, COOLDOWN);
 		this.name = "Firewall";
 		this.joke = "A wall built from thousands of copies of the most fire albums of 2014.";
 		hitsRemaining = 3;
