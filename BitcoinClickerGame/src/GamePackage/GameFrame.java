@@ -43,7 +43,7 @@ public class GameFrame extends JFrame{
 	public GameFrame(){
 		
 		//DEBUG: Hardcoding in player
-		thisPlayer = new Player();
+		thisPlayer = new Player(null);
 		
 		setSize(1200,700);
 		setLocation(100,200);
@@ -194,12 +194,8 @@ public class GameFrame extends JFrame{
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-//				testWallet += 1;
-//				moneyLabel.setText("$" + testWallet);
-				
 				thisPlayer.incrementFromButtonClick();
 				moneyLabel.setText("$" + thisPlayer.getCoinString());
-				
 			}
 
 			@Override
@@ -223,7 +219,7 @@ public class GameFrame extends JFrame{
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				//
+				thisPlayer.resetCombo();
 			}
 		});
 		
