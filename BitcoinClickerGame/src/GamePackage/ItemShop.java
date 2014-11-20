@@ -105,8 +105,8 @@ class ShopPanel extends JPanel{
 }
 
 abstract class AbstractItem extends JButton{
-	private double cost = 10;
-	private double cooldown;
+	private int cost = 10;
+	private int cooldown;
 	private String description = "DESCRIPTION";
 	private String joke = "JOKE";
 	
@@ -127,7 +127,7 @@ abstract class AbstractItem extends JButton{
 		this.setPreferredSize(new Dimension(200, 90));
 		
 		//MouseOverLabel
-		setToolTipText("TEST");
+		setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
 		
 		this.addMouseListener(new MouseListener(){
 
@@ -172,25 +172,6 @@ abstract class AbstractItem extends JButton{
 		p.y += 15;
 		return p;
 	}
-	
-	class mouseOverPanel extends JPanel{
-		public mouseOverPanel(){
-			setPreferredSize(new Dimension(100,20));
-			setToolTipText("");
-			setBackground(Color.WHITE);
-		}
-		public String getToolTipText(MouseEvent e){
-			return "Test";
-		}
-		
-		public Point getToolTipLocation(MouseEvent e){
-			Point p = e.getPoint();
-			p.y += 15;
-			return p;
-		}
-		
-	}
-	
 }
 
 class EconomyButton extends AbstractItem{
@@ -225,3 +206,5 @@ class DefenseButton extends AbstractItem{
 
 	}
 }
+
+
