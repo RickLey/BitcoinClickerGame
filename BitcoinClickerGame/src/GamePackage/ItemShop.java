@@ -78,12 +78,18 @@ class ShopPanel extends JPanel{
 			economyPanel.add(newButton, gbc);
 			shopButtons.add(newButton);
 		}
+
+		
+		gbc.gridy = 1;
+		JButton newButton = new AttackButton(new NokiaPhone(null, 10, 5));
+		attackPanel.add(newButton, gbc);
+
 		//AttackPanel
 		gbc.gridy = 0;
 		attackPanel.add(attackLabel);
-		for (int i = 1; i < 4; ++i){
+		for (int i = 2; i < 4; ++i){
 			gbc.gridy = i;
-			JButton newButton = new AttackButton("Attack " + i, mainFrame.getGlass());
+			newButton = new AttackButton("Attack " + i, mainFrame.getGlass());
 			attackPanel.add(newButton, gbc);
 			shopButtons.add(newButton);
 		}
@@ -93,7 +99,7 @@ class ShopPanel extends JPanel{
 		defensePanel.add(defenseLabel);
 		for (int i = 1; i < 4; ++i){
 			gbc.gridy = i;
-			JButton newButton = new DefenseButton("Defense " + i, mainFrame.getGlass());
+			newButton = new DefenseButton("Defense " + i, mainFrame.getGlass());
 			defensePanel.add(newButton, gbc);
 			shopButtons.add(newButton);
 		}
@@ -114,7 +120,7 @@ class ShopPanel extends JPanel{
 	}
 }
 
-abstract class AbstractItem extends JButton{
+abstract class AbstractItemButton extends JButton{
 	private int cost = 10;
 	private int cooldown;
 	private String description = "DESCRIPTION";
@@ -126,8 +132,57 @@ abstract class AbstractItem extends JButton{
 	//Layout
 	Border raisedBorder = BorderFactory.createRaisedBevelBorder();
 	Border loweredBorder = BorderFactory.createLoweredBevelBorder();
+
+	//Backend
+	Item item;
+
+	public AbstractItemButton(Item item){
+		super(item.getItemName());
+		
+		this.item = item;
+		this.description = item.description;
+		this.joke = item.joke;
+		
+		this.setBorder(raisedBorder);
+		this.setOpaque(true);
+		this.setPreferredSize(new Dimension(200, 90));
+		
+		//MouseOverLabel
+		setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
+		
+		this.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				setBorder(loweredBorder);
+				repaint();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				setBorder(raisedBorder);
+				repaint();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
+		
+	}
 	
-	public AbstractItem(String name, JPanel glass){
+	
+	public AbstractItemButton(String name, JPanel glass){
 		super(name);
 		
 		this.glass = glass;
@@ -184,7 +239,7 @@ abstract class AbstractItem extends JButton{
 	}
 }
 
-class EconomyButton extends AbstractItem{
+class EconomyButton extends AbstractItemButton{
 	public EconomyButton(String name, JPanel glass){
 		super(name, glass);
 	}
@@ -195,10 +250,15 @@ class EconomyButton extends AbstractItem{
 	}
 }
 
-class AttackButton extends AbstractItem{
+class AttackButton extends AbstractItemButton{
 	public AttackButton(String name, JPanel glass){
 		super(name, glass);
 	}
+	
+	public AttackButton(Item item){
+		super(item);
+	}
+	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		this.setBackground(new Color(255, 140, 105));
@@ -206,7 +266,7 @@ class AttackButton extends AbstractItem{
 	}
 }
 
-class DefenseButton extends AbstractItem{
+class DefenseButton extends AbstractItemButton{
 	public DefenseButton(String name, JPanel glass){
 		super(name, glass);
 	}
