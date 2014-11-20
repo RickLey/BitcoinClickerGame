@@ -1,6 +1,10 @@
 package GamePackage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JButton;
 
 public class Player extends Thread {
 	private Store myStore;
@@ -14,14 +18,21 @@ public class Player extends Thread {
 	private IOHandler threadHandler;
 	private Item currentSelectedItem;
 	private Game container;
+	private Player moneyRecipient;
+	private Game container;
 	
 	public Player(Game container) {
 		this.container = container;  
+
+	
+	public Player(Game container) {
+		this.container = container;
 		health = 100;
 		alive = true;
 		coins = 0;
 		combo = 0;
 		multiplier = 1;
+		moneyRecipient = this;
 		threadHandler = new NullHandler();
 	}
 	
@@ -29,28 +40,65 @@ public class Player extends Thread {
 		threadHandler = replacement;
 	}
 	
-	private void purchaseItem(Item item) {
-		deductMoney(item.getCost());
+	public synchronized void setMoneyRecipient(Player player) {
+		moneyRecipient = player;
 	}
 	
 	public ArrayList<Item> getActiveItems() {
 		return activeItems;
 	}
 	
-	private void deductMoney(double amount) {
+	public double getCoins() {
+		return coins;
+	}
+
+	public synchronized void receiveMoney(double amount) {
+		if(amount < 0) {
+			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
+		}
+		if(moneyRecipient.equals(this)) {
+			coins += amount;
+		} else {
+			//TODO: send information via stream to other player so that they get money.
+		}
+	}
+	
+	public synchronized void receiveHealth(int amount) {
+		if(amount < 0) {
+			throw new RuntimeException("receiveHealth(): amount " + amount + " is negative.");
+		}
+		health += amount;
+	}
+
+	public void deductMoney(double amount) {
 		coins -= amount;
 	}
 	
-	public void takeItem(Item item) {
-		if(item instanceof Virus) {
+	public synchronized void deductHealth(double amount) {
+		if(amount < 0) {
+			throw new RuntimeException("deductHealth(): amount " + amount + " is negative.");
+		}
+		health -= amount;
+	}
+
+	public synchronized void loseMoney(double amount) {
+		if(amount < 0) {
+			throw new RuntimeException("loseMoney(): amount " + amount + " is negative.");
+		}
+		deductMoney(amount);
+	}
+	
+	public void startItem(Item item) {
+		if(item instanceof Virus || item instanceof Leech) {
 			activeItems.add(item);
 		}
 		item.run();
 	}
 	
-	public double getCoins() {
-		return coins;
+	private void purchaseItem(Item item) {
+		deductMoney(item.getCost());
 	}
+
 	public String getCoinString(){
 		String coinString = "" + coins;
 		String buildString = "";
@@ -64,11 +112,17 @@ public class Player extends Thread {
 	
 	public void incrementFromButtonClick() {
 		double amount = Constants.BASE_COINS_PER_CLICK + combo;
-		coins += amount;
+		receiveMoney(amount);
 		combo += Constants.COMBO_INCREMENT_AMOUNT;
 	}
 	
 	public void resetCombo() {
 		combo = 0;
 	}
+
+	public List<JButton> getButtons() { 
+		return Collections.synchronizedList(container.getButtons());
+	}
+
+>>>>>>> player
 }
