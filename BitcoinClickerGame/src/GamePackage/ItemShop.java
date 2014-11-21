@@ -75,29 +75,20 @@ class ShopPanel extends JPanel{
 		gbc.gridy = 0;
 
 		//EconomyPanel
-		
+		gbc.gridy = 0;
 		economyPanel.add(economyLabel);
-		for (int i = 1; i < 4; ++i){
-			gbc.gridy = i;
-			newButton = new EconomyButton("Economy " + i, mainFrame.getGlass());
-			economyPanel.add(newButton, gbc);
-			shopButtons.add(newButton);
-		}
-
-//		gbc.gridy = 0;
-//		economyPanel.add(economyLabel);
-//		
-//		gbc.gridy = 1;
-//		newButton = new EconomyButton(new NokiaPhone(null));
-//		attackPanel.add(newButton, gbc);
-//		
-//		gbc.gridy = 2;
-//		newButton = new EconomyButton(new EMP(null));
-//		attackPanel.add(newButton, gbc);
-//		
-//		gbc.gridy = 3;
-//		newButton = new EconomyButton(new Virus(null));
-//		attackPanel.add(newButton, gbc);
+		
+		gbc.gridy = 1;
+		newButton = new EconomyButton(new NokiaPhone(null), player);
+		attackPanel.add(newButton, gbc);
+		
+		gbc.gridy = 2;
+		newButton = new EconomyButton(new EMP(null), player);
+		attackPanel.add(newButton, gbc);
+		
+		gbc.gridy = 3;
+		newButton = new EconomyButton(new Virus(null), player);
+		attackPanel.add(newButton, gbc);
 		
 		//Attack Panel
 		
@@ -106,15 +97,15 @@ class ShopPanel extends JPanel{
 		
 		gbc.gridy = 1;
 		newButton = new AttackButton(new NokiaPhone(null), player);
-		attackPanel.add(newButton, gbc);
+		economyPanel.add(newButton, gbc);
 		
 		gbc.gridy = 2;
 		newButton = new AttackButton(new EMP(null), player);
-		attackPanel.add(newButton, gbc);
+		economyPanel.add(newButton, gbc);
 		
 		gbc.gridy = 3;
 		newButton = new AttackButton(new Virus(null), player);
-		attackPanel.add(newButton, gbc);
+		economyPanel.add(newButton, gbc);
 
 		//DefensePanel
 		
