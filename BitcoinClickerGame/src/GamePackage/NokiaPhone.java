@@ -4,11 +4,12 @@ public class NokiaPhone extends AttackItem {
 
 	private final static int DAMAGE = 5;
 	private final static int COST = Constants.nokiaCost;
-	private final static int COOLDOWN = 10;
+	private final static int COOLDOWN = Constants.nokiaCooldown;;
 	
 	public NokiaPhone(Player target) {
 		super(target, COST, COOLDOWN);
-		this.joke = "Nokia was founded in 1871 and that’s the biggest joke on Nokia customers ever.";
+		this.joke = Constants.nokiaJoke;
+		this.description = Constants.nokiaDescription;
 		this.name = "Nokia Phone";
 	}
 

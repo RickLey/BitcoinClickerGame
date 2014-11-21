@@ -3,15 +3,15 @@ package GamePackage;
 public class Firewall extends DefenseItem implements IOHandler {
 	private int hitsRemaining;
 	
-	private final static int COST = 500;
-	private final static int COOLDOWN = 30;
+	private final static int COST = Constants.firewallCost;
+	private final static int COOLDOWN = Constants.firewallCooldown;
 	
 	public Firewall(Player target) {
 		super(target, COST, COOLDOWN);
 		this.name = "Firewall";
-		this.joke = "A wall built from thousands of copies of the most fire albums of 2014.";
+		this.joke = Constants.firewallJoke;
+		this.description = Constants.firewallDescription;
 		hitsRemaining = 3;
-		this.name = "Firewall";
 	}
 
 	@Override
