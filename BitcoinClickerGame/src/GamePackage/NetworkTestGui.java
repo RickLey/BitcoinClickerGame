@@ -187,4 +187,15 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 		}
 	}
 
+	public void closeSockets() {
+		try {
+			myGameplayOutput.close();
+			myChatOutput.close();
+		} catch(SocketException e){
+		} catch (IOException e) {
+		
+			e.printStackTrace();
+		}	
+	}
+
 }

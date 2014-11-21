@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class Server {
 			connectChatSocketsMessage.setSender(NetworkMessage.SERVER_ALIAS);
 			connectChatSocketsMessage.setMessageType(NetworkMessage.GAME_INITIALIZATION_MESSAGE);
 			
-			sendMessageToAll(connectChatSocketsMessage);
+			sendGameplayMessageToAll(connectChatSocketsMessage);
 			
 			System.out.println("Send message to connect chat sockets");
 			
@@ -89,7 +90,7 @@ public class Server {
 			distributeAliases.setMessageType(NetworkMessage.GAME_INITIALIZATION_MESSAGE);
 			distributeAliases.setValue(gameplayOutputs.keySet().toArray());
 			
-			sendMessageToAll(distributeAliases);
+			sendGameplayMessageToAll(distributeAliases);
 			
 			//send drawWindow message
 			
@@ -97,7 +98,7 @@ public class Server {
 			drawWindows.setSender(NetworkMessage.SERVER_ALIAS);
 			drawWindows.setMessageType(NetworkMessage.DRAW_WINDOW_MESSAGE);
 			
-			sendMessageToAll(drawWindows);
+			sendGameplayMessageToAll(drawWindows);
 			
 			//wait for response from everyone
 			for(int i=0; i<4; i++){
@@ -118,7 +119,7 @@ public class Server {
 			NetworkMessage startGame = new NetworkMessage();
 			startGame.setSender(NetworkMessage.SERVER_ALIAS);
 			startGame.setMessageType(NetworkMessage.START_GAME_MESSAGE);
-			sendMessageToAll(startGame);
+			sendGameplayMessageToAll(startGame);
 			
 			
 		} catch (IOException e) {
@@ -139,7 +140,7 @@ public class Server {
 		}
 	}
 
-	public synchronized void sendMessageToAll(NetworkMessage nm){
+	public synchronized void sendGameplayMessageToAll(NetworkMessage nm){
 		for(ObjectOutputStream oos: gameplayOutputs.values()){
 			try {
 				oos.writeObject(nm);
@@ -151,11 +152,33 @@ public class Server {
 		System.out.println("Sent message to everyone");
 	}
 	
+	public synchronized void sendChatMessageToAll(NetworkMessage nm){
+		for(ObjectOutputStream oos: chatOutputs.values()){
+			try {
+				oos.writeObject(nm);
+				oos.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Sent message to everyone");
+	}
+	
 
-	public synchronized void sendMessageToPlayer(NetworkMessage m, String recipientAlias){
+	public synchronized void sendGameplayMessageToPlayer(NetworkMessage m, String recipientAlias){
 		try {
 			gameplayOutputs.get(recipientAlias).writeObject(m);
 			gameplayOutputs.get(recipientAlias).flush();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public synchronized void sendChatMessageToPlayer(NetworkMessage m, String recipientAlias){
+		try {
+			chatOutputs.get(recipientAlias).writeObject(m);
+			chatOutputs.get(recipientAlias).flush();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -218,16 +241,13 @@ class GamePlayThread extends Thread{
 	}
 	
 	public void run(){
-		while(true){
+		while(!Thread.interrupted()){
 			try {
-				if(Thread.interrupted()){
-					break;
-				}
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 					System.out.println("Got update");
 					TruncatedPlayer playerUpdate = (TruncatedPlayer)received.getValue();
-					parentServer.sendMessageToAll(received);
+					parentServer.sendGameplayMessageToAll(received);
 					
 					//eliminate player if out of health
 					if(playerUpdate.getHealth() <= 0){
@@ -258,13 +278,17 @@ class GamePlayThread extends Thread{
 						parentServer.addItemForTracking(itemType);
 					}
 					
-					parentServer.sendMessageToPlayer(received, received.getRecipient());
+					parentServer.sendGameplayMessageToPlayer(received, received.getRecipient());
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+			} catch (SocketException e){
+				System.out.println("Caught socket exception");
+
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			} 
+			
 		}
 	}
 
@@ -278,7 +302,7 @@ class GamePlayThread extends Thread{
 		else{
 			endGame.setValue(parentServer.getRemainingPlayer());
 		}
-		parentServer.sendMessageToAll(endGame);
+		parentServer.sendGameplayMessageToAll(endGame);
 	}
 	
 	public void cleanThread(){
@@ -287,7 +311,7 @@ class GamePlayThread extends Thread{
 			oos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 }
@@ -313,13 +337,16 @@ class ChatThread extends Thread{
 				String messageType = received.getMessageType();
 				
 				if(messageType.equals(NetworkMessage.CHAT_MESSAGE)){
-					parentServer.sendMessageToAll(received);
+					parentServer.sendChatMessageToAll(received);
+					System.out.println("Received chat on the chat thread");
 				}
 				else if(messageType.equals(NetworkMessage.WHISPER_MESSAGE)){
-					parentServer.sendMessageToPlayer(received, received.getRecipient());
+					parentServer.sendChatMessageToPlayer(received, received.getRecipient());
 				}
-			}
-			catch (IOException e) {
+			} 
+			catch (SocketException e){
+				System.out.println("Caught socket exception");
+			}catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();

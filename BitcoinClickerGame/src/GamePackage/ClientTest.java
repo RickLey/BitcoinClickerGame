@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class ClientTest {
@@ -14,6 +15,7 @@ public class ClientTest {
 	private ObjectOutputStream gameplayOOS;
 	private ObjectInputStream chatOIS;
 	private ObjectOutputStream chatOOS;
+	private readChatMessageThread chatThread;
 	
 	private NetworkTestGui gui;
 	
@@ -77,7 +79,8 @@ public class ClientTest {
 			
 			new GUIThread(this, gameplayOOS, chatOOS).start();
 			new readGamePlayMessageThread(this, gameplayOIS).start();
-			new readChatMessageThread(this, chatOIS).start();
+			chatThread = new readChatMessageThread(this, chatOIS);
+			chatThread.start();
 			
 		} catch (UnknownHostException e) {
 			System.out.println("UHE");
@@ -107,6 +110,12 @@ public class ClientTest {
 
 	public void setGui(NetworkTestGui networkTestGui) {
 		gui = networkTestGui;
+	}
+
+	public void shutDown() {
+		gui.closeSockets();
+		chatThread.interrupt();
+		chatThread.endGame();
 	}
 }
 
@@ -139,12 +148,23 @@ class readGamePlayMessageThread extends Thread{
 	}
 	
 	public void run(){
-		while(true){
+		while(!Thread.interrupted()){
 			try {
 				NetworkMessage received = (NetworkMessage)myInput.readObject();
 				System.out.println("Read message");
 				client.displayMessage(received);
-			} catch (ClassNotFoundException | IOException e) {
+				if(received.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)){
+					this.interrupt();
+					myInput.close();
+					client.shutDown();
+				}
+				if(received.getMessageType().equals(NetworkMessage.CHAT_MESSAGE)){
+					System.out.println("Received chat on gameplay thread");
+				}
+			} catch(SocketException e){
+				System.out.println("Closed gameplay input");
+			}
+			catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -160,9 +180,28 @@ class readChatMessageThread extends Thread{
 		myInput = i;
 	}
 	
-	public void run(){
-		while(true){
-			
+	public void endGame() {
+		try {
+			myInput.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
+
+	public void run(){
+		while(!Thread.interrupted()){
+			try {
+				NetworkMessage received = (NetworkMessage)myInput.readObject();
+				System.out.println("Read message");
+				client.displayMessage(received);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch(SocketException e){
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }
