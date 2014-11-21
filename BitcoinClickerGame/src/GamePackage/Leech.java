@@ -7,8 +7,9 @@ public class Leech extends AttackItem {
 	private static final int DURATION = 10;
 	private Player sender;
 	
-	public Leech(Player target, Player sender, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	public Leech(Player target, Player sender) {
+		super(target, COST, COOLDOWN);
+		this.joke = "JOKE";
 		this.name = "Leech";
 	}
 
