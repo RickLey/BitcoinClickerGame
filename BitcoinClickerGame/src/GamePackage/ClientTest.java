@@ -197,9 +197,10 @@ class readChatMessageThread extends Thread{
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch(SocketException e){
+				break;
 			} catch (IOException e) {
-			
-				e.printStackTrace();
+				break;
+				//e.printStackTrace();
 			}
 		}
 	}
