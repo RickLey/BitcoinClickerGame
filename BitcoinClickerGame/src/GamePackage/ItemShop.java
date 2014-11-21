@@ -211,50 +211,6 @@ class ShopPanel extends JPanel{
 			
 		}
 		
-		
-		public AbstractItemButton(String name, JPanel glass){
-			super(name);
-			
-			this.glass = glass;
-			
-			this.setBorder(raisedBorder);
-			this.setOpaque(true);
-			this.setPreferredSize(new Dimension(200, 90));
-			
-			//MouseOverLabel
-			setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
-			
-			this.addMouseListener(new MouseListener(){
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					setBorder(loweredBorder);
-					repaint();
-				}
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					setBorder(raisedBorder);
-					repaint();
-				}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-				}
-
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					
-				}
-			});
-			
-		}
-
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
 			g.setFont(Constants.getFont(12));
@@ -270,10 +226,6 @@ class ShopPanel extends JPanel{
 	}
 	
 	class EconomyButton extends AbstractItemButton{
-		public EconomyButton(String name, JPanel glass){
-			super(name, glass);
-		}
-		
 		public EconomyButton(Item item, Player player){
 			super(item, player);
 		}
@@ -286,10 +238,6 @@ class ShopPanel extends JPanel{
 	}
 
 	class AttackButton extends AbstractItemButton{
-		public AttackButton(String name, JPanel glass){
-			super(name, glass);
-		}
-		
 		public AttackButton(Item item, Player player){
 			super(item, player);
 		}
@@ -302,9 +250,6 @@ class ShopPanel extends JPanel{
 	}
 
 	class DefenseButton extends AbstractItemButton{
-		public DefenseButton(String name, JPanel glass){
-			super(name, glass);
-		}
 		public DefenseButton(Item item, Player player){
 			super(item, player);
 		}
