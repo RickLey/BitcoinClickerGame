@@ -75,6 +75,13 @@ public class Player extends Thread {
 		}
 		health -= amount;
 	}
+	
+	public synchronized void addHealth(double amount) { 
+		if(amount < 0) {
+			throw new RuntimeException("addHealth(): amount " + amount + " is negative.");
+		}
+		health += amount;
+	}
 
 	public synchronized void loseMoney(double amount) {
 		if(amount < 0) {

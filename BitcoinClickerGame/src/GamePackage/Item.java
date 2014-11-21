@@ -19,9 +19,9 @@ public abstract class Item extends Thread implements Serializable {
 		this.cooldown = cooldown;
 	}
 	
-	public double getCooldown()
+	public long getCooldown()
 	{
-		return cooldown;
+		return (long) cooldown;
 	}
 
 //	private Animation animation

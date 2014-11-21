@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -140,7 +142,7 @@ class ShopPanel extends JPanel{
 	}
 	
 	//Inner class
-	abstract class AbstractItemButton extends JButton{
+	abstract class AbstractItemButton extends JButton {
 		private int cost = 10;
 		private int cooldown;
 		private String description = "DESCRIPTION";
@@ -200,11 +202,20 @@ class ShopPanel extends JPanel{
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					System.out.println(player.getCoins());
-					if (player.getCoins() < cost){
+					if (player.getCoins() < cost || !isEnabled()){
 						//Display error message
 					} else{
 						player.deductMoney(cost);
 						mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
+						setEnabled(false);
+						Timer timer = new Timer();
+					    timer.schedule(new TimerTask() {
+					    	public void run()
+					    	{
+					    		setEnabled(true);
+					    	}
+					    }, item.getCooldown()*1000);
+						
 					}
 				}
 			});
