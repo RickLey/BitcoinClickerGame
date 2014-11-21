@@ -24,7 +24,7 @@ public class ClientTest {
 	public ClientTest(String alias) {
 		try {
 			name = alias;
-			String hostname = "localhost";
+			String hostname = "10.121.71.42";
 			//Gameplay Socket stuff
 			System.out.println("started");
 			System.out.println(name);
@@ -196,11 +196,14 @@ class readChatMessageThread extends Thread{
 				client.displayMessage(received);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+				break;
 			} catch(SocketException e){
 				break;
 			} catch (IOException e) {
+
+				e.printStackTrace();
 				break;
-				//e.printStackTrace();
+
 			}
 		}
 	}
