@@ -23,6 +23,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 class ShopPanel extends JPanel{
+	private Player player;
 	
 	private JLabel titleLabel = new JLabel("Bitcoin Shop", SwingConstants.CENTER);
 	
@@ -38,8 +39,9 @@ class ShopPanel extends JPanel{
 	
 	private List<JButton> shopButtons = new ArrayList<JButton>();
 	
-	public ShopPanel(GameFrame main){
+	public ShopPanel(GameFrame main, Player player){
 		mainFrame = main;
+		this.player = player;
 		setPreferredSize(new Dimension(650,400));
 		setBackground(Color.WHITE);
 		setBorder(new LineBorder(Color.BLACK, 1));
@@ -65,44 +67,71 @@ class ShopPanel extends JPanel{
 		attackLabel.setFont(Constants.getFont(18));
 		defenseLabel.setFont(Constants.getFont(18));
 
+		JButton newButton;
 		
-		//EconomyPanel
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(5, 0, 5, 0);
 		gbc.ipady = 0;
 		gbc.gridy = 0;
+
+		//EconomyPanel
+		
 		economyPanel.add(economyLabel);
 		for (int i = 1; i < 4; ++i){
 			gbc.gridy = i;
-			JButton newButton = new EconomyButton("Economy " + i, mainFrame.getGlass());
+			newButton = new EconomyButton("Economy " + i, mainFrame.getGlass());
 			economyPanel.add(newButton, gbc);
 			shopButtons.add(newButton);
 		}
 
+//		gbc.gridy = 0;
+//		economyPanel.add(economyLabel);
+//		
+//		gbc.gridy = 1;
+//		newButton = new EconomyButton(new NokiaPhone(null));
+//		attackPanel.add(newButton, gbc);
+//		
+//		gbc.gridy = 2;
+//		newButton = new EconomyButton(new EMP(null));
+//		attackPanel.add(newButton, gbc);
+//		
+//		gbc.gridy = 3;
+//		newButton = new EconomyButton(new Virus(null));
+//		attackPanel.add(newButton, gbc);
 		
-		gbc.gridy = 1;
-		JButton newButton = new AttackButton(new NokiaPhone(null, 10, 5));
-		attackPanel.add(newButton, gbc);
-
-		//AttackPanel
+		//Attack Panel
+		
 		gbc.gridy = 0;
 		attackPanel.add(attackLabel);
-		for (int i = 2; i < 4; ++i){
-			gbc.gridy = i;
-			newButton = new AttackButton("Attack " + i, mainFrame.getGlass());
-			attackPanel.add(newButton, gbc);
-			shopButtons.add(newButton);
-		}
 		
+		gbc.gridy = 1;
+		newButton = new AttackButton(new NokiaPhone(null), player);
+		attackPanel.add(newButton, gbc);
+		
+		gbc.gridy = 2;
+		newButton = new AttackButton(new EMP(null), player);
+		attackPanel.add(newButton, gbc);
+		
+		gbc.gridy = 3;
+		newButton = new AttackButton(new Virus(null), player);
+		attackPanel.add(newButton, gbc);
+
 		//DefensePanel
+		
 		gbc.gridy = 0;
 		defensePanel.add(defenseLabel);
-		for (int i = 1; i < 4; ++i){
-			gbc.gridy = i;
-			newButton = new DefenseButton("Defense " + i, mainFrame.getGlass());
-			defensePanel.add(newButton, gbc);
-			shopButtons.add(newButton);
-		}
+		
+		gbc.gridy = 1;
+		newButton = new DefenseButton(new Encryption(null), player);
+		defensePanel.add(newButton, gbc);
+		
+		gbc.gridy = 2;
+		newButton = new DefenseButton(new Norton(null), player);
+		defensePanel.add(newButton, gbc);
+		
+		gbc.gridy = 3;
+		newButton = new DefenseButton(new Firewall(null), player);
+		defensePanel.add(newButton, gbc);
 		
 		add(titleLabel);
 		add(economyPanel);
@@ -118,162 +147,184 @@ class ShopPanel extends JPanel{
 	{
 		return shopButtons;
 	}
+	
+	//Inner class
+	abstract class AbstractItemButton extends JButton{
+		private int cost = 10;
+		private int cooldown;
+		private String description = "DESCRIPTION";
+		private String joke = "JOKE";
+		
+		private JToolTip mouseOverLabel = new JToolTip();
+		private JPanel glass;
+		
+		private Player player;
+		//Layout
+		Border raisedBorder = BorderFactory.createRaisedBevelBorder();
+		Border loweredBorder = BorderFactory.createLoweredBevelBorder();
+
+		//Backend
+		Item item;
+
+		public AbstractItemButton(Item item, Player player){
+			super(item.getItemName());
+			
+			this.item = item;
+			this.description = item.description;
+			this.joke = item.joke;
+			this.cost = (int) item.getCost();
+
+			this.player = player;
+			
+			this.setBorder(raisedBorder);
+			this.setOpaque(true);
+			this.setPreferredSize(new Dimension(200, 90));
+			
+			//MouseOverLabel
+			setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
+			
+			this.addMouseListener(new MouseListener(){
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					setBorder(loweredBorder);
+					repaint();
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					setBorder(raisedBorder);
+					repaint();
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println(player.getCoins());
+					if (player.getCoins() < cost){
+						//Display error message
+					} else{
+						player.deductMoney(cost);
+						mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
+					}
+				}
+			});
+			
+		}
+		
+		
+		public AbstractItemButton(String name, JPanel glass){
+			super(name);
+			
+			this.glass = glass;
+			
+			this.setBorder(raisedBorder);
+			this.setOpaque(true);
+			this.setPreferredSize(new Dimension(200, 90));
+			
+			//MouseOverLabel
+			setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
+			
+			this.addMouseListener(new MouseListener(){
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					setBorder(loweredBorder);
+					repaint();
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					setBorder(raisedBorder);
+					repaint();
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					
+				}
+			});
+			
+		}
+
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			g.setFont(Constants.getFont(12));
+			g.drawString("$"+cost, 160, 80);
+
+		}
+		
+		public Point getToolTipLocation(MouseEvent e){
+			Point p = e.getPoint();
+			p.y += 15;
+			return p;
+		}
+	}
+	
+	class EconomyButton extends AbstractItemButton{
+		public EconomyButton(String name, JPanel glass){
+			super(name, glass);
+		}
+		
+		public EconomyButton(Item item, Player player){
+			super(item, player);
+		}
+		
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			this.setBackground(new Color(191,239,255));
+
+		}
+	}
+
+	class AttackButton extends AbstractItemButton{
+		public AttackButton(String name, JPanel glass){
+			super(name, glass);
+		}
+		
+		public AttackButton(Item item, Player player){
+			super(item, player);
+		}
+		
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			this.setBackground(new Color(255, 140, 105));
+
+		}
+	}
+
+	class DefenseButton extends AbstractItemButton{
+		public DefenseButton(String name, JPanel glass){
+			super(name, glass);
+		}
+		public DefenseButton(Item item, Player player){
+			super(item, player);
+		}
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			this.setBackground(new Color(189, 252, 201));
+
+		}
+	}
+
+	
 }
 
-abstract class AbstractItemButton extends JButton{
-	private int cost = 10;
-	private int cooldown;
-	private String description = "DESCRIPTION";
-	private String joke = "JOKE";
-	
-	private JToolTip mouseOverLabel = new JToolTip();
-	private JPanel glass;
-	
-	//Layout
-	Border raisedBorder = BorderFactory.createRaisedBevelBorder();
-	Border loweredBorder = BorderFactory.createLoweredBevelBorder();
-
-	//Backend
-	Item item;
-
-	public AbstractItemButton(Item item){
-		super(item.getItemName());
-		
-		this.item = item;
-		this.description = item.description;
-		this.joke = item.joke;
-		
-		this.setBorder(raisedBorder);
-		this.setOpaque(true);
-		this.setPreferredSize(new Dimension(200, 90));
-		
-		//MouseOverLabel
-		setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
-		
-		this.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				setBorder(loweredBorder);
-				repaint();
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				setBorder(raisedBorder);
-				repaint();
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-			}
-		});
-		
-	}
-	
-	
-	public AbstractItemButton(String name, JPanel glass){
-		super(name);
-		
-		this.glass = glass;
-		
-		this.setBorder(raisedBorder);
-		this.setOpaque(true);
-		this.setPreferredSize(new Dimension(200, 90));
-		
-		//MouseOverLabel
-		setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
-		
-		this.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				setBorder(loweredBorder);
-				repaint();
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				setBorder(raisedBorder);
-				repaint();
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-			}
-		});
-		
-	}
-	
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		g.setFont(Constants.getFont(12));
-		g.drawString("$"+cost, 170, 80);
-
-	}
-	
-	public Point getToolTipLocation(MouseEvent e){
-		Point p = e.getPoint();
-		p.y += 15;
-		return p;
-	}
-}
-
-class EconomyButton extends AbstractItemButton{
-	public EconomyButton(String name, JPanel glass){
-		super(name, glass);
-	}
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		this.setBackground(new Color(191,239,255));
-
-	}
-}
-
-class AttackButton extends AbstractItemButton{
-	public AttackButton(String name, JPanel glass){
-		super(name, glass);
-	}
-	
-	public AttackButton(Item item){
-		super(item);
-	}
-	
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		this.setBackground(new Color(255, 140, 105));
-
-	}
-}
-
-class DefenseButton extends AbstractItemButton{
-	public DefenseButton(String name, JPanel glass){
-		super(name, glass);
-	}
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		this.setBackground(new Color(189, 252, 201));
-
-	}
-}
 

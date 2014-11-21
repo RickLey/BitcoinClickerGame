@@ -32,7 +32,7 @@ import javax.swing.border.LineBorder;
 
 public class GameFrame extends JFrame{
 	
-	private Player thisPlayer;
+	private Player player;
 	
 	private JPanel chatPanel	= new JPanel();
 	private JPanel bitcoinPanel	= new JPanel();
@@ -44,7 +44,7 @@ public class GameFrame extends JFrame{
 	public GameFrame(){
 		
 		//DEBUG: Hardcoding in player
-		thisPlayer = new Player(null);
+		player = new Player(null);
 		
 		setSize(1200,700);
 		setLocation(100,200);
@@ -67,6 +67,10 @@ public class GameFrame extends JFrame{
 	
 	public JPanel getGlass(){
 		return glass;
+	}
+	
+	public Player getPlayer(){
+		return player;
 	}
 	
 	//Setup Functions
@@ -195,8 +199,8 @@ public class GameFrame extends JFrame{
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				thisPlayer.incrementFromButtonClick();
-				moneyLabel.setText("$" + thisPlayer.getCoinString());
+				player.incrementFromButtonClick();
+				moneyLabel.setText("$" + player.getCoinString());
 			}
 
 			@Override
@@ -220,13 +224,13 @@ public class GameFrame extends JFrame{
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				thisPlayer.resetCombo();
+				player.resetCombo();
 			}
 		});
 		
 		//MoneyLabel
 		moneyLabel.setFont(Constants.getFont(24));
-		moneyLabel.setText("$" + thisPlayer.getCoins());
+		moneyLabel.setText("$" + player.getCoins());
 		
 
 		
@@ -256,10 +260,11 @@ public class GameFrame extends JFrame{
 	}
 	
 	//	********************* ShopPanel *************************
-	private ShopPanel shopPanel = new ShopPanel(this);
+	private ShopPanel shopPanel;
 	private JPanel playerPanels = new JPanel();
 	
 	private void setupCenterPanel(){
+		shopPanel = new ShopPanel(this, player);
 		centerPanel.setBackground(Color.WHITE);
 
 		playerPanels.setBackground(Color.GRAY);
@@ -281,4 +286,11 @@ public class GameFrame extends JFrame{
 	public static void main(String[] args){
 		new GameFrame();
 	}
+	
+	// Getters and setters
+	
+	public JLabel getMoneyLabel(){
+		return moneyLabel;
+	}
+	
 }

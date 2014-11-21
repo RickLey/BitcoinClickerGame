@@ -46,7 +46,7 @@ public class Player extends Thread {
 	public double getCoins() {
 		return coins;
 	}
-
+	
 	public synchronized void receiveMoney(double amount) {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
@@ -97,8 +97,6 @@ public class Player extends Thread {
 	public String getCoinString(){
 		String coinString = "" + coins;
 		String buildString = "";
-		
-		System.out.println(coinString);
 		
 		return coinString.substring(0, coinString.indexOf('.')+2);
 		

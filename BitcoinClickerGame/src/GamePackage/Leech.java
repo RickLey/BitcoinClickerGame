@@ -2,7 +2,7 @@ package GamePackage;
 
 public class Leech extends AttackItem {
 	
-	private static final int COST = 150;
+	private static final int COST = Constants.leechCost;
 	private static final int COOLDOWN = 60;
 	private static final int DURATION = 10;
 	private Player sender;

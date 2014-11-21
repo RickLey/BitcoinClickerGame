@@ -3,7 +3,7 @@ package GamePackage;
 public class NokiaPhone extends AttackItem {
 
 	private final static int DAMAGE = 5;
-	private final static int COST = 250;
+	private final static int COST = Constants.nokiaCost;
 	private final static int COOLDOWN = 10;
 	
 	public NokiaPhone(Player target) {

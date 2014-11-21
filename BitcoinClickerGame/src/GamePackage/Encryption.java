@@ -2,13 +2,14 @@ package GamePackage;
 
 public class Encryption extends DefenseItem implements IOHandler {
 
-	private final static int COST = 1000;
+	private final static int COST = Constants.encryptionCost;
 	private final static int COOLDOWN = 120;
 	private long timeLeft;
 	
 	public Encryption(Player target) {
 		super(target, COST, COOLDOWN);
 		this.name = "Encryption";
+		this.joke = "We found this item in a tool shed and all it does is turn input signal into like, noise, so we’re guessing it’s an encryptor I mean we don’t really know we just sell stuff we’re not engineers but hey we’re selling this thing so come on down.";
 		// TODO Auto-generated constructor stub
 	}
 

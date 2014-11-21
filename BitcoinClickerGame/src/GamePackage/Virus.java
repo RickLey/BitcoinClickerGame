@@ -2,7 +2,7 @@ package GamePackage;
 
 public class Virus extends AttackItem {
 
-	private final static int COST = 2000;
+	private final static int COST = Constants.virusCost;
 	private final static int COOLDOWN = 120;
 	private final static int DPS = 1;
 	private boolean running;

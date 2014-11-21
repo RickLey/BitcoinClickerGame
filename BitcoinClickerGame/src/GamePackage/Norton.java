@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Norton extends DefenseItem {
 
-	private final static int COST = 500;
+	private final static int COST = Constants.nortonCost;
 	private final static int COOLDOWN = 0;
 	
 	public Norton(Player target) {
