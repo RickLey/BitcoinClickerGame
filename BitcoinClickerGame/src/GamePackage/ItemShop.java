@@ -27,11 +27,11 @@ class ShopPanel extends JPanel{
 	
 	private JLabel titleLabel = new JLabel("Bitcoin Shop", SwingConstants.CENTER);
 	
-	private JPanel economyPanel = new JPanel();
+//	private JPanel economyPanel = new JPanel();
 	private JPanel attackPanel = new JPanel();
 	private JPanel defensePanel = new JPanel();
 	
-	private JLabel economyLabel = new JLabel("Economy");
+//	private JLabel economyLabel = new JLabel("Economy");
 	private JLabel attackLabel = new JLabel("Attack");
 	private JLabel defenseLabel = new JLabel("Defense");
 	
@@ -52,80 +52,102 @@ class ShopPanel extends JPanel{
 		
 		
 		//Layouts
-		economyPanel.setPreferredSize(new Dimension(210, 350));
-		economyPanel.setBackground(Color.WHITE);
-		attackPanel.setPreferredSize(new Dimension(210, 350));
+//		economyPanel.setPreferredSize(new Dimension(210, 350));
+//		economyPanel.setBackground(Color.WHITE);
+		attackPanel.setPreferredSize(new Dimension(600, 175));
 		attackPanel.setBackground(Color.WHITE);
-		defensePanel.setPreferredSize(new Dimension(210, 350));
+		defensePanel.setPreferredSize(new Dimension(600, 175));
 		defensePanel.setBackground(Color.WHITE);
 		
-		economyPanel.setLayout(new GridBagLayout());
+//		economyPanel.setLayout(new GridBagLayout());
 		attackPanel.setLayout(new GridBagLayout());
 		defensePanel.setLayout(new GridBagLayout());
 		
-		economyLabel.setFont(Constants.getFont(18));
+//		economyLabel.setFont(Constants.getFont(18));
 		attackLabel.setFont(Constants.getFont(18));
 		defenseLabel.setFont(Constants.getFont(18));
 
-		JButton newButton;
+//		attackLabel.setPreferredSize(new Dimension(50, 20));
 		
+		JButton newButton;
+//		
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(5, 0, 5, 0);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.ipady = 0;
 		gbc.gridy = 0;
-
-		//EconomyPanel
-		gbc.gridy = 0;
-		economyPanel.add(economyLabel);
-		
-		gbc.gridy = 1;
-		newButton = new EconomyButton(new NokiaPhone(null), player);
-		attackPanel.add(newButton, gbc);
-		
-		gbc.gridy = 2;
-		newButton = new EconomyButton(new EMP(null), player);
-		attackPanel.add(newButton, gbc);
-		
-		gbc.gridy = 3;
-		newButton = new EconomyButton(new Virus(null), player);
-		attackPanel.add(newButton, gbc);
-		
+//
+//		//EconomyPanel
+//		gbc.gridy = 0;
+//		economyPanel.add(economyLabel);
+//		
+//		gbc.gridy = 1;
+//		newButton = new EconomyButton(new NokiaPhone(null), player);
+//		attackPanel.add(newButton, gbc);
+//		
+//		gbc.gridy = 2;
+//		newButton = new EconomyButton(new EMP(null), player);
+//		attackPanel.add(newButton, gbc);
+//		
+//		gbc.gridy = 3;
+//		newButton = new EconomyButton(new Virus(null), player);
+//		attackPanel.add(newButton, gbc);
+//		
 		//Attack Panel
 		
+		gbc.gridx = 1;
 		gbc.gridy = 0;
+		gbc.gridwidth = 2;
 		attackPanel.add(attackLabel);
 		
+		gbc.gridwidth = 2;
 		gbc.gridy = 1;
+		gbc.gridx = 0;
 		newButton = new AttackButton(new NokiaPhone(null), player);
-		economyPanel.add(newButton, gbc);
+		attackPanel.add(newButton, gbc);
+		
+		gbc.gridy = 1;
+		gbc.gridx = 2;
+		newButton = new AttackButton(new EMP(null), player);
+		attackPanel.add(newButton, gbc);
 		
 		gbc.gridy = 2;
-		newButton = new AttackButton(new EMP(null), player);
-		economyPanel.add(newButton, gbc);
-		
-		gbc.gridy = 3;
+		gbc.gridx = 0;
 		newButton = new AttackButton(new Virus(null), player);
-		economyPanel.add(newButton, gbc);
-
-		//DefensePanel
+		attackPanel.add(newButton, gbc);
 		
+		gbc.gridy = 2;
+		gbc.gridx = 2;
+		newButton = new AttackButton(new Leech(null, null), player);
+		attackPanel.add(newButton, gbc);
+//
+//		//DefensePanel
+
+		gbc.gridx = 1;
 		gbc.gridy = 0;
+		gbc.gridwidth = 2;	
 		defensePanel.add(defenseLabel);
 		
 		gbc.gridy = 1;
+		gbc.gridx = 0;		
 		newButton = new DefenseButton(new Encryption(null), player);
 		defensePanel.add(newButton, gbc);
 		
-		gbc.gridy = 2;
+		gbc.gridy = 1;
+		gbc.gridx = 2;
 		newButton = new DefenseButton(new Norton(null), player);
 		defensePanel.add(newButton, gbc);
 		
-		gbc.gridy = 3;
+		gbc.gridy = 2;
+		gbc.gridx = 0;
 		newButton = new DefenseButton(new Firewall(null), player);
 		defensePanel.add(newButton, gbc);
+//		
+//		gbc.gridy = 1;
+//		gbc.gridx = 0;
+//		newButton = new DefenseButton 
 		
 		add(titleLabel);
-		add(economyPanel);
+//		add(economyPanel);
 		add(attackPanel);
 		add(defensePanel);
 	}
@@ -169,7 +191,7 @@ class ShopPanel extends JPanel{
 			
 			this.setBorder(raisedBorder);
 			this.setOpaque(true);
-			this.setPreferredSize(new Dimension(200, 90));
+			this.setPreferredSize(new Dimension(250, 60));
 			
 			//MouseOverLabel
 			setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
@@ -214,7 +236,7 @@ class ShopPanel extends JPanel{
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
 			g.setFont(Constants.getFont(12));
-			g.drawString("$"+cost, 160, 80);
+			g.drawString("$"+cost, 200, 50);
 
 		}
 		
