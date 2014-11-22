@@ -20,6 +20,7 @@ public class Player extends Thread {
 	private String moneyRecipient;		//As a string of their alias
 	private String alias;
 	private Game container;
+	private String alias;
 	
 	public Player(String alias, Game container) {
 		this.container = container;
@@ -30,6 +31,23 @@ public class Player extends Thread {
 		multiplier = 1;
 		moneyRecipient = alias;
 		threadHandler = new NullHandler();
+	}
+	
+	//Stephen's testing constructor
+	public Player(Game container, String alias) {
+		this.container = container;
+		this.alias = alias;
+		health = 100;
+		alive = true;
+		coins = 0;
+		combo = 0;
+		multiplier = 1;
+		moneyRecipient = this;
+		threadHandler = new NullHandler();
+	}
+	
+	public String getAlias(){
+		return alias;
 	}
 	
 	public int getHealth(){
@@ -85,7 +103,7 @@ public class Player extends Thread {
 		if(amount < 0) {
 			throw new RuntimeException("deductMoney(): amount " + amount + " is negative.");
 		}
-		coins-=amount;
+		coins -= amount;
 	}
 	
 	public void startItem(Item item) {

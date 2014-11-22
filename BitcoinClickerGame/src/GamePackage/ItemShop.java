@@ -183,6 +183,8 @@ abstract class AbstractItemButton extends JButton {
 				if (!isDisabled){
 					setBorder(loweredBorder);
 					repaint();
+					
+					item.run();
 				}
 			}
 
@@ -209,6 +211,7 @@ abstract class AbstractItemButton extends JButton {
 				if (player.getCoins() < cost || isDisabled){
 					//Display error message
 				} else{
+					System.out.println("Cost: " + cost);
 					player.deductMoney(cost);
 					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
 					new Thread(new CooldownThread(button)).start();
@@ -252,8 +255,6 @@ abstract class AbstractItemButton extends JButton {
 		public void run(){
 			int count = button.cooldown;
 			button.setIsOnCooldown(true);
-
-			System.out.println("Marker: " + count);
 			
 			try{
 				while (count != 0){
