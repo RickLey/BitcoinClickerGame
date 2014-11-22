@@ -63,6 +63,10 @@ public class GameFrame extends JFrame{
 		//Glass
 		glass.setLayout(null);
 		
+		//Start main repaint thread
+		Thread mainRepaint = new MainRepaintThread(this);
+		mainRepaint.start();
+		
 	}
 	
 	public JPanel getGlass(){
@@ -71,6 +75,12 @@ public class GameFrame extends JFrame{
 	
 	public Player getPlayer(){
 		return player;
+	}
+	
+	public void paintComponent(Graphics g){
+		super.paintComponents(g);
+		
+		healthPanel.repaint();
 	}
 	
 	//Setup Functions
@@ -162,11 +172,12 @@ public class GameFrame extends JFrame{
 	private JLabel				moneyLabel		= new JLabel();
 	private JPanel				statusPanel		= new JPanel();
 		private JLabel			healthLabel		= new JLabel("Health");
-		private HealthPanel		healthPanel		= new HealthPanel();
+		private HealthPanel		healthPanel	;
 		
 //	private int testWallet = 0;
 	
 	private void setupBitcoinPanel(){
+		healthPanel = new HealthPanel(player);
 		bitcoinPanel.setLayout(new GridBagLayout());
 		bitcoinPanel.setBackground(Color.WHITE);
 		bitcoinPanel.setBorder(new LineBorder(Color.BLACK, 1));
@@ -246,14 +257,21 @@ public class GameFrame extends JFrame{
 	}
 	
 	class HealthPanel extends JPanel{
-		public HealthPanel(){
+		private Player player;
+		public HealthPanel(Player player){
+			this.player = player;
 			setPreferredSize(new Dimension(100,10));
+			setBorder(new LineBorder(Color.BLACK, 1));
 		}
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
 			
+			//paint left section green
 			g.setColor(Color.GREEN);
-			g.fillRect(0, 0, 100, 10);
+			g.fillRect(0, 0, player.getHealth(), 10);
+			
+			g.setColor(Color.WHITE);
+			g.fillRect(player.getHealth(), 0, 100-player.getHealth(), 10);
 		}
 	}
 	
@@ -289,6 +307,25 @@ public class GameFrame extends JFrame{
 	
 	public JLabel getMoneyLabel(){
 		return moneyLabel;
+	}
+
+	// Main repaint thread
+	class MainRepaintThread extends Thread{
+		private GameFrame gf;
+		public MainRepaintThread(GameFrame gf){
+			this.gf = gf;
+		}
+		public void run(){
+			while(true){
+				try{
+					sleep(1000/24);
+					gf.repaint();
+					
+				} catch(InterruptedException IE){
+					IE.printStackTrace();
+				}
+			}
+		}
 	}
 	
 }

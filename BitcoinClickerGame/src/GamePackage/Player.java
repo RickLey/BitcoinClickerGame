@@ -31,6 +31,10 @@ public class Player extends Thread {
 		threadHandler = new NullHandler();
 	}
 	
+	public int getHealth(){
+		return health;
+	}
+	
 	public void setHandler(IOHandler replacement) {
 		threadHandler = replacement;
 	}
