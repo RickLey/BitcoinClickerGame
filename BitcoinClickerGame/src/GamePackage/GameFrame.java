@@ -18,6 +18,8 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.SocketException;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,7 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
+import javax.swing.text.DefaultCaret;
 
+@SuppressWarnings("serial")
 public class GameFrame extends JFrame{
 	
 	private Player player;
@@ -43,7 +47,15 @@ public class GameFrame extends JFrame{
 	private GameFrame self = this;
 	private JPanel glass = (JPanel)self.getGlassPane();
 	
-	public GameFrame(){
+	//Networking related variables that are needed as reference
+	private Game game;
+	private ObjectOutputStream myGameplayOutput;
+	private ObjectOutputStream myChatOutput;
+	
+	public GameFrame(Game g, ObjectOutputStream goos, ObjectOutputStream coos){
+		this.game = g;
+		this.myGameplayOutput = goos;
+		this.myChatOutput = coos;
 		
 		//DEBUG: Hardcoding in player
 		player = new Player(null, null);
@@ -106,6 +118,7 @@ public class GameFrame extends JFrame{
 		chatArea.setBackground(Color.WHITE);
 		chatArea.setLineWrap(true);
 		chatArea.setEditable(false);
+		((DefaultCaret)chatArea.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		
 		chatScroller.setPreferredSize(new Dimension(265, 500));
 		chatScroller.setBackground(Color.WHITE);
@@ -116,10 +129,24 @@ public class GameFrame extends JFrame{
 		writingArea.addKeyListener(new KeyAdapter(){
 			public void keyReleased(KeyEvent e){
 				if (e.getKeyCode() == KeyEvent.VK_ENTER){
-					if (!chatArea.getText().equals("")){
-						chatArea.setText(chatArea.getText() + writingArea.getText());
-					} else{
-						chatArea.setText(writingArea.getText());
+//					if (!chatArea.getText().equals("")){
+//						chatArea.setText(chatArea.getText() + writingArea.getText());
+//					} else{
+//						chatArea.setText(writingArea.getText());
+//					}
+					
+					if(!writingArea.getText().equals("")) {
+						NetworkMessage chatMessage = new NetworkMessage();
+						chatMessage.setMessageType(NetworkMessage.CHAT_MESSAGE);
+						chatMessage.setSender(game.getAlias());
+						chatMessage.setRecipient(NetworkMessage.BROADCAST);
+						chatMessage.setValue(writingArea.getText());
+						try {
+							myChatOutput.writeObject(chatMessage);
+							myChatOutput.flush();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
 					}
 					
 					//Clear textarea
@@ -136,11 +163,26 @@ public class GameFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!chatArea.getText().equals("")){
-					chatArea.setText(chatArea.getText() + writingArea.getText() + "\n");
-				} else{
-					chatArea.setText(writingArea.getText() + "\n");
+//				if (!chatArea.getText().equals("")){
+//					chatArea.setText(chatArea.getText() + writingArea.getText() + "\n");
+//				} else{
+//					chatArea.setText(writingArea.getText() + "\n");
+//				}
+				
+				if(!writingArea.getText().equals("")) {
+					NetworkMessage chatMessage = new NetworkMessage();
+					chatMessage.setMessageType(NetworkMessage.CHAT_MESSAGE);
+					chatMessage.setSender(game.getAlias());
+					chatMessage.setRecipient(NetworkMessage.BROADCAST);
+					chatMessage.setValue(writingArea.getText() + "\n");
+					try {
+						myChatOutput.writeObject(chatMessage);
+						myChatOutput.flush();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
+				
 				//Clear textarea
 				writingArea.setText("");
 			}
@@ -189,11 +231,11 @@ public class GameFrame extends JFrame{
 		
 		//Set icon
 		try{
-			BufferedImage bi = ImageIO.read(new File("images/bitcoin.jpg"));
+			BufferedImage bi = ImageIO.read(new File("./images/bitcoin.jpg"));
 			Image scaled = bi.getScaledInstance(Constants.bitcoinButtonSize, Constants.bitcoinButtonSize, Image.SCALE_SMOOTH);
 			normalCoin = new ImageIcon(scaled);
 			
-			bi = ImageIO.read(new File("images/bitcoin_inverted.jpg"));
+			bi = ImageIO.read(new File("./images/bitcoin_inverted.jpg"));
 			scaled = bi.getScaledInstance(Constants.bitcoinButtonSize, Constants.bitcoinButtonSize, Image.SCALE_SMOOTH);
 			invertedCoin = new ImageIcon(scaled);
 			
@@ -309,10 +351,6 @@ public class GameFrame extends JFrame{
 		return buttonList;
 	}
 	
-	public static void main(String[] args){
-		new GameFrame();
-	}
-	
 	// Getters and setters
 	
 	public JLabel getMoneyLabel(){
@@ -350,5 +388,28 @@ public class GameFrame extends JFrame{
 			}
 		}
 	}
+
+	//For closing the 
+	public void closeSockets() {
+		try {
+			myGameplayOutput.close();
+			myChatOutput.close();
+		} catch(SocketException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+
+	public void displayMessage(NetworkMessage m) {
+		if(m.getMessageType().equals(NetworkMessage.CHAT_MESSAGE)) {
+			chatArea.append(m.getSender() + ": ");
+			chatArea.append((String)m.getValue() + "\n");
+		}
+	}
 	
+	
+	public static void main(String[] args) {
+		//new GameFrame();
+	}
 }
