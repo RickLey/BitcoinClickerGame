@@ -6,8 +6,8 @@ public class Encryption extends DefenseItem implements IOHandler {
 	private final static int COOLDOWN = Constants.encryptionCooldown;
 	private long timeLeft;
 	
-	public Encryption() {
-		super(COST, COOLDOWN);
+	public Encryption(Player target) {
+		super(target, COST, COOLDOWN);
 		this.name = "Encryption";
 		this.joke = Constants.encryptionJoke;
 		this.description = Constants.encryptionDescription;
@@ -27,12 +27,12 @@ public class Encryption extends DefenseItem implements IOHandler {
 	}
 
 	@Override
-	public void handleIncomingItem(Item item) {
+	public void handleIncomingNetworkMessage(NetworkMessage incoming) {
 		
 	}
 
 	@Override
-	public void handleOutgoingItem(Item item) {
+	public void handleOutgoingItem(NetworkMessage outgoing) {
 		
 	}
 

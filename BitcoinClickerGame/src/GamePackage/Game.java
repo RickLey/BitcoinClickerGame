@@ -107,6 +107,8 @@ public class Game extends Thread {
 	{
 		return gameFrame.getButtons();
 	}
+	
+	
 		
 	//display request for alias, initialize sockets here… see Networking
 	public static void main(String[] args)
