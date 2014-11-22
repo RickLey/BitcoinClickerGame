@@ -99,7 +99,8 @@ public class ClientTest {
 	}
 	
 	public static void main(String [] args) {
-		new ClientTest(args[0]);
+//		new ClientTest(args[0]);
+		new ClientTest("Dylan");
 	}
 
 	public void displayMessage(NetworkMessage m) {
