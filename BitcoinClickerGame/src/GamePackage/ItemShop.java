@@ -117,12 +117,12 @@ class ShopPanel extends JPanel{
 		
 		gbc.gridy = 2;
 		gbc.gridx = 0;
-		newButton = new DefenseButton(new Firewall(player), player, mainFrame);
+		newButton = new DefenseButton(new Firewall(), player, mainFrame);
 		defensePanel.add(newButton, gbc);
 		
 		gbc.gridy = 2;
 		gbc.gridx = 2;
-		newButton = new DefenseButton(new HealthPack(player), player, mainFrame);
+		newButton = new DefenseButton(new HealthPack(), player, mainFrame);
 		defensePanel.add(newButton, gbc);
 		
 		add(titleLabel);

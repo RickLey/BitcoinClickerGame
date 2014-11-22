@@ -15,11 +15,13 @@ public class Firewall extends DefenseItem implements IOHandler {
 	}
 
 	@Override
-	public void handleIncomingItem(Item item) {
-		if(item instanceof AttackItem) {
-			hitsRemaining--;
+	public void handleIncomingMessage(Game game, NetworkMessage nm) {
+		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)) {
+			if(((Item) nm.getValue()) instanceof AttackItem) {
+				hitsRemaining--;
+			}
 		} else {
-			target.startItem(item);
+			game.getLocalPlayer().receiveMessage(nm);
 		}
 		if(hitsRemaining <= 0) {
 			target.setHandler(new NullHandler());
@@ -27,8 +29,8 @@ public class Firewall extends DefenseItem implements IOHandler {
 	}
 
 	@Override
-	public void handleOutgoingItem(Item item) {
-
+	public void handleOutgoingMessage(Game game, NetworkMessage nm) {
+		game.sendMessage(nm);
 	}
 
 	@Override

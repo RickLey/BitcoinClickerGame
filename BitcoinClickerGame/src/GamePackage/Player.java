@@ -36,6 +36,10 @@ public class Player extends Thread {
 		return health;
 	}
 	
+	public IOHandler getHandler() {
+		return threadHandler;
+	}
+	
 	public void setHandler(IOHandler replacement) {
 		threadHandler = replacement;
 	}
@@ -60,7 +64,7 @@ public class Player extends Thread {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
 		}
-		if(moneyRecipient.equals(this)) {
+		if(moneyRecipient.equals(this)) {	//TODO: moneyRecipient is a string, not a player object, need to account for this
 			coins += amount;
 		} else {
 			//TODO: send information via stream to other player so that they get money.
@@ -71,7 +75,13 @@ public class Player extends Thread {
 		if(amount < 0) {
 			throw new RuntimeException("deductHealth(): amount " + amount + " is negative.");
 		}
-		health -= amount;
+		if(amount > health) {
+			health = 0;
+		}
+		else {
+			health -= amount;
+
+		}
 	}
 	
 	public synchronized void addHealth(double amount) { 
@@ -86,6 +96,12 @@ public class Player extends Thread {
 			throw new RuntimeException("deductMoney(): amount " + amount + " is negative.");
 		}
 		coins-=amount;
+	}
+	
+	public void receiveMessage(NetworkMessage nm) {
+		/**
+		 * TODO: Logic for decoding network message.
+		 */
 	}
 	
 	public void startItem(Item item) {
