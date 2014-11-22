@@ -16,15 +16,12 @@ public class Encryption extends DefenseItem implements IOHandler {
 	public void run() {
 		target.setHandler(this);
 		
-		long startTime = System.currentTimeMillis();
-		
-		long endTime = startTime + timeLeft * 1000;
-		
-		while(System.currentTimeMillis() < endTime){
-			
+		//The thread that accesses the handleMessage methods aren't going to be on this thread that is running
+		try {
+			Thread.sleep(duration * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		
-		target.setHandler(new NullHandler());
 	}
 
 	@Override

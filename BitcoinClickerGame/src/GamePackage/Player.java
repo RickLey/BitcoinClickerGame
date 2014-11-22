@@ -64,7 +64,7 @@ public class Player extends Thread {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
 		}
-		if(moneyRecipient.equals(this)) {
+		if(moneyRecipient.equals(this)) {	//TODO: moneyRecipient is a string, not a player object, need to account for this
 			coins += amount;
 		} else {
 			//TODO: send information via stream to other player so that they get money.
