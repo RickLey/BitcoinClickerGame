@@ -208,8 +208,7 @@ class ShopPanel extends JPanel{
 					} else{
 						player.deductMoney(cost);
 						mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
-						Thread cooldown = new CooldownThread(button);
-						cooldown.start();
+						new Thread(new CooldownThread(button)).start();
 					}
 				}
 			});

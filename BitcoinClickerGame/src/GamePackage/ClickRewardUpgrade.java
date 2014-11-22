@@ -12,7 +12,7 @@ public class ClickRewardUpgrade extends Item {
 	
 	public void run()
 	{
-		//TODO: figure out how we will increase player click reward and by how much
+		target.upgradeClicker();
 	}
 
 }

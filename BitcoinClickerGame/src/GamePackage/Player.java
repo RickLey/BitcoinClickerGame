@@ -47,6 +47,10 @@ public class Player extends Thread {
 		return coins;
 	}
 	
+	public void upgradeClicker() {
+		multiplier += 1;
+	}
+	
 	public synchronized void receiveMoney(double amount) {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
@@ -56,17 +60,6 @@ public class Player extends Thread {
 		} else {
 			//TODO: send information via stream to other player so that they get money.
 		}
-	}
-	
-	public synchronized void receiveHealth(int amount) {
-		if(amount < 0) {
-			throw new RuntimeException("receiveHealth(): amount " + amount + " is negative.");
-		}
-		health += amount;
-	}
-
-	public void deductMoney(double amount) {
-		coins -= amount;
 	}
 	
 	public synchronized void deductHealth(double amount) {
@@ -83,11 +76,11 @@ public class Player extends Thread {
 		health += amount;
 	}
 
-	public synchronized void loseMoney(double amount) {
+	public synchronized void deductMoney(double amount) {
 		if(amount < 0) {
-			throw new RuntimeException("loseMoney(): amount " + amount + " is negative.");
+			throw new RuntimeException("deductMoney(): amount " + amount + " is negative.");
 		}
-		deductMoney(amount);
+		coins+=amount;
 	}
 	
 	public void startItem(Item item) {
@@ -95,6 +88,7 @@ public class Player extends Thread {
 			activeItems.add(item);
 		}
 		item.run();
+		System.out.println(health);
 	}
 	
 	private void purchaseItem(Item item) {
