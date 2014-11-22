@@ -40,7 +40,7 @@ public class Player extends Thread {
 		return threadHandler;
 	}
 	
-	public void setHandler(IOHandler replacement) {
+	public synchronized void setHandler(IOHandler replacement) {
 		threadHandler = replacement;
 	}
 	
@@ -56,7 +56,7 @@ public class Player extends Thread {
 		return coins;
 	}
 	
-	public void upgradeClicker() {
+	public synchronized void upgradeClicker() {
 		multiplier += 1;
 	}
 	
@@ -101,6 +101,7 @@ public class Player extends Thread {
 	public void receiveMessage(NetworkMessage nm) {
 		/**
 		 * TODO: Logic for decoding network message.
+		 * when receiving a message, if it's an update or chat, check that it's not from yourself before updating anything
 		 */
 	}
 	
@@ -108,9 +109,10 @@ public class Player extends Thread {
 		item.setPlayer(this);
 		item.run();
 		if(item instanceof Virus || item instanceof Leech) {
-			activeItems.add(item);
+			synchronized(this) {
+				activeItems.add(item);
+			}
 		}
-		System.out.println(health);
 	}
 	
 	private void purchaseItem(Item item) {
