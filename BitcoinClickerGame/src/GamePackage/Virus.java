@@ -25,11 +25,9 @@ public class Virus extends AttackItem {
 				e.printStackTrace();
 			}
 		}
-
 	}
 	
 	public void die() {
 		running = false;
 	}
-
 }
