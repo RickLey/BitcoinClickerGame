@@ -28,7 +28,6 @@ public class Firewall extends DefenseItem implements IOHandler {
 
 	@Override
 	public void handleOutgoingItem(Item item) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -36,5 +35,4 @@ public class Firewall extends DefenseItem implements IOHandler {
 	public void run() {
 		target.setHandler(this);
 	}
-
 }

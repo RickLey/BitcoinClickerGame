@@ -11,7 +11,6 @@ public class HealthPack extends DefenseItem {
 		this.description = Constants.healthPackDescription;
 		this.joke = Constants.healthPackJoke;
 		this.name = "Health Pack";
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

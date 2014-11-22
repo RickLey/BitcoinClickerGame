@@ -24,9 +24,6 @@ public abstract class Item extends Thread implements Serializable {
 		return (long) cooldown;
 	}
 
-//	private Animation animation
-
-
 	public double getCost() {
 		return cost;
 	}
@@ -43,7 +40,6 @@ public abstract class Item extends Thread implements Serializable {
 		try {
 			Thread.sleep(1000 * durationInSeconds);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

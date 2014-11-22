@@ -11,7 +11,6 @@ public class Encryption extends DefenseItem implements IOHandler {
 		this.name = "Encryption";
 		this.joke = Constants.encryptionJoke;
 		this.description = Constants.encryptionDescription;
-		// TODO Auto-generated constructor stub
 	}
 
 	void handleOutgoingItem() {
@@ -29,13 +28,11 @@ public class Encryption extends DefenseItem implements IOHandler {
 
 	@Override
 	public void handleIncomingItem(Item item) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void handleOutgoingItem(Item item) {
-		// TODO Auto-generated method stub
 		
 	}
 

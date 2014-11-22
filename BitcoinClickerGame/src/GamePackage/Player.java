@@ -104,8 +104,6 @@ public class Player extends Thread {
 		String buildString = "";
 		
 		return coinString.substring(0, coinString.indexOf('.')+2);
-		
-//		return "Error in getCoinString()";
 	}
 	
 	public void incrementFromButtonClick() {

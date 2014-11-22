@@ -118,7 +118,4 @@ public class Game extends Thread {
 	{
 		Game bitcoinGame = new Game(new GameFrame());
 	}
-
-	
-	
 }
