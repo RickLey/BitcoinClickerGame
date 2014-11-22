@@ -4,19 +4,21 @@ public class Leech extends AttackItem {
 	
 	private static final int COST = Constants.leechCost;
 	private static final int COOLDOWN = Constants.leechCooldown;
-	private Player sender;
+	private static final int DURATION = Constants.leechDuration;
+	private String senderAlias;
 	
-	public Leech(Player target, Player sender) {
-		super(target, COST, COOLDOWN);
+	public Leech(String senderAlias) {
+		super(COST, COOLDOWN);
 		this.joke = Constants.leechJoke;
 		this.description = Constants.leechDescription;
 		this.name = "Leech";
-		this.duration = 10;
+		this.duration = DURATION;
+		this.senderAlias = senderAlias;
 	}
 
 	@Override
 	public void run() {
-		target.setMoneyRecipient(sender);
+		target.setMoneyRecipient(senderAlias);
 		try {
 			Thread.sleep(duration * 1000);
 		} catch (InterruptedException e) {
@@ -24,5 +26,4 @@ public class Leech extends AttackItem {
 		}
 		target.setMoneyRecipient(target);
 	}
-
 }

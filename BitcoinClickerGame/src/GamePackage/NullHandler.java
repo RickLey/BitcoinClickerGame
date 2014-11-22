@@ -3,6 +3,7 @@ package GamePackage;
 public class NullHandler implements IOHandler {
 
 	@Override
+
 	public void handleIncomingNetworkMessage(NetworkMessage incoming) {
 	
 	}

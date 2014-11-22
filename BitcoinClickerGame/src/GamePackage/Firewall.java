@@ -6,8 +6,8 @@ public class Firewall extends DefenseItem implements IOHandler {
 	private final static int COST = Constants.firewallCost;
 	private final static int COOLDOWN = Constants.firewallCooldown;
 	
-	public Firewall(Player target) {
-		super(target, COST, COOLDOWN);
+	public Firewall() {
+		super(COST, COOLDOWN);
 		this.name = "Firewall";
 		this.joke = Constants.firewallJoke;
 		this.description = Constants.firewallDescription;

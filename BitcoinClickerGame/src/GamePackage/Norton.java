@@ -7,8 +7,8 @@ public class Norton extends DefenseItem {
 	private final static int COST = Constants.nortonCost;
 	private final static int COOLDOWN = Constants.nortonCooldown;
 	
-	public Norton(Player target) {
-		super(target, COST, COOLDOWN);
+	public Norton() {
+		super(COST, COOLDOWN);
 		this.name = "Norton";
 		this.description = Constants.nortonDescription;
 		this.joke = Constants.nortonJoke;

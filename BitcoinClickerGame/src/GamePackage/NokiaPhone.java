@@ -6,8 +6,8 @@ public class NokiaPhone extends AttackItem {
 	private final static int COST = Constants.nokiaCost;
 	private final static int COOLDOWN = Constants.nokiaCooldown;;
 	
-	public NokiaPhone(Player target) {
-		super(target, COST, COOLDOWN);
+	public NokiaPhone() {
+		super(COST, COOLDOWN);
 		this.joke = Constants.nokiaJoke;
 		this.description = Constants.nokiaDescription;
 		this.name = "Nokia Phone";

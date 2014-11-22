@@ -2,8 +2,8 @@ package GamePackage;
 
 public abstract class AttackItem extends Item {
 	
-	public AttackItem(Player target, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	public AttackItem(double cost, double cooldown) {
+		super(cost, cooldown);
 	}
 
 	@Override

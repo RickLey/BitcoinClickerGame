@@ -261,7 +261,7 @@ public class GameFrame extends JFrame{
 		
 		//Now add in clicker upgrade button
 		mainConstraints.gridy = 2;
-		JButton newButton = new DefenseButton(new ClickRewardUpgrade(player), player, this);
+		JButton newButton = new DefenseButton(new ClickRewardUpgrade(), player, this);
 		bitcoinPanel.add(newButton, mainConstraints);
 		
 	}

@@ -2,8 +2,8 @@ package GamePackage;
 
 public abstract class DefenseItem extends Item {
 
-	public DefenseItem(Player target, double cost, double cooldown) {
-		super(target, cost, cooldown);
+	public DefenseItem(double cost, double cooldown) {
+		super(cost, cooldown);
 		// TODO Auto-generated constructor stub
 	}
 

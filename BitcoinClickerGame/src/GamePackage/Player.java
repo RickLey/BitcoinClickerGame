@@ -17,17 +17,18 @@ public class Player extends Thread {
 	private ArrayList<Item> activeItems;
 	private IOHandler threadHandler;
 	private Item currentSelectedItem;
-	private Player moneyRecipient;
+	private String moneyRecipient;		//As a string of their alias
+	private String alias;
 	private Game container;
 	
-	public Player(Game container) {
+	public Player(String alias, Game container) {
 		this.container = container;
 		health = 100;
 		alive = true;
 		coins = 0;
 		combo = 0;
 		multiplier = 1;
-		moneyRecipient = this;
+		moneyRecipient = alias;
 		threadHandler = new NullHandler();
 	}
 	
@@ -39,8 +40,8 @@ public class Player extends Thread {
 		threadHandler = replacement;
 	}
 	
-	public synchronized void setMoneyRecipient(Player player) {
-		moneyRecipient = player;
+	public synchronized void setMoneyRecipient(String stringAlias) {
+		moneyRecipient = stringAlias;
 	}
 	
 	public ArrayList<Item> getActiveItems() {
@@ -88,10 +89,11 @@ public class Player extends Thread {
 	}
 	
 	public void startItem(Item item) {
+		item.setPlayer(this);
+		item.run();
 		if(item instanceof Virus || item instanceof Leech) {
 			activeItems.add(item);
 		}
-		item.run();
 		System.out.println(health);
 	}
 	
@@ -118,6 +120,10 @@ public class Player extends Thread {
 
 	public List<JButton> getButtons() { 
 		return Collections.synchronizedList(container.getButtons());
+	}
+
+	public String getAlias() {
+		return alias;
 	}
 
 }

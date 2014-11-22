@@ -7,8 +7,8 @@ public class Virus extends AttackItem {
 	private final static int DPS = 1;
 	private boolean running;
 
-	public Virus(Player target) {
-		super(target, COST, COOLDOWN);
+	public Virus() {
+		super(COST, COOLDOWN);
 		this.name = "Virus";
 		this.description = Constants.virusDescription;
 		this.joke = Constants.virusJoke;
