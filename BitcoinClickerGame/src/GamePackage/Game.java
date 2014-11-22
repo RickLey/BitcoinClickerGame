@@ -86,11 +86,6 @@ public class Game extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
-	public void parseItemXML()
-	{
-		
-	}
 
 	public void initializeGame()
 	{
