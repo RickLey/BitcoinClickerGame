@@ -3,7 +3,7 @@ package GamePackage;
 import java.io.Serializable;
 
 public abstract class Item extends Thread implements Serializable {
-	protected double duration; //set to zero if instantaneous action
+	protected int duration; //set to zero if instantaneous action
 	protected double cost;
 	protected double cooldown;
 	protected String name;
