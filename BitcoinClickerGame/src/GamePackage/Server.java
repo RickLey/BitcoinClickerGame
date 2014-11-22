@@ -60,7 +60,6 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
-			System.out.println("After 4 sockets");
 			
 			//send message to connect chat sockets
 			NetworkMessage connectChatSocketsMessage = new NetworkMessage();
@@ -69,7 +68,6 @@ public class Server {
 			
 			sendGameplayMessageToAll(connectChatSocketsMessage);
 			
-			System.out.println("Send message to connect chat sockets");
 			
 			//connect chat sockets and create chat threads
 			for(int i=0; i<4; i++){
@@ -83,7 +81,6 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
-			System.out.println("Got chat sockets");
 			//Send list of all players to all players
 			NetworkMessage distributeAliases = new NetworkMessage();
 			distributeAliases.setSender(NetworkMessage.SERVER_ALIAS);
@@ -106,8 +103,6 @@ public class Server {
 			}
 			
 			//TODO everything disabled until receives start message
-			
-			System.out.println("GUI's loaded");
 			
 			//start threads
 			for(int i=0; i<4; i++){

@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -33,8 +35,10 @@ public class Game extends Thread {
 	private ReadChatMessageThread chatThread;
 	
 	//TODO These will need to change as we get closer to finishing
-	private String name = "A";
+	private String name;
 	private String hostname = "localhost";
+	
+	private HashSet<String> allPlayers;
 	
 	public Game(String alias)
 	{		
@@ -51,8 +55,9 @@ public class Game extends Thread {
 			aliasMessage.setSender(name);
 			gameplayOOS.writeObject(aliasMessage);
 			gameplayOOS.flush();
-						
-			NetworkMessage received = (NetworkMessage) gameplayOIS.readObject();
+			
+			//read message to send chat socket
+			gameplayOIS.readObject();
 			
 			//Chat socket set up and initialization
 			chatSocket = new Socket(hostname, 20000);
@@ -65,15 +70,18 @@ public class Game extends Thread {
 			chatOOS.writeObject(aliasMessage2);
 			chatOOS.flush();
 						
+			//this receives the list of all players
+			//TODO: store the aliases somewhere
 			NetworkMessage received2 = (NetworkMessage) gameplayOIS.readObject();
+			allPlayers = new HashSet<String>(Arrays.asList((String[])received2.getValue()));
 			
 			//Receive the draw GUI message
-			NetworkMessage received3 = (NetworkMessage) gameplayOIS.readObject();
+			gameplayOIS.readObject();
 			
 			gameplayOOS.writeObject(new NetworkMessage());
 			
 			//Receive the start game message
-			NetworkMessage received4 = (NetworkMessage) gameplayOIS.readObject();
+			gameplayOIS.readObject();
 			
 			//Create the GUI, gameplay, and chat threads for client
 			new GUIThread(this, gameplayOOS, chatOOS).start();
@@ -125,9 +133,11 @@ public class Game extends Thread {
 	}
 	
 	public void sendMessage(NetworkMessage nm) {
-		/**
-		 * TODO: Use appropriate socket to send message.
-		 */
+		try {
+			gameplayOOS.writeObject(nm);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void startGame()
@@ -144,9 +154,6 @@ public class Game extends Thread {
 	{
 		return gameFrame.getButtons();
 	}
-	
-	
-		
 	
 	public static void main(String[] args)
 	{

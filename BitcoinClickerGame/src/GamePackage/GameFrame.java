@@ -130,11 +130,7 @@ public class GameFrame extends JFrame{
 		writingArea.addKeyListener(new KeyAdapter(){
 			public void keyReleased(KeyEvent e){
 				if (e.getKeyCode() == KeyEvent.VK_ENTER){
-//					if (!chatArea.getText().equals("")){
-//						chatArea.setText(chatArea.getText() + writingArea.getText());
-//					} else{
-//						chatArea.setText(writingArea.getText());
-//					}
+
 					
 					if(!writingArea.getText().equals("")) {
 						NetworkMessage chatMessage = new NetworkMessage();
@@ -143,7 +139,6 @@ public class GameFrame extends JFrame{
 						chatMessage.setRecipient(NetworkMessage.BROADCAST);
 						chatMessage.setValue(writingArea.getText());
 						try {
-							//TODO: send through IO handlers
 							myChatOutput.writeObject(chatMessage);
 							myChatOutput.flush();
 						} catch (IOException e1) {
@@ -165,11 +160,6 @@ public class GameFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				if (!chatArea.getText().equals("")){
-//					chatArea.setText(chatArea.getText() + writingArea.getText() + "\n");
-//				} else{
-//					chatArea.setText(writingArea.getText() + "\n");
-//				}
 				
 				if(!writingArea.getText().equals("")) {
 					NetworkMessage chatMessage = new NetworkMessage();
@@ -177,8 +167,12 @@ public class GameFrame extends JFrame{
 					chatMessage.setSender(game.getAlias());
 					chatMessage.setRecipient(NetworkMessage.BROADCAST);
 					chatMessage.setValue(writingArea.getText() + "\n");
-					game.getLocalPlayer().getHandler().handleOutgoingMessage(game, chatMessage);
-					
+					try {
+						myChatOutput.writeObject(chatMessage);
+						myChatOutput.flush();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 				
 				//Clear textarea

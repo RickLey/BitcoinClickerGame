@@ -2,9 +2,11 @@ package GamePackage;
 
 public abstract class DefenseItem extends Item {
 
+	
+	private static final long serialVersionUID = -1159106535550303018L;
+
 	public DefenseItem(double cost, double cooldown) {
 		super(cost, cooldown);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

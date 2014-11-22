@@ -2,12 +2,13 @@ package GamePackage;
 
 public class Encryption extends DefenseItem implements IOHandler {
 
+	private static final long serialVersionUID = -1545625439002668624L;
 	private final static int COST = Constants.encryptionCost;
 	private final static int COOLDOWN = Constants.encryptionCooldown;
-	private long timeLeft;
+
 	
-	public Encryption(Player target) {
-		super(target, COST, COOLDOWN);
+	public Encryption() {
+		super(COST, COOLDOWN);
 		this.name = "Encryption";
 		this.joke = Constants.encryptionJoke;
 		this.description = Constants.encryptionDescription;
