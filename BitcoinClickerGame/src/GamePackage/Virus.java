@@ -12,7 +12,6 @@ public class Virus extends AttackItem {
 		this.name = "Virus";
 		this.description = Constants.virusDescription;
 		this.joke = Constants.virusJoke;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -23,7 +22,6 @@ public class Virus extends AttackItem {
 				target.deductHealth(DPS);
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
