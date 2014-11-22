@@ -4,6 +4,7 @@ public class Leech extends AttackItem {
 	
 	private static final int COST = Constants.leechCost;
 	private static final int COOLDOWN = Constants.leechCooldown;
+	private static final int DURATION = Constants.leechDuration;
 	private Player sender;
 	
 	public Leech(Player target, Player sender) {
@@ -11,7 +12,7 @@ public class Leech extends AttackItem {
 		this.joke = Constants.leechJoke;
 		this.description = Constants.leechDescription;
 		this.name = "Leech";
-		this.duration = 10;
+		this.duration = DURATION;
 	}
 
 	@Override
@@ -23,7 +24,5 @@ public class Leech extends AttackItem {
 			e.printStackTrace();
 		}
 		target.setMoneyRecipient(target);
-
 	}
-
 }
