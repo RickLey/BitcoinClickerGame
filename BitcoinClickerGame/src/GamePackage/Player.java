@@ -104,6 +104,7 @@ public class Player {
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			Item item = (Item)nm.getValue();
 			startItem(item);
+			//TODO: call graphics stuff, too
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 			if(nm.getSender().equals(alias)){

@@ -33,7 +33,7 @@ public class Game extends Thread {
 	private ObjectInputStream chatOIS;
 	private ObjectOutputStream chatOOS;
 	private ReadChatMessageThread chatThread;
-	private sendPlayerUpdatesThread updateThread;
+	private SendPlayerUpdatesThread updateThread;
 	
 	//TODO These will need to change as we get closer to finishing
 	private String name;
@@ -92,7 +92,7 @@ public class Game extends Thread {
 			new ReadGameplayMessageThread(this, gameplayOIS).start();
 			chatThread = new ReadChatMessageThread(this, chatOIS);
 			chatThread.start();
-			updateThread = new sendPlayerUpdatesThread(this, gameplayOOS);
+			updateThread = new SendPlayerUpdatesThread(this, gameplayOOS);
 			
 		} catch (UnknownHostException e) {
 			System.out.println("UHE");
@@ -126,6 +126,8 @@ public class Game extends Thread {
 		chatThread.endGame();
 		updateThread.interrupt();
 		updateThread.endGame();
+		
+		//TODO: Calls to post game gui and stats
 	}
 	
 //Not sure about all methods below this comment
@@ -141,20 +143,12 @@ public class Game extends Thread {
 	
 	public void sendGameplayMessage(NetworkMessage nm) {
 		try {
-			gameplayOOS.writeObject(nm);
+			synchronized(gameplayOOS){
+				gameplayOOS.writeObject(nm);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public void startGame()
-	{
-		
-	}
-	
-	public void endGame()
-	{
-		
 	}
 	
 	public List<JButton> getButtons()
@@ -197,11 +191,13 @@ class ReadGameplayMessageThread extends Thread {
 		while(!Thread.interrupted()){
 			try {
 				NetworkMessage received = (NetworkMessage)myGameplayInput.readObject();
-				myGame.displayMessage(received);
 				if(received.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)){
 					this.interrupt();
 					myGameplayInput.close();
 					myGame.shutDown();
+				}
+				else{
+					myGame.getLocalPlayer().getHandler().handleIncomingMessage(myGame, received);
 				}
 			} catch(SocketException e){
 			}
@@ -247,11 +243,11 @@ class ReadChatMessageThread extends Thread {
 	}
 }
 
-class sendPlayerUpdatesThread extends Thread{
+class SendPlayerUpdatesThread extends Thread{
 	Game myGame;
 	ObjectOutputStream gameplayOOS;
 	
-	public sendPlayerUpdatesThread(Game g, ObjectOutputStream oos){
+	public SendPlayerUpdatesThread(Game g, ObjectOutputStream oos){
 		myGame = g;
 		gameplayOOS = oos;
 	}
@@ -276,9 +272,13 @@ class sendPlayerUpdatesThread extends Thread{
 					e.printStackTrace();
 				}
 			}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
-	//Be sure to synchronize on the stream object
 }
 
 

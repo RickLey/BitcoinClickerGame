@@ -393,7 +393,7 @@ public class GameFrame extends JFrame{
 		}	
 	}
 
-	public void displayMessage(NetworkMessage m) {
+	public synchronized void displayMessage(NetworkMessage m) {
 		if(m.getMessageType().equals(NetworkMessage.CHAT_MESSAGE)) {
 			chatArea.append(m.getSender() + ": ");
 			chatArea.append((String)m.getValue() + "\n");
