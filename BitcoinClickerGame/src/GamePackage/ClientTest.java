@@ -117,7 +117,7 @@ public class ClientTest {
 		chatThread.interrupt();
 		chatThread.endGame();
 	}
-}
+//}
 
 class GUIThread extends Thread{
 	
@@ -208,4 +208,6 @@ class readChatMessageThread extends Thread{
 		}
 	}
 	
+}
+
 }
