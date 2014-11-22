@@ -33,6 +33,7 @@ public class Game extends Thread {
 	private ObjectInputStream chatOIS;
 	private ObjectOutputStream chatOOS;
 	private ReadChatMessageThread chatThread;
+	private sendPlayerUpdatesThread updateThread;
 	
 	//TODO These will need to change as we get closer to finishing
 	private String name;
@@ -85,9 +86,13 @@ public class Game extends Thread {
 			
 			//Create the GUI, gameplay, and chat threads for client
 			new GUIThread(this, gameplayOOS, chatOOS).start();
+			
+			//don't need a reference to the gameplay message thread because
+			//it shuts itself down
 			new ReadGameplayMessageThread(this, gameplayOIS).start();
 			chatThread = new ReadChatMessageThread(this, chatOIS);
 			chatThread.start();
+			updateThread = new sendPlayerUpdatesThread(this, gameplayOOS);
 			
 		} catch (UnknownHostException e) {
 			System.out.println("UHE");
@@ -119,6 +124,8 @@ public class Game extends Thread {
 		gameFrame.closeSockets();
 		chatThread.interrupt();
 		chatThread.endGame();
+		updateThread.interrupt();
+		updateThread.endGame();
 	}
 	
 //Not sure about all methods below this comment
@@ -132,7 +139,7 @@ public class Game extends Thread {
 		return localPlayer;
 	}
 	
-	public void sendMessage(NetworkMessage nm) {
+	public void sendGameplayMessage(NetworkMessage nm) {
 		try {
 			gameplayOOS.writeObject(nm);
 		} catch (IOException e) {
@@ -142,12 +149,12 @@ public class Game extends Thread {
 	
 	public void startGame()
 	{
-		localPlayer.start();
+		
 	}
 	
 	public void endGame()
 	{
-		localPlayer.interrupt();
+		
 	}
 	
 	public List<JButton> getButtons()
@@ -190,18 +197,13 @@ class ReadGameplayMessageThread extends Thread {
 		while(!Thread.interrupted()){
 			try {
 				NetworkMessage received = (NetworkMessage)myGameplayInput.readObject();
-				System.out.println("Read message");
 				myGame.displayMessage(received);
 				if(received.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)){
 					this.interrupt();
 					myGameplayInput.close();
 					myGame.shutDown();
 				}
-				if(received.getMessageType().equals(NetworkMessage.CHAT_MESSAGE)){
-					System.out.println("Received chat on gameplay thread");
-				}
 			} catch(SocketException e){
-				System.out.println("Closed gameplay input");
 			}
 			catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
@@ -231,7 +233,6 @@ class ReadChatMessageThread extends Thread {
 		while(!Thread.interrupted()){
 			try {
 				NetworkMessage received = (NetworkMessage)myChatInput.readObject();
-				System.out.println("Read message");
 				myGame.displayMessage(received);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -239,13 +240,45 @@ class ReadChatMessageThread extends Thread {
 			} catch(SocketException e){
 				break;
 			} catch (IOException e) {
-
 				e.printStackTrace();
 				break;
-
 			}
 		}
 	}
+}
+
+class sendPlayerUpdatesThread extends Thread{
+	Game myGame;
+	ObjectOutputStream gameplayOOS;
+	
+	public sendPlayerUpdatesThread(Game g, ObjectOutputStream oos){
+		myGame = g;
+		gameplayOOS = oos;
+	}
+	
+	public void endGame(){
+		try {
+			gameplayOOS.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void run(){
+		while(!Thread.interrupted()){
+			TruncatedPlayer update = new TruncatedPlayer(myGame.getLocalPlayer().getCoins(),
+														myGame.getLocalPlayer().getHealth());
+			synchronized(gameplayOOS){
+				try {
+					gameplayOOS.writeObject(update);
+				} catch(SocketException e){
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	//Be sure to synchronize on the stream object
 }
 
 

@@ -24,7 +24,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 				hitsRemaining--;
 			}
 		} else {
-			game.getLocalPlayer().receiveMessage(nm);
+			game.getLocalPlayer().receiveGameplayMessage(nm);
 		}
 		if(hitsRemaining <= 0) {
 			target.setHandler(new NullHandler());
@@ -33,7 +33,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 
 	@Override
 	public void handleOutgoingMessage(Game game, NetworkMessage nm) {
-		game.sendMessage(nm);
+		game.sendGameplayMessage(nm);
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 
-public class Player extends Thread {
+public class Player {
 	private Store myStore;
 	private double coins;
 	private int health;			
@@ -98,7 +98,7 @@ public class Player extends Thread {
 		coins-=amount;
 	}
 	
-	public void receiveMessage(NetworkMessage nm) {
+	public void receiveGameplayMessage(NetworkMessage nm) {
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			Item item = (Item)nm.getValue();
 			startItem(item);

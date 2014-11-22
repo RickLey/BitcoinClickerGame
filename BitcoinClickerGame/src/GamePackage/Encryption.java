@@ -27,7 +27,7 @@ public class Encryption extends DefenseItem implements IOHandler {
 
 	@Override
 	public void handleIncomingMessage(Game game, NetworkMessage nm) {
-		game.getLocalPlayer().receiveMessage(nm);
+		game.getLocalPlayer().receiveGameplayMessage(nm);
 	}
 
 	@Override

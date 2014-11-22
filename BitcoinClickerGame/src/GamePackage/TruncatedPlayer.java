@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class TruncatedPlayer implements Serializable {
 	
 	private static final long serialVersionUID = -3482171270792167603L;
-	private int money;
+	private double money;
 	private int health;
 	
-	public int getMoney() {
+	public double getMoney() {
 		return money;
 	}
 
@@ -16,7 +16,7 @@ public class TruncatedPlayer implements Serializable {
 		return health;
 	}
 
-	public TruncatedPlayer(int m, int h){
+	public TruncatedPlayer(double m, int h){
 		money = m;
 		health = h;
 	}
