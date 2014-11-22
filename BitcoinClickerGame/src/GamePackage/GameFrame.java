@@ -52,6 +52,7 @@ public class GameFrame extends JFrame{
 	private ObjectOutputStream myGameplayOutput;
 	private ObjectOutputStream myChatOutput;
 	
+	
 	public GameFrame(Game g, ObjectOutputStream goos, ObjectOutputStream coos){
 		this.game = g;
 		this.myGameplayOutput = goos;
@@ -142,6 +143,7 @@ public class GameFrame extends JFrame{
 						chatMessage.setRecipient(NetworkMessage.BROADCAST);
 						chatMessage.setValue(writingArea.getText());
 						try {
+							//TODO: send through IO handlers
 							myChatOutput.writeObject(chatMessage);
 							myChatOutput.flush();
 						} catch (IOException e1) {
@@ -175,12 +177,8 @@ public class GameFrame extends JFrame{
 					chatMessage.setSender(game.getAlias());
 					chatMessage.setRecipient(NetworkMessage.BROADCAST);
 					chatMessage.setValue(writingArea.getText() + "\n");
-					try {
-						myChatOutput.writeObject(chatMessage);
-						myChatOutput.flush();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					game.getLocalPlayer().getHandler().handleOutgoingMessage(game, chatMessage);
+					
 				}
 				
 				//Clear textarea
