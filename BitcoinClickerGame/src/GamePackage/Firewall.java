@@ -15,7 +15,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 	}
 
 	@Override
-	public void handleIncomingItem(Item item) {
+	public void handleIncomingNetworkMessage(NetworkMessage incoming) {
 		if(item instanceof AttackItem) {
 			hitsRemaining--;
 		} else {
@@ -27,7 +27,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 	}
 
 	@Override
-	public void handleOutgoingItem(Item item) {
+	public void handleOutgoingItem(NetworkMessage outgoing) {
 
 	}
 

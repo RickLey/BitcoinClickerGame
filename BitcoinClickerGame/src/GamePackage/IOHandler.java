@@ -1,6 +1,6 @@
 package GamePackage;
 
 public interface IOHandler {
-	void handleIncomingItem(Item item);
-	void handleOutgoingItem(Item item);	
+	void handleIncomingNetworkMessage(NetworkMessage incoming);
+	void handleOutgoingItem(NetworkMessage outgoing);	
 }
