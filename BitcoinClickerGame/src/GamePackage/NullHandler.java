@@ -11,5 +11,4 @@ public class NullHandler implements IOHandler {
 	public void handleOutgoingItem(NetworkMessage outgoing) {
 		
 	}
-
 }

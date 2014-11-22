@@ -23,7 +23,6 @@ public class Leech extends AttackItem {
 			e.printStackTrace();
 		}
 		target.setMoneyRecipient(target);
-
 	}
 
 }
