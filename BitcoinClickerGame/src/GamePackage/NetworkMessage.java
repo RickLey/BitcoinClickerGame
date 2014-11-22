@@ -25,6 +25,7 @@ public class NetworkMessage implements Serializable{
 	private String messageType;
 	private String itemType;
 	private Object value;
+
 	
 	public NetworkMessage(){
 		
