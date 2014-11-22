@@ -84,7 +84,7 @@ public class Player extends Thread {
 		if(amount < 0) {
 			throw new RuntimeException("deductMoney(): amount " + amount + " is negative.");
 		}
-		coins+=amount;
+		coins-=amount;
 	}
 	
 	public void startItem(Item item) {
