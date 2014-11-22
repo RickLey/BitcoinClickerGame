@@ -29,11 +29,9 @@ class ShopPanel extends JPanel{
 	
 	private JLabel titleLabel = new JLabel("Bitcoin Shop", SwingConstants.CENTER);
 	
-//	private JPanel economyPanel = new JPanel();
 	private JPanel attackPanel = new JPanel();
 	private JPanel defensePanel = new JPanel();
 	
-//	private JLabel economyLabel = new JLabel("Economy");
 	private JLabel attackLabel = new JLabel("Attack");
 	private JLabel defenseLabel = new JLabel("Defense");
 	
@@ -54,46 +52,24 @@ class ShopPanel extends JPanel{
 		
 		
 		//Layouts
-//		economyPanel.setPreferredSize(new Dimension(210, 350));
-//		economyPanel.setBackground(Color.WHITE);
 		attackPanel.setPreferredSize(new Dimension(600, 175));
 		attackPanel.setBackground(Color.WHITE);
 		defensePanel.setPreferredSize(new Dimension(600, 175));
 		defensePanel.setBackground(Color.WHITE);
 		
-//		economyPanel.setLayout(new GridBagLayout());
 		attackPanel.setLayout(new GridBagLayout());
 		defensePanel.setLayout(new GridBagLayout());
 		
-//		economyLabel.setFont(Constants.getFont(18));
 		attackLabel.setFont(Constants.getFont(18));
 		defenseLabel.setFont(Constants.getFont(18));
 
-//		attackLabel.setPreferredSize(new Dimension(50, 20));
-		
 		JButton newButton;
-//		
+
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.ipady = 0;
 		gbc.gridy = 0;
-//
-//		//EconomyPanel
-//		gbc.gridy = 0;
-//		economyPanel.add(economyLabel);
-//		
-//		gbc.gridy = 1;
-//		newButton = new EconomyButton(new NokiaPhone(null), player);
-//		attackPanel.add(newButton, gbc);
-//		
-//		gbc.gridy = 2;
-//		newButton = new EconomyButton(new EMP(null), player);
-//		attackPanel.add(newButton, gbc);
-//		
-//		gbc.gridy = 3;
-//		newButton = new EconomyButton(new Virus(null), player);
-//		attackPanel.add(newButton, gbc);
-//		
+
 		//Attack Panel
 		
 		gbc.gridx = 1;
@@ -121,8 +97,8 @@ class ShopPanel extends JPanel{
 		gbc.gridx = 2;
 		newButton = new AttackButton(new Leech(null, null), player);
 		attackPanel.add(newButton, gbc);
-//
-//		//DefensePanel
+
+		//DefensePanel
 
 		gbc.gridx = 1;
 		gbc.gridy = 0;
@@ -143,13 +119,13 @@ class ShopPanel extends JPanel{
 		gbc.gridx = 0;
 		newButton = new DefenseButton(new Firewall(null), player);
 		defensePanel.add(newButton, gbc);
-//		
-//		gbc.gridy = 1;
-//		gbc.gridx = 0;
-//		newButton = new DefenseButton 
+		
+		gbc.gridy = 2;
+		gbc.gridx = 2;
+		newButton = new DefenseButton(new HealthPack(null), player);
+		defensePanel.add(newButton, gbc);
 		
 		add(titleLabel);
-//		add(economyPanel);
 		add(attackPanel);
 		add(defensePanel);
 	}
@@ -165,32 +141,31 @@ class ShopPanel extends JPanel{
 	
 	//Inner class
 	abstract class AbstractItemButton extends JButton {
-		private int cost = 10;
+		//Info
+		private int cost = 0;
 		private int cooldown;
 		private String description = "DESCRIPTION";
 		private String joke = "JOKE";
 		
-		private JToolTip mouseOverLabel = new JToolTip();
-		private JPanel glass;
-		
-		private Player player;
 		//Layout
 		Border raisedBorder = BorderFactory.createRaisedBevelBorder();
 		Border loweredBorder = BorderFactory.createLoweredBevelBorder();
 
 		//Backend
-		Item item;
-
+		private Item item;
+		private AbstractItemButton button;
+		private boolean isOnCooldown = false;
+		
 		public AbstractItemButton(Item item, Player player){
 			super(item.getItemName());
 			
 			this.item = item;
+			this.button = this;
 			this.description = item.description;
 			this.joke = item.joke;
 			this.cost = (int) item.getCost();
+			this.cooldown = (int) item.getCooldown();
 
-			this.player = player;
-			
 			this.setBorder(raisedBorder);
 			this.setOpaque(true);
 			this.setPreferredSize(new Dimension(250, 60));
@@ -202,14 +177,18 @@ class ShopPanel extends JPanel{
 
 				@Override
 				public void mousePressed(MouseEvent e) {
-					setBorder(loweredBorder);
-					repaint();
+					if (!isOnCooldown){
+						setBorder(loweredBorder);
+						repaint();
+					}
 				}
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					setBorder(raisedBorder);
-					repaint();
+					if (!isOnCooldown){
+						setBorder(raisedBorder);
+						repaint();
+					}
 				}
 
 				@Override
@@ -224,30 +203,36 @@ class ShopPanel extends JPanel{
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					System.out.println(player.getCoins());
-					if (player.getCoins() < cost || !isEnabled()){
+					if (player.getCoins() < cost || isOnCooldown){
 						//Display error message
 					} else{
 						player.deductMoney(cost);
 						mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
-						setEnabled(false);
-						Timer timer = new Timer();
-					    timer.schedule(new TimerTask() {
-					    	public void run()
-					    	{
-					    		setEnabled(true);
-					    	}
-					    }, item.getCooldown()*1000);
-						
+						Thread cooldown = new CooldownThread(button);
+						cooldown.start();
 					}
 				}
 			});
 			
 		}
 		
+		public void setIsOnCooldown(boolean b){
+			isOnCooldown = b;
+			repaint();
+		}
+		
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
-			g.setFont(Constants.getFont(12));
-			g.drawString("$"+cost, 200, 50);
+			
+			if(!isOnCooldown){
+				setForeground(Color.BLACK);
+				setText(item.getItemName());
+				g.setFont(Constants.getFont(12));
+				g.drawString("$"+cost, 200, 50);
+			} else{
+				//grey everything out
+				setForeground(Color.WHITE);
+			}
 
 		}
 		
@@ -256,6 +241,32 @@ class ShopPanel extends JPanel{
 			p.y += 15;
 			return p;
 		}
+		
+		class CooldownThread extends Thread{
+			private AbstractItemButton button;
+			public CooldownThread(AbstractItemButton button){
+				this.button = button;
+			}
+			public void run(){
+				int count = button.cooldown;
+				button.setIsOnCooldown(true);
+
+				System.out.println("Marker: " + count);
+				
+				try{
+					while (count != 0){
+						button.setText("" + count--);
+						sleep(1000);
+						button.repaint();
+					}
+				} catch(InterruptedException IE){
+					IE.printStackTrace();
+				}
+				
+				button.setIsOnCooldown(false);
+			}
+		}
+		
 	}
 	
 	class EconomyButton extends AbstractItemButton{

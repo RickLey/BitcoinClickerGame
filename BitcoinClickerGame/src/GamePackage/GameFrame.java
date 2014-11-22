@@ -232,8 +232,6 @@ public class GameFrame extends JFrame{
 		moneyLabel.setFont(Constants.getFont(24));
 		moneyLabel.setText("$" + player.getCoins());
 		
-
-		
 		coinGBC.gridx = 0;
 		coinGBC.gridy = 0;
 		bitcoinPanel.add(statusPanel, coinGBC);
