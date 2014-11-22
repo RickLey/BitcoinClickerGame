@@ -7,6 +7,7 @@ public class ClickRewardUpgrade extends Item {
 	
 	public ClickRewardUpgrade(Player target) {
 		super(target, COST, COOLDOWN);
+		name = "Upgrade Clicking Power!";
 		// TODO Auto-generated constructor stub
 	}
 	
