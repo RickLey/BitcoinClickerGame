@@ -34,6 +34,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 	@Override
 	public void handleOutgoingMessage(Game game, NetworkMessage nm) {
 		game.sendGameplayMessage(nm);
+
 	}
 
 	@Override
