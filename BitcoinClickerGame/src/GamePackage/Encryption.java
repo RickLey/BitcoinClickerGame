@@ -12,28 +12,31 @@ public class Encryption extends DefenseItem implements IOHandler {
 		this.joke = Constants.encryptionJoke;
 		this.description = Constants.encryptionDescription;
 	}
-
-	void handleOutgoingItem() {
-		//set the health and money fields to -1
-		
-	}
 	
 	public void run() {
 		target.setHandler(this);
 		
 		long startTime = System.currentTimeMillis();
-		//Clock object - get  current time in millis, add duration
-		//exist as long as current time in millis < new time
+		
+		long endTime = startTime + timeLeft * 1000;
+		
+		while(System.currentTimeMillis() < endTime){
+			
+		}
+		
+		target.setHandler(new NullHandler());
 	}
 
 	@Override
 	public void handleIncomingMessage(Game game, NetworkMessage nm) {
-		
+		game.getLocalPlayer().receiveMessage(nm);
 	}
 
 	@Override
 	public void handleOutgoingMessage(Game game, NetworkMessage nm) {
-		
+		if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)) {
+			nm.setValue(new TruncatedPlayer(-1,-1));	//-1 signals encryption to GUI displays
+		}
 	}
 
 
