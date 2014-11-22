@@ -170,6 +170,7 @@ public class GameFrame extends JFrame{
 	private ImageIcon 			invertedCoin;
 	private GridBagConstraints 	coinGBC			= new GridBagConstraints();
 	private JLabel				moneyLabel		= new JLabel();
+	private JPanel				coinCenterPanel	= new JPanel();
 	private JPanel				statusPanel		= new JPanel();
 		private JLabel			healthLabel		= new JLabel("Health");
 		private HealthPanel		healthPanel	;
@@ -181,6 +182,9 @@ public class GameFrame extends JFrame{
 		bitcoinPanel.setLayout(new GridBagLayout());
 		bitcoinPanel.setBackground(Color.WHITE);
 		bitcoinPanel.setBorder(new LineBorder(Color.BLACK, 1));
+		
+		coinCenterPanel.setLayout(new GridBagLayout());
+		coinCenterPanel.setBackground(Color.WHITE);
 		
 		//status panel
 		statusPanel.setLayout(new FlowLayout());
@@ -245,15 +249,22 @@ public class GameFrame extends JFrame{
 		
 		coinGBC.gridx = 0;
 		coinGBC.gridy = 0;
-		bitcoinPanel.add(statusPanel, coinGBC);
+		coinCenterPanel.add(statusPanel, coinGBC);
 		
 		coinGBC.gridx = 0;
 		coinGBC.gridy = 1;
-		bitcoinPanel.add(bitcoinButton, coinGBC);
+		coinCenterPanel.add(bitcoinButton, coinGBC);
 		
 		coinGBC.gridx = 0;
 		coinGBC.gridy = 2;
-		bitcoinPanel.add(moneyLabel, coinGBC);
+		coinCenterPanel.add(moneyLabel, coinGBC);
+		
+		GridBagConstraints mainConstraints = new GridBagConstraints();
+		mainConstraints.gridx = 0;
+		mainConstraints.gridy = 1;
+		bitcoinPanel.add(coinCenterPanel, mainConstraints);
+		
+		//Now add in clicker upgrade button
 	}
 	
 	class HealthPanel extends JPanel{
