@@ -24,6 +24,6 @@ public class Leech extends AttackItem {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		target.setMoneyRecipient(target);
+		target.setMoneyRecipient(target.getAlias());
 	}
 }

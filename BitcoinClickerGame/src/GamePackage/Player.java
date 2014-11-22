@@ -36,6 +36,10 @@ public class Player extends Thread {
 		return health;
 	}
 	
+	public IOHandler getHandler() {
+		return threadHandler;
+	}
+	
 	public void setHandler(IOHandler replacement) {
 		threadHandler = replacement;
 	}
@@ -86,6 +90,12 @@ public class Player extends Thread {
 			throw new RuntimeException("deductMoney(): amount " + amount + " is negative.");
 		}
 		coins-=amount;
+	}
+	
+	public void receiveMessage(NetworkMessage nm) {
+		/**
+		 * TODO: Logic for decoding network message.
+		 */
 	}
 	
 	public void startItem(Item item) {

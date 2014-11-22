@@ -27,12 +27,12 @@ public class Encryption extends DefenseItem implements IOHandler {
 	}
 
 	@Override
-	public void handleIncomingItem(Item item) {
+	public void handleIncomingMessage(Game game, NetworkMessage nm) {
 		
 	}
 
 	@Override
-	public void handleOutgoingItem(Item item) {
+	public void handleOutgoingMessage(Game game, NetworkMessage nm) {
 		
 	}
 

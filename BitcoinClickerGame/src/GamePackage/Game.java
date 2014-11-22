@@ -90,7 +90,17 @@ public class Game extends Thread {
 	public void initializeGame()
 	{
 		gameFrame.setVisible(true);
-		localPlayer = new Player(this);
+		localPlayer = new Player("aaa"/* alias */, this);
+	}
+	
+	public Player getLocalPlayer() {
+		return localPlayer;
+	}
+	
+	public void sendMessage(NetworkMessage nm) {
+		/**
+		 * TODO: Use appropriate socket to send message.
+		 */
 	}
 	
 	public void startGame()
