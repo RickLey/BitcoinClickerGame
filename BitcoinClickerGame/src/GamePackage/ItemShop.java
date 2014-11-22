@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+@SuppressWarnings("serial")
 class ShopPanel extends JPanel{
 	private Player player;
 	
@@ -141,6 +142,7 @@ class ShopPanel extends JPanel{
 	
 }
 
+@SuppressWarnings("serial")
 abstract class AbstractItemButton extends JButton {
 	//Info
 	private int cost = 0;
@@ -157,7 +159,7 @@ abstract class AbstractItemButton extends JButton {
 	private AbstractItemButton button;
 	protected boolean isDisabled = false;
 	
-	private GameFrame mainFrame;
+//	private GameFrame mainFrame;													<---------Can we delete this???
 	
 	public AbstractItemButton(Item item, Player player, GameFrame mainFrame){
 		super(item.getItemName());
@@ -271,6 +273,7 @@ abstract class AbstractItemButton extends JButton {
 	
 }
 
+@SuppressWarnings("serial")
 class EconomyButton extends AbstractItemButton{
 	public EconomyButton(Item item, Player player, GameFrame mainFrame){
 		super(item, player, mainFrame);
@@ -287,6 +290,7 @@ class EconomyButton extends AbstractItemButton{
 	}
 }
 
+@SuppressWarnings("serial")
 class AttackButton extends AbstractItemButton{
 	public AttackButton(Item item, Player player, GameFrame mainFrame){
 		super(item, player, mainFrame);
@@ -303,6 +307,7 @@ class AttackButton extends AbstractItemButton{
 	}
 }
 
+@SuppressWarnings("serial")
 class DefenseButton extends AbstractItemButton{
 	public DefenseButton(Item item, Player player, GameFrame mainFrame){
 		super(item, player, mainFrame);

@@ -1,5 +1,6 @@
 package GamePackage;
 
+@SuppressWarnings("serial")
 public class Leech extends AttackItem {
 	
 	private static final int COST = Constants.leechCost;
@@ -25,5 +26,7 @@ public class Leech extends AttackItem {
 			e.printStackTrace();
 		}
 		target.setMoneyRecipient(target.getAlias());
+		
+		
 	}
 }

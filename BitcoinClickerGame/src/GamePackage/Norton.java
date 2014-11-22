@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Norton extends DefenseItem {
 
+	private static final long serialVersionUID = -5497474528524968655L;
 	private final static int COST = Constants.nortonCost;
 	private final static int COOLDOWN = Constants.nortonCooldown;
 	

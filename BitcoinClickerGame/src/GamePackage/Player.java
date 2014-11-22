@@ -40,7 +40,7 @@ public class Player {
 		return threadHandler;
 	}
 	
-	public void setHandler(IOHandler replacement) {
+	public synchronized void setHandler(IOHandler replacement) {
 		threadHandler = replacement;
 	}
 	
@@ -56,7 +56,7 @@ public class Player {
 		return coins;
 	}
 	
-	public void upgradeClicker() {
+	public synchronized void upgradeClicker() {
 		multiplier += 1;
 	}
 	
@@ -98,24 +98,29 @@ public class Player {
 		coins-=amount;
 	}
 	
+
 	public void receiveGameplayMessage(NetworkMessage nm) {
+
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			Item item = (Item)nm.getValue();
 			startItem(item);
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
-			
+			if(nm.getSender().equals(alias)){
+				return;
+			}
 		}
-		//TODO fill in logic
+
 	}
 	
 	public void startItem(Item item) {
 		item.setPlayer(this);
 		item.run();
 		if(item instanceof Virus || item instanceof Leech) {
-			activeItems.add(item);
+			synchronized(this) {
+				activeItems.add(item);
+			}
 		}
-		System.out.println(health);
 	}
 	
 	private void purchaseItem(Item item) {
