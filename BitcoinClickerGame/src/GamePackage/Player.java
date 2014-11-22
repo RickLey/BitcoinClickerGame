@@ -99,10 +99,21 @@ public class Player extends Thread {
 	}
 	
 	public void receiveMessage(NetworkMessage nm) {
+
 		/**
 		 * TODO: Logic for decoding network message.
 		 * when receiving a message, if it's an update or chat, check that it's not from yourself before updating anything
 		 */
+
+		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
+			Item item = (Item)nm.getValue();
+			startItem(item);
+		}
+		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
+			
+		}
+		//TODO fill in logic
+
 	}
 	
 	public void startItem(Item item) {

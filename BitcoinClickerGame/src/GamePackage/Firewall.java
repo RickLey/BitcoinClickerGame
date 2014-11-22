@@ -1,6 +1,9 @@
 package GamePackage;
 
 public class Firewall extends DefenseItem implements IOHandler {
+	
+	private static final long serialVersionUID = 8188826749105768693L;
+
 	private int hitsRemaining;
 	
 	private final static int COST = Constants.firewallCost;

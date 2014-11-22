@@ -6,6 +6,7 @@ import javax.swing.JButton;
 
 public class EMP extends AttackItem {
 
+	private static final long serialVersionUID = -1366508025406958516L;
 	private final static int COST = Constants.EMPCost;
 	private final static int COOLDOWN = 240;
 	private final static int DURATION = Constants.EMPCooldown;
