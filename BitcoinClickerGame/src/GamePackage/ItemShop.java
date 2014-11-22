@@ -80,22 +80,22 @@ class ShopPanel extends JPanel{
 		gbc.gridwidth = 2;
 		gbc.gridy = 1;
 		gbc.gridx = 0;
-		newButton = new AttackButton(new NokiaPhone(player), player, mainFrame);
+		newButton = new AttackButton(new NokiaPhone(), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 		
 		gbc.gridy = 1;
 		gbc.gridx = 2;
-		newButton = new AttackButton(new EMP(player), player, mainFrame);
+		newButton = new AttackButton(new EMP(), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 		
 		gbc.gridy = 2;
 		gbc.gridx = 0;
-		newButton = new AttackButton(new Virus(player), player, mainFrame);
+		newButton = new AttackButton(new Virus(), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 		
 		gbc.gridy = 2;
 		gbc.gridx = 2;
-		newButton = new AttackButton(new Leech(player, player), player, mainFrame);
+		newButton = new AttackButton(new Leech(player.getAlias()), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 
 		//DefensePanel
@@ -107,12 +107,12 @@ class ShopPanel extends JPanel{
 		
 		gbc.gridy = 1;
 		gbc.gridx = 0;		
-		newButton = new DefenseButton(new Encryption(player), player, mainFrame);
+		newButton = new DefenseButton(new Encryption(), player, mainFrame);
 		defensePanel.add(newButton, gbc);
 		
 		gbc.gridy = 1;
 		gbc.gridx = 2;
-		newButton = new DefenseButton(new Norton(player), player, mainFrame);
+		newButton = new DefenseButton(new Norton(), player, mainFrame);
 		defensePanel.add(newButton, gbc);
 		
 		gbc.gridy = 2;

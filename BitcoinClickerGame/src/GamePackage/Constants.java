@@ -53,7 +53,7 @@ class Constants {
 
 		
 		//Description
-		public static final String EMPDescription = "Disables all(?) other players from playing for 30 seconds";;
+		public static final String EMPDescription = "Disables all(?) other players from playing for 30 seconds";
 		public static final String leechDescription = "Causes another player’s clicks to feed your wallet instead of theirs, 10 seconds";
 		public static final String nokiaDescription = "5 damage to target player";
 		public static final String nortonDescription = "Kills virus";

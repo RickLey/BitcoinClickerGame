@@ -10,8 +10,8 @@ public class EMP extends AttackItem {
 	private final static int COOLDOWN = 240;
 	private final static int DURATION = Constants.EMPCooldown;
 	
-	public EMP(Player target) {
-		super(target, COST, COOLDOWN);
+	public EMP() {
+		super(COST, COOLDOWN);
 		this.joke = Constants.EMPJoke;
 		this.name = "EMP";
 		this.description = Constants.EMPDescription;

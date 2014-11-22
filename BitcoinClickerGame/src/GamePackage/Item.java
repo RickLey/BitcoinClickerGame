@@ -11,8 +11,7 @@ public abstract class Item extends Thread implements Serializable {
 	protected String description;
 	protected Player target;
 
-	public Item(Player target, double cost, double cooldown) {
-		this.target = target;
+	public Item(double cost, double cooldown) {
 		this.cost = cost;
 		this.joke = "Joke";
 		this.description = "TEST DESCRIPTION";
@@ -34,6 +33,10 @@ public abstract class Item extends Thread implements Serializable {
 	
 	public String getJoke() {
 		return joke;
+	}
+	
+	public void setPlayer(Player p) {
+		target = p;
 	}
 
 	protected void pause(int durationInSeconds) {

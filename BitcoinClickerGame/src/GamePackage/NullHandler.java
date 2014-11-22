@@ -4,7 +4,7 @@ public class NullHandler implements IOHandler {
 
 	@Override
 	public void handleIncomingItem(Item item) {
-	
+		
 	}
 
 	@Override
