@@ -160,6 +160,12 @@ public class Game extends Thread {
 	{
 		new Game(args[0]);
 	}
+
+	public HashSet<String> getOpponents() {
+		HashSet<String> withoutLocalPlayer = new HashSet<String>(allPlayers);
+		withoutLocalPlayer.remove(name);
+		return withoutLocalPlayer;
+	}
 }
 
 class GUIThread extends Thread {
