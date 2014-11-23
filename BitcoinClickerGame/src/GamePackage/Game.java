@@ -1,5 +1,6 @@
 package GamePackage;
 
+import java.awt.event.WindowEvent;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,11 +17,10 @@ import java.util.Set;
 
 import javax.swing.JButton;
 
-public class Game extends Thread {
+public class Game {
 
 	private final double critChanceRate = 0.005;
 	private final double clickerComboMultiplier = 1.2;
-	private final int MaxCoins = 100000; //win condition
 	private final int startHealth = 100;
 	private int inProgress;
 	private Player localPlayer;
@@ -44,10 +44,11 @@ public class Game extends Thread {
 	
 	private HashMap<String, TruncatedPlayer> allPlayers;
 	
-	public Game(String alias)
+	public Game(String alias, String hostname,StartGUI sg)
 	{		
 		try {
-			name = alias;
+			this.name = alias;
+			this.hostname = hostname;
 
 			//Gameplay socket set up and initialization
 			gameplaySocket = new Socket(hostname, 10000);
@@ -93,6 +94,10 @@ public class Game extends Thread {
 			
 			//Receive the start game message
 			gameplayOIS.readObject();
+			
+			//Remove StartGUI
+			sg.setVisible(false);
+			sg.dispose();
 			
 			//Create the GUI, gameplay, and chat threads for client
 			new GUIThread(this, gameplayOOS, chatOOS).start();
@@ -163,7 +168,7 @@ public class Game extends Thread {
 	
 	public static void main(String[] args)
 	{
-		new Game(args[0]);
+		//new Game(args[0]);
 	}
 
 	public Set<String> getOpponents() {

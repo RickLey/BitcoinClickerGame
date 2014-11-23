@@ -20,13 +20,33 @@ public class Leech extends AttackItem {
 	@Override
 	public void run() {
 		
-		target.setMoneyRecipient(senderAlias);
-		try {
-			Thread.sleep(duration * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		long startTime = System.currentTimeMillis();
+		long endTime = startTime + duration*1000;
+		
+		int leechedAmount = 0;
+		double baseCoins = target.getCoins();
+		
+		while(System.currentTimeMillis() < endTime){
+			double currCoins = target.getCoins();
+			if(currCoins > baseCoins){
+				leechedAmount+=currCoins-baseCoins;
+			}
+			baseCoins = currCoins;
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}	
 		}
-		target.setMoneyRecipient(target.getAlias());
+		
+		target.deductMoney(leechedAmount);
+		
+		NetworkMessage leechMessage = new NetworkMessage();
+		leechMessage.setRecipient(senderAlias);
+		leechMessage.setSender(target.getAlias());
+		leechMessage.setMessageType(NetworkMessage.LEECH_RESULT_MESSAGE);
+		leechMessage.setValue(leechedAmount);
+		
 		
 		
 	}

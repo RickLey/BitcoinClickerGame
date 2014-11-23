@@ -16,9 +16,7 @@ import java.util.HashSet;
 public class Server {
 	
 	//TODO timeouts?
-	//TODO whisper sends to recipient AND sender
 	//TODO when players die, do they still send updates? Can they be revived?
-	//TODO leech and EMP
 	
 	private HashMap<String, ObjectOutputStream> gameplayOutputs;
 	private HashMap<String, ObjectOutputStream> chatOutputs;
@@ -132,11 +130,6 @@ public class Server {
 		}
 	}
 	
-	/*TODO
-	 * There will be 4 threads for chat and 4 for gameplay. Each is polling a separate input socket.
-	 * When it receives a message, it can still get the recipient, etc. We'll just create a method - send message -
-	 * that synchronizes to make sure only one writes at a time.
-	 */
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
 		Server s = new Server();
@@ -265,15 +258,14 @@ class GamePlayThread extends Thread{
 						}
 					}
 					
-					//TODO update constant
-					else if(playerUpdate.getMoney() == 10000){
+					else if(playerUpdate.getMoney() == Constants.MAX_COIN_LIMIT){
 						sendEndGame(received);
 						parentServer.endGame();
 					}
 					
 				}
 				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE) ||
-						received.getMessageType().equals(NetworkMessage.LEECH_MESSAGE)){
+						received.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 					
 					//update how many times the item has been seen
 					String itemType = received.getItemType();
@@ -351,6 +343,7 @@ class ChatThread extends Thread{
 				}
 				else if(messageType.equals(NetworkMessage.WHISPER_MESSAGE)){
 					parentServer.sendChatMessageToPlayer(received, received.getRecipient());
+					parentServer.sendChatMessageToPlayer(received, received.getSender());
 				}
 			} 
 			catch (SocketException e){

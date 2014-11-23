@@ -13,8 +13,8 @@ public class NetworkMessage implements Serializable{
 	public static final String START_GAME_MESSAGE = "Start Game";
 	public static final String END_GAME_MESSAGE = "End Game";
 	public static final String UPDATE_MESSAGE = "Update";
-	public static final String LEECH_MESSAGE = "Money from leech";
 	public static final String ITEM_MESSAGE = "Item";
+	public static final String LEECH_RESULT_MESSAGE = "Leech result";
 	public static final String CHAT_MESSAGE = "Chat";
 	public static final String WHISPER_MESSAGE = "Whisper";
 	public static final String INITIALIZE_SERVER_MESSAGE = "Initialize Server";

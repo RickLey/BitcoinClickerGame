@@ -17,6 +17,7 @@ public class Virus extends AttackItem {
 
 	@Override
 	public void run() {
+		
 		while(!Thread.interrupted())
 		{
 			try {

@@ -124,7 +124,6 @@ public class Player {
 			Item item = (Item)nm.getValue();
 			startItem(item);
 			//TODO: call graphics stuff, too
-			//TODO: check if virus and add to active threads
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 			if(nm.getSender().equals(alias)){
@@ -133,6 +132,10 @@ public class Player {
 			else{
 				container.updateOpponent((TruncatedPlayer)nm.getValue());
 			}
+		}
+		else if(nm.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
+			int amount = (Integer)nm.getValue();
+			receiveMoney(amount);
 		}
 			
 	}
