@@ -241,6 +241,7 @@ class GamePlayThread extends Thread{
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
+				Thread.sleep(1000/36);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 					System.out.println("Got update");
@@ -283,8 +284,9 @@ class GamePlayThread extends Thread{
 				e.printStackTrace();
 			} catch (SocketException e){
 				System.out.println("Caught socket exception");
-
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} 
 			
@@ -332,6 +334,7 @@ class ChatThread extends Thread{
 	public void run(){
 		while(!Thread.interrupted()){
 			try{
+				Thread.sleep(1000/36);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				String messageType = received.getMessageType();
 				
@@ -348,6 +351,8 @@ class ChatThread extends Thread{
 			}catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

@@ -196,6 +196,7 @@ class ReadGameplayMessageThread extends Thread {
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
+				Thread.sleep(1000/36);
 				NetworkMessage received = (NetworkMessage)myGameplayInput.readObject();
 				if(received.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)){
 					this.interrupt();
@@ -208,6 +209,8 @@ class ReadGameplayMessageThread extends Thread {
 			} catch(SocketException e){
 			}
 			catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
@@ -234,6 +237,7 @@ class ReadChatMessageThread extends Thread {
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
+				Thread.sleep(1000/36);
 				NetworkMessage received = (NetworkMessage)myChatInput.readObject();
 				myGame.displayMessage(received);
 			} catch (ClassNotFoundException e) {
@@ -244,6 +248,8 @@ class ReadChatMessageThread extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 				break;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}

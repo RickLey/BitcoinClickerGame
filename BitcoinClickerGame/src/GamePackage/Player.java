@@ -124,6 +124,7 @@ public class Player {
 			Item item = (Item)nm.getValue();
 			startItem(item);
 			//TODO: call graphics stuff, too
+			//TODO: check if virus and add to active threads
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 			if(nm.getSender().equals(alias)){
