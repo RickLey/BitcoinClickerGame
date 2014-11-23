@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -30,7 +31,9 @@ public class Server {
 	
 	public Server(){
 		try {
+			@SuppressWarnings("resource")
 			ServerSocket gameplaySS = new ServerSocket(10000);
+			@SuppressWarnings("resource")
 			ServerSocket chatSS = new ServerSocket(20000);
 			
 			gpThreads = new ArrayList<GamePlayThread>();
@@ -60,6 +63,7 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
+			System.out.println("Got gameplay sockets");
 			
 			//send message to connect chat sockets
 			NetworkMessage connectChatSocketsMessage = new NetworkMessage();
@@ -81,11 +85,15 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
+			System.out.println("Got chat sockets");
+			
 			//Send list of all players to all players
 			NetworkMessage distributeAliases = new NetworkMessage();
 			distributeAliases.setSender(NetworkMessage.SERVER_ALIAS);
 			distributeAliases.setMessageType(NetworkMessage.GAME_INITIALIZATION_MESSAGE);
-			distributeAliases.setValue(gameplayOutputs.keySet().toArray());
+			String [] aliasesArray = Arrays.copyOf(gameplayOutputs.keySet().toArray(), gameplayOutputs.keySet().size(), String[].class);
+			distributeAliases.setValue(aliasesArray);
+			//distributeAliases.setValue((String[])gameplayOutputs.keySet().toArray());
 			
 			sendGameplayMessageToAll(distributeAliases);
 			
@@ -239,6 +247,7 @@ class GamePlayThread extends Thread{
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
+				Thread.sleep(1000/36);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 					System.out.println("Got update");
@@ -263,7 +272,8 @@ class GamePlayThread extends Thread{
 					}
 					
 				}
-				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
+				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE) ||
+						received.getMessageType().equals(NetworkMessage.LEECH_MESSAGE)){
 					
 					//update how many times the item has been seen
 					String itemType = received.getItemType();
@@ -277,12 +287,14 @@ class GamePlayThread extends Thread{
 					parentServer.sendGameplayMessageToPlayer(received, received.getRecipient());
 				}
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				break;
 			} catch (SocketException e){
 				System.out.println("Caught socket exception");
-
+				break;
 			} catch (IOException e) {
-				e.printStackTrace();
+				break;
+			} catch (InterruptedException e) {
+				break;
 			} 
 			
 		}
@@ -329,6 +341,7 @@ class ChatThread extends Thread{
 	public void run(){
 		while(!Thread.interrupted()){
 			try{
+				Thread.sleep(1000/36);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				String messageType = received.getMessageType();
 				
@@ -342,10 +355,13 @@ class ChatThread extends Thread{
 			} 
 			catch (SocketException e){
 				System.out.println("Caught socket exception");
-			}catch (IOException e) {
-				e.printStackTrace();
+				break;
+			} catch (IOException e) {
+				break;
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				break;
+			} catch (InterruptedException e) {
+				break;
 			}
 		}
 	}

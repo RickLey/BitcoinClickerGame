@@ -17,24 +17,25 @@ public class Encryption extends DefenseItem implements IOHandler {
 	public void run() {
 		target.setHandler(this);
 		
+		
 		//The thread that accesses the handleMessage methods aren't going to be on this thread that is running
-		try {
-			Thread.sleep(duration * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		pause(duration);
+		
+		target.setHandler(new NullHandler());
+		
 	}
 
 	@Override
 	public void handleIncomingMessage(Game game, NetworkMessage nm) {
-		game.getLocalPlayer().receiveMessage(nm);
+		game.getLocalPlayer().receiveGameplayMessage(nm);
 	}
 
 	@Override
 	public void handleOutgoingMessage(Game game, NetworkMessage nm) {
 		if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)) {
-			nm.setValue(new TruncatedPlayer(-1,-1));	//-1 signals encryption to GUI displays
+			nm.setValue(new TruncatedPlayer(-1,-1, target.getAlias()));	//-1 signals encryption to GUI displays
 		}
+		game.sendGameplayMessage(nm);
 	}
 
 

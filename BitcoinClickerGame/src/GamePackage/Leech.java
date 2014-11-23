@@ -19,6 +19,7 @@ public class Leech extends AttackItem {
 
 	@Override
 	public void run() {
+		
 		target.setMoneyRecipient(senderAlias);
 		try {
 			Thread.sleep(duration * 1000);

@@ -185,6 +185,7 @@ abstract class AbstractItemButton extends JButton {
 				if (!isDisabled){
 					setBorder(loweredBorder);
 					repaint();
+					
 				}
 			}
 
@@ -211,9 +212,20 @@ abstract class AbstractItemButton extends JButton {
 				if (player.getCoins() < cost || isDisabled){
 					//Display error message
 				} else{
+					System.out.println("Cost: " + cost);
 					player.deductMoney(cost);
 					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
 					new Thread(new CooldownThread(button)).start();
+					
+					//Make a new networkMessage object and fill in fields
+					NetworkMessage newMessage = new NetworkMessage();
+					
+					newMessage.setSender(player.getAlias());
+					newMessage.setRecipient("3");
+					newMessage.setItemType("Nokia Phone");
+					newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+					newMessage.setValue(item);
+					player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
 				}
 			}
 		});
@@ -254,8 +266,6 @@ abstract class AbstractItemButton extends JButton {
 		public void run(){
 			int count = button.cooldown;
 			button.setIsOnCooldown(true);
-
-			System.out.println("Marker: " + count);
 			
 			try{
 				while (count != 0){

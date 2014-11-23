@@ -37,7 +37,7 @@ import javax.swing.text.DefaultCaret;
 @SuppressWarnings("serial")
 public class GameFrame extends JFrame{
 	
-	private Player player;
+	private Player selfPlayer;
 	
 	private JPanel chatPanel	= new JPanel();
 	private JPanel bitcoinPanel	= new JPanel();
@@ -45,7 +45,7 @@ public class GameFrame extends JFrame{
 	private Vector<JButton> buttonVector = new Vector<JButton>();
 	
 	private GameFrame self = this;
-	private JPanel glass = (JPanel)self.getGlassPane();
+//	private JPanel glass = (JPanel)self.getGlassPane();
 	
 	//Networking related variables that are needed as reference
 	private Game game;
@@ -59,8 +59,9 @@ public class GameFrame extends JFrame{
 		this.myChatOutput = coos;
 		
 		//DEBUG: Hardcoding in player
-		player = new Player(null, null);
-		
+
+		selfPlayer = game.getLocalPlayer();
+
 		setSize(1200,700);
 		setLocation(100,200);
 		
@@ -76,7 +77,7 @@ public class GameFrame extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Glass
-		glass.setLayout(null);
+		self.setLayout(null);
 		
 		//Start main repaint thread
 		Thread mainRepaint = new MainRepaintThread(this);
@@ -206,7 +207,7 @@ public class GameFrame extends JFrame{
 //	private int testWallet = 0;
 	
 	private void setupBitcoinPanel(){
-		healthPanel = new HealthPanel(player);
+		healthPanel = new HealthPanel(selfPlayer);
 		bitcoinPanel.setLayout(new GridBagLayout());
 		bitcoinPanel.setBackground(Color.WHITE);
 		bitcoinPanel.setBorder(new LineBorder(Color.BLACK, 1));
@@ -242,8 +243,8 @@ public class GameFrame extends JFrame{
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				player.incrementFromButtonClick();
-				moneyLabel.setText("$" + player.getCoinString());
+				selfPlayer.incrementFromButtonClick();
+				moneyLabel.setText("$" + selfPlayer.getCoinString());
 			}
 
 			@Override
@@ -267,13 +268,13 @@ public class GameFrame extends JFrame{
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				player.resetCombo();
+				selfPlayer.resetCombo();
 			}
 		});
 		
 		//MoneyLabel
 		moneyLabel.setFont(Constants.getFont(24));
-		moneyLabel.setText("$" + player.getCoins());
+		moneyLabel.setText("$" + selfPlayer.getCoins());
 		
 		coinGBC.gridx = 0;
 		coinGBC.gridy = 0;
@@ -295,7 +296,8 @@ public class GameFrame extends JFrame{
 		
 		//Now add in clicker upgrade button
 		mainConstraints.gridy = 2;
-		JButton newButton = new DefenseButton(new ClickRewardUpgrade(), player, this);
+
+		JButton newButton = new DefenseButton(new ClickRewardUpgrade(), selfPlayer, this);
 		bitcoinPanel.add(newButton, mainConstraints);
 		
 	}
@@ -321,20 +323,106 @@ public class GameFrame extends JFrame{
 	
 	//	********************* ShopPanel *************************
 	private ShopPanel shopPanel;
-	private JPanel playerPanels = new JPanel();
+	private JPanel playerPanel = new JPanel();
+	private Vector<JButton> playerButtonVector = new Vector<JButton>();
 	
 	private void setupCenterPanel(){
-		shopPanel = new ShopPanel(this, player);
+		shopPanel = new ShopPanel(this, selfPlayer);
 		centerPanel.setBackground(Color.WHITE);
 
-		playerPanels.setBackground(Color.GRAY);
-		playerPanels.setPreferredSize(new Dimension(650,250));
+		playerPanel.setBackground(Color.WHITE);
+		playerPanel.setLayout(new GridBagLayout());
+		playerPanel.setPreferredSize(new Dimension(650,250));
 		
-		centerPanel.add(playerPanels, BorderLayout.CENTER);
+		setupPlayerButtons();
+
+		
+		centerPanel.add(playerPanel, BorderLayout.CENTER);
 		centerPanel.add(shopPanel, BorderLayout.SOUTH);
 		
 	}
 	
+	//	********************* playerPanel *************************
+	public void setupPlayerButtons(){
+		//first is the player
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		
+		JButton newButton;
+		
+		gbc.insets = new Insets(5,5,5,5);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()));
+		playerPanel.add(newButton, gbc);
+		playerButtonVector.add(newButton);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)));
+//		newButton = new PlayerButton(TruncatedPlayer[Opponent]);
+		playerPanel.add(newButton, gbc);
+		playerButtonVector.add(newButton);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(1)));
+		playerPanel.add(newButton, gbc);
+		playerButtonVector.add(newButton);
+
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)));
+		playerPanel.add(newButton, gbc);
+		playerButtonVector.add(newButton);
+	}
+	
+	class PlayerButton extends JButton{
+		private TruncatedPlayer player;
+		
+		public PlayerButton(TruncatedPlayer player){
+			super(player.getAlias());
+			
+			this.setPlayer(player);
+			setBackground(Color.WHITE);
+			setBorder(new LineBorder(Color.BLACK, 1));
+			setBackground(Color.WHITE);
+			setPreferredSize(new Dimension(310,110));
+			
+			//Add action
+			this.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent ae){
+					//only do this if player is not self
+					if (!selfPlayer.getAlias().equals(player.getAlias())){
+						for (int i = 0; i < 4; ++i){
+							playerButtonVector.get(i).setBorder(new LineBorder(Color.BLACK, 1));
+						}
+						setBorder(new LineBorder(Color.RED, 1));
+					}
+					
+					//TODO: assign target when clicked
+				}
+			});
+			
+		}
+		
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			
+		}
+
+		public TruncatedPlayer getPlayer() {
+			return player;
+		}
+
+		public void setPlayer(TruncatedPlayer player) {
+			this.player = player;
+		}
+	}
+	
+
+	// Getters and setters
 	public List<JButton> getButtons()
 	{
 		List<JButton> buttonList = shopPanel.getButtons();
@@ -343,18 +431,16 @@ public class GameFrame extends JFrame{
 		return buttonList;
 	}
 	
-	// Getters and setters
-	
 	public JLabel getMoneyLabel(){
 		return moneyLabel;
 	}
 
-	public JPanel getGlass(){
-		return glass;
-	}
+//	public JPanel getGlass(){
+////		return glass;
+//	}
 	
 	public Player getPlayer(){
-		return player;
+		return selfPlayer;
 	}
 	
 	public Vector<JButton> getButtonVector(){
@@ -393,15 +479,11 @@ public class GameFrame extends JFrame{
 		}	
 	}
 
-	public void displayMessage(NetworkMessage m) {
+	public synchronized void displayMessage(NetworkMessage m) {
 		if(m.getMessageType().equals(NetworkMessage.CHAT_MESSAGE)) {
 			chatArea.append(m.getSender() + ": ");
 			chatArea.append((String)m.getValue() + "\n");
 		}
 	}
 	
-	
-	public static void main(String[] args) {
-		//new GameFrame();
-	}
 }
