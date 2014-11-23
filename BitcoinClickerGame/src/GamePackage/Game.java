@@ -8,8 +8,10 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 
@@ -37,9 +39,9 @@ public class Game extends Thread {
 	
 	//TODO These will need to change as we get closer to finishing
 	private String name;
-	private String hostname = "localhost";
+	private String hostname = "10.121.71.42";
 	
-	private HashSet<String> allPlayers;
+	private HashMap<String, TruncatedPlayer> allPlayers;
 	
 	public Game(String alias)
 	{		
@@ -74,7 +76,12 @@ public class Game extends Thread {
 			//this receives the list of all players
 			//TODO: store the aliases somewhere
 			NetworkMessage received2 = (NetworkMessage) gameplayOIS.readObject();
-			allPlayers = new HashSet<String>(Arrays.asList((String[])received2.getValue()));
+			allPlayers = new HashMap<String, TruncatedPlayer>();
+			String[] receivedAliases = (String[])received2.getValue();
+			for(int i=0; i<3; i++){
+				allPlayers.put(receivedAliases[i], new TruncatedPlayer(0, 100,
+								receivedAliases[i]));
+			}
 			
 			//Receive the draw GUI message
 			gameplayOIS.readObject();
@@ -161,10 +168,18 @@ public class Game extends Thread {
 		new Game(args[0]);
 	}
 
-	public HashSet<String> getOpponents() {
-		HashSet<String> withoutLocalPlayer = new HashSet<String>(allPlayers);
+	public Set<String> getOpponents() {
+		Set<String> withoutLocalPlayer = allPlayers.keySet();
 		withoutLocalPlayer.remove(name);
 		return withoutLocalPlayer;
+	}
+	
+	public TruncatedPlayer getTruncatedPlayerByAlias(String alias){
+		return allPlayers.get(alias);
+	}
+
+	public void updateOpponent(TruncatedPlayer update) {
+		allPlayers.put(update.getAlias(), update);
 	}
 }
 
@@ -275,7 +290,8 @@ class SendPlayerUpdatesThread extends Thread{
 	public void run(){
 		while(!Thread.interrupted()){
 			TruncatedPlayer update = new TruncatedPlayer(myGame.getLocalPlayer().getCoins(),
-														myGame.getLocalPlayer().getHealth());
+														myGame.getLocalPlayer().getHealth(),
+														myGame.getLocalPlayer().getAlias());
 			synchronized(gameplayOOS){
 				try {
 					gameplayOOS.writeObject(update);
