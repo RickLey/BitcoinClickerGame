@@ -17,7 +17,7 @@ public class Virus extends AttackItem {
 
 	@Override
 	public void run() {
-		while(running)
+		while(!Thread.interrupted())
 		{
 			try {
 				target.deductHealth(DPS);
@@ -26,9 +26,5 @@ public class Virus extends AttackItem {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public void die() {
-		running = false;
 	}
 }

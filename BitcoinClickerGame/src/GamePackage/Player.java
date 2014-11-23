@@ -83,7 +83,7 @@ public class Player {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
 		}
-		if(moneyRecipient.equals(this.getAlias())) {	//TODO: moneyRecipient is a string, not a player object, need to account for this
+		if(moneyRecipient.equals(this.getAlias())) {
 			coins += amount;
 		} else {
 			//TODO: send information via stream to other player so that they get money.

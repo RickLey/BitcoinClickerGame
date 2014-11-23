@@ -40,7 +40,7 @@ public class Game extends Thread {
 	
 	//TODO These will need to change as we get closer to finishing
 	private String name;
-	private String hostname = "10.121.71.42";
+	private String hostname = "10.121.89.124";
 	
 	private HashMap<String, TruncatedPlayer> allPlayers;
 	
@@ -103,6 +103,7 @@ public class Game extends Thread {
 			chatThread = new ReadChatMessageThread(this, chatOIS);
 			chatThread.start();
 			updateThread = new SendPlayerUpdatesThread(this, gameplayOOS);
+			updateThread.start();
 			
 		} catch (UnknownHostException e) {
 			System.out.println("UHE");
@@ -289,9 +290,15 @@ class SendPlayerUpdatesThread extends Thread{
 			TruncatedPlayer update = new TruncatedPlayer(myGame.getLocalPlayer().getCoins(),
 														myGame.getLocalPlayer().getHealth(),
 														myGame.getLocalPlayer().getAlias());
+			NetworkMessage updateMessage = new NetworkMessage();
+			updateMessage.setMessageType(NetworkMessage.UPDATE_MESSAGE);
+			updateMessage.setSender(myGame.getLocalPlayer().getAlias());
+			updateMessage.setRecipient(NetworkMessage.BROADCAST);
+			updateMessage.setValue(update);
+			
 			synchronized(gameplayOOS){
 				try {
-					gameplayOOS.writeObject(update);
+					gameplayOOS.writeObject(updateMessage);
 				} catch(SocketException e){
 				} catch (IOException e) {
 					e.printStackTrace();

@@ -376,9 +376,6 @@ public class GameFrame extends JFrame{
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)));
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
-
-
-	
 	}
 	
 	class PlayerButton extends JButton{
@@ -387,7 +384,7 @@ public class GameFrame extends JFrame{
 		public PlayerButton(TruncatedPlayer player){
 			super(player.getAlias());
 			
-			this.player = player;
+			this.setPlayer(player);
 			setBackground(Color.WHITE);
 			setBorder(new LineBorder(Color.BLACK, 1));
 			setBackground(Color.WHITE);
@@ -412,6 +409,15 @@ public class GameFrame extends JFrame{
 		
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
+			
+		}
+
+		public TruncatedPlayer getPlayer() {
+			return player;
+		}
+
+		public void setPlayer(TruncatedPlayer player) {
+			this.player = player;
 		}
 	}
 	
