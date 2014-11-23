@@ -16,7 +16,6 @@ import java.util.HashSet;
 public class Server {
 	
 	//TODO timeouts?
-	//TODO whisper sends to recipient AND sender
 	//TODO when players die, do they still send updates? Can they be revived?
 	
 	private HashMap<String, ObjectOutputStream> gameplayOutputs;
@@ -259,8 +258,7 @@ class GamePlayThread extends Thread{
 						}
 					}
 					
-					//TODO update constant
-					else if(playerUpdate.getMoney() == 10000){
+					else if(playerUpdate.getMoney() == Constants.MAX_COIN_LIMIT){
 						sendEndGame(received);
 						parentServer.endGame();
 					}
@@ -345,6 +343,7 @@ class ChatThread extends Thread{
 				}
 				else if(messageType.equals(NetworkMessage.WHISPER_MESSAGE)){
 					parentServer.sendChatMessageToPlayer(received, received.getRecipient());
+					parentServer.sendChatMessageToPlayer(received, received.getSender());
 				}
 			} 
 			catch (SocketException e){

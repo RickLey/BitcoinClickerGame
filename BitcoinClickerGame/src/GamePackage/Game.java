@@ -21,7 +21,6 @@ public class Game {
 
 	private final double critChanceRate = 0.005;
 	private final double clickerComboMultiplier = 1.2;
-	private final int MaxCoins = 100000; //win condition
 	private final int startHealth = 100;
 	private int inProgress;
 	private Player localPlayer;
