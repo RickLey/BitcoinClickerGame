@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 
-public class Player extends Thread {
+public class Player {
 	private Store myStore;
 	private double coins;
 	private int health;			

@@ -142,12 +142,11 @@ public class Game extends Thread {
 	
 	public void startGame()
 	{
-		localPlayer.start();
+		
 	}
 	
 	public void endGame()
 	{
-		localPlayer.interrupt();
 	}
 	
 	public List<JButton> getButtons()

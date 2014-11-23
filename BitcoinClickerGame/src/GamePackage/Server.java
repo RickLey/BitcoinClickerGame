@@ -130,6 +130,7 @@ public class Server {
 	 * that synchronizes to make sure only one writes at a time.
 	 */
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		Server s = new Server();
 		while(true){
 		}
