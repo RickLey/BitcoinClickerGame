@@ -1,5 +1,6 @@
 package GamePackage;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -218,12 +219,12 @@ class ReadGameplayMessageThread extends Thread {
 					myGame.getLocalPlayer().getHandler().handleIncomingMessage(myGame, received);
 				}
 			} catch(SocketException e){
-			}
-			catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
+				break;
+			} catch (ClassNotFoundException | IOException e) {
+				break;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+				break;
+			} 
 		}
 	}
 }

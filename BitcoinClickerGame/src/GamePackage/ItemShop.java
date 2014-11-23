@@ -186,7 +186,6 @@ abstract class AbstractItemButton extends JButton {
 					setBorder(loweredBorder);
 					repaint();
 					
-					item.run();
 				}
 			}
 
@@ -219,8 +218,14 @@ abstract class AbstractItemButton extends JButton {
 					new Thread(new CooldownThread(button)).start();
 					
 					//Make a new networkMessage object and fill in fields
-					NetworkMessage newMessage;
+					NetworkMessage newMessage = new NetworkMessage();
 					
+					newMessage.setSender(player.getAlias());
+					newMessage.setRecipient("3");
+					newMessage.setItemType("Nokia Phone");
+					newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+					newMessage.setValue(item);
+					player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
 				}
 			}
 		});
