@@ -2,10 +2,10 @@ package GamePackage;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JButton;
 
@@ -17,25 +17,12 @@ public class Player {
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
 	private Set<String> opponentAliases;
-	private ArrayList<Item> activeItems;
-	private IOHandler threadHandler;
+	private Vector<Item> activeItems;
+	private IOHandler ioHandler;
 	private Item currentSelectedItem;
 	private String moneyRecipient;		//As a string of their alias
 	private String alias;
 	private Game container;
-	
-	
-	
-	public Player(String alias, Game container) {
-		this.container = container;
-		health = 100;
-		alive = true;
-		coins = 0;
-		combo = 0;
-		multiplier = 1;
-		moneyRecipient = alias;
-		threadHandler = new NullHandler();
-	}
 	
 	//Stephen's testing constructor
 	public Player(Game container, String alias) {
@@ -47,11 +34,12 @@ public class Player {
 		combo = 0;
 		multiplier = 1;
 		moneyRecipient = this.getAlias();
-		threadHandler = new NullHandler();
+		ioHandler = new NullHandler();
 		opponentAliases = container.getOpponents();
+		activeItems = new Vector<Item>();
 	}
 	
-	public String getOpponentAliasByIndex(int index){
+	public synchronized String getOpponentAliasByIndex(int index){
 		Iterator<String> it = opponentAliases.iterator();
 		String alias = it.next();
 		for(int i = 0; i < index; ++i){
@@ -64,27 +52,27 @@ public class Player {
 		return alias;
 	}
 	
-	public int getHealth(){
+	public synchronized int getHealth(){
 		return health;
 	}
 	
-	public IOHandler getHandler() {
-		return threadHandler;
+	public synchronized IOHandler getHandler() {
+		return ioHandler;
 	}
 	
 	public synchronized void setHandler(IOHandler replacement) {
-		threadHandler = replacement;
+		ioHandler = replacement;
 	}
 	
 	public synchronized void setMoneyRecipient(String stringAlias) {
 		moneyRecipient = stringAlias;
 	}
 	
-	public ArrayList<Item> getActiveItems() {
+	public synchronized Vector<Item> getActiveItems() {
 		return activeItems;
 	}
 	
-	public double getCoins() {
+	public synchronized double getCoins() {
 		return coins;
 	}
 	
@@ -96,7 +84,7 @@ public class Player {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
 		}
-		if(moneyRecipient.equals(this)) {	//TODO: moneyRecipient is a string, not a player object, need to account for this
+		if(moneyRecipient.equals(this.getAlias())) {
 			coins += amount;
 		} else {
 			//TODO: send information via stream to other player so that they get money.
@@ -137,7 +125,6 @@ public class Player {
 			Item item = (Item)nm.getValue();
 			startItem(item);
 			//TODO: call graphics stuff, too
-			//TODO: check if virus and add to active threads
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 			if(nm.getSender().equals(alias)){
@@ -147,7 +134,11 @@ public class Player {
 				container.updateOpponent((TruncatedPlayer)nm.getValue());
 			}
 		}
-
+		else if(nm.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
+			int amount = (Integer)nm.getValue();
+			receiveMoney(amount);
+		}
+			
 	}
 	
 	public void startItem(Item item) {
@@ -160,29 +151,32 @@ public class Player {
 		}
 	}
 	
-	private void purchaseItem(Item item) {
+	private synchronized void purchaseItem(Item item) {
 		deductMoney(item.getCost());
 	}
 
-	public String getCoinString(){
+	public synchronized String getCoinString(){
 		String coinString = "" + coins;
-		String buildString = "";
 		
 		return coinString.substring(0, coinString.indexOf('.')+2);
 	}
 	
-	public void incrementFromButtonClick() {
+	public synchronized void incrementFromButtonClick() {
 		double amount = Constants.BASE_COINS_PER_CLICK + combo;
 		receiveMoney(amount);
 		combo += Constants.COMBO_INCREMENT_AMOUNT;
 	}
 	
-	public void resetCombo() {
+	public synchronized void resetCombo() {
 		combo = 0;
 	}
 
 	public List<JButton> getButtons() { 
 		return Collections.synchronizedList(container.getButtons());
+	}
+	
+	public Game getGame() {
+		return container;
 	}
 	
 }

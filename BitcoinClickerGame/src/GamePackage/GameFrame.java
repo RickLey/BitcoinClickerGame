@@ -11,8 +11,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -60,9 +60,8 @@ public class GameFrame extends JFrame{
 		
 		//DEBUG: Hardcoding in player
 
-		selfPlayer = new Player("Stephen", null);
+		selfPlayer = game.getLocalPlayer();
 
-		
 		setSize(1200,700);
 		setLocation(100,200);
 		
@@ -129,58 +128,12 @@ public class GameFrame extends JFrame{
 		//writing area
 		writingArea.setBackground(Color.WHITE);
 		writingArea.setLineWrap(true);
-		writingArea.addKeyListener(new KeyAdapter(){
-			public void keyReleased(KeyEvent e){
-				if (e.getKeyCode() == KeyEvent.VK_ENTER){
-
-					
-					if(!writingArea.getText().equals("")) {
-						NetworkMessage chatMessage = new NetworkMessage();
-						chatMessage.setMessageType(NetworkMessage.CHAT_MESSAGE);
-						chatMessage.setSender(game.getAlias());
-						chatMessage.setRecipient(NetworkMessage.BROADCAST);
-						chatMessage.setValue(writingArea.getText());
-						try {
-							myChatOutput.writeObject(chatMessage);
-							myChatOutput.flush();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-					
-					//Clear textarea
-					writingArea.setText("");
-					
-				}
-			}
-		});
+		writingArea.addKeyListener(new ChatListener());
 		
 		writeScroller.setPreferredSize(new Dimension(180,125));
 		
 		//Button
-		sendButton.addActionListener(new ActionListener(){
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				if(!writingArea.getText().equals("")) {
-					NetworkMessage chatMessage = new NetworkMessage();
-					chatMessage.setMessageType(NetworkMessage.CHAT_MESSAGE);
-					chatMessage.setSender(game.getAlias());
-					chatMessage.setRecipient(NetworkMessage.BROADCAST);
-					chatMessage.setValue(writingArea.getText() + "\n");
-					try {
-						myChatOutput.writeObject(chatMessage);
-						myChatOutput.flush();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-				
-				//Clear textarea
-				writingArea.setText("");
-			}
-		});
+		sendButton.addActionListener(new ChatListener());
 		
 		//South panel
 		chatSouthPanel.setBackground(Color.WHITE);
@@ -192,6 +145,79 @@ public class GameFrame extends JFrame{
 		chatPanel.add(chatScroller, BorderLayout.CENTER);
 		chatPanel.add(chatSouthPanel, BorderLayout.SOUTH);
 		
+	}
+	
+	class ChatListener implements ActionListener, KeyListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			sendTextMessage();
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER){
+				
+				sendTextMessage();
+				
+			}
+		}
+		
+		private void sendTextMessage() {
+			NetworkMessage textMessage = new NetworkMessage();
+			//TODO: add invalid whisper syntax warning label
+			//TODO: whisper doesn't work
+			String text = writingArea.getText();
+			
+			if(!writingArea.getText().equals("")) {
+				
+				if(text.startsWith("/Whisper:")){
+					int begin = text.indexOf(':') + 1;
+					int end = text.indexOf(" ");
+					String alias;
+					String messageValue;
+					if(end < 0){
+						alias = text.substring(begin);
+						messageValue = "";
+					}
+					else{
+						alias = text.substring(begin, end);
+						messageValue = text.substring(begin+alias.length());
+					}
+					
+					textMessage.setMessageType(NetworkMessage.WHISPER_MESSAGE);
+					textMessage.setRecipient(alias);
+					textMessage.setSender(game.getLocalPlayer().getAlias());
+					textMessage.setValue(messageValue);
+				}
+				else{
+					textMessage.setMessageType(NetworkMessage.CHAT_MESSAGE);
+					textMessage.setSender(game.getAlias());
+					textMessage.setRecipient(NetworkMessage.BROADCAST);
+					textMessage.setValue(writingArea.getText());
+				}
+				
+				try {
+					myChatOutput.writeObject(textMessage);
+					myChatOutput.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			//Clear text area
+			writingArea.setText("");
+		}
 	}
 	
 	//	********************* BitcoinPanel *************************
@@ -377,9 +403,6 @@ public class GameFrame extends JFrame{
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)));
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
-
-
-	
 	}
 	
 	class PlayerButton extends JButton{
@@ -391,7 +414,7 @@ public class GameFrame extends JFrame{
 		public PlayerButton(TruncatedPlayer player){
 			super(player.getAlias());
 			
-			this.player = player;
+			this.setPlayer(player);
 			setBackground(Color.WHITE);
 			setBorder(new LineBorder(Color.BLACK, 1));
 			setBackground(Color.WHITE);
@@ -426,6 +449,15 @@ public class GameFrame extends JFrame{
 			
 			g.drawString("Money: ", healthBarX, moneyLabelY);
 			g.drawString("$" + player.getCoinString(), healthBarX + 70, moneyLabelY);
+	
+		}
+
+		public TruncatedPlayer getPlayer() {
+			return player;
+		}
+
+		public void setPlayer(TruncatedPlayer player) {
+			this.player = player;
 		}
 	}
 	

@@ -12,21 +12,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToolTip;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 class ShopPanel extends JPanel{
-	private Player player;
+
 	
 	private JLabel titleLabel = new JLabel("Bitcoin Shop", SwingConstants.CENTER);
 	
@@ -42,7 +39,6 @@ class ShopPanel extends JPanel{
 	
 	public ShopPanel(GameFrame main, Player player){
 		mainFrame = main;
-		this.player = player;
 		setPreferredSize(new Dimension(650,400));
 		setBackground(Color.WHITE);
 		setBorder(new LineBorder(Color.BLACK, 1));
@@ -177,6 +173,7 @@ abstract class AbstractItemButton extends JButton {
 		
 		//MouseOverLabel
 		setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
+		//TODO: These boxes could be prettier if description and joke had line breaks inserted into them and we played with colors
 		
 		this.addMouseListener(new MouseListener(){
 
@@ -186,7 +183,6 @@ abstract class AbstractItemButton extends JButton {
 					setBorder(loweredBorder);
 					repaint();
 					
-					item.run();
 				}
 			}
 
@@ -219,8 +215,14 @@ abstract class AbstractItemButton extends JButton {
 					new Thread(new CooldownThread(button)).start();
 					
 					//Make a new networkMessage object and fill in fields
-					NetworkMessage newMessage;
+					NetworkMessage newMessage = new NetworkMessage();
 					
+					newMessage.setSender(player.getAlias());
+					newMessage.setRecipient("3");
+					newMessage.setItemType(item.getItemName());
+					newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+					newMessage.setValue(item);
+					player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
 				}
 			}
 		});

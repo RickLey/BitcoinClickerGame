@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,11 +14,10 @@ import java.util.Set;
 
 import javax.swing.JButton;
 
-public class Game extends Thread {
+public class Game {
 
 	private final double critChanceRate = 0.005;
 	private final double clickerComboMultiplier = 1.2;
-	private final int MaxCoins = 100000; //win condition
 	private final int startHealth = 100;
 	private int inProgress;
 	private Player localPlayer;
@@ -39,15 +37,16 @@ public class Game extends Thread {
 	
 	//TODO These will need to change as we get closer to finishing
 	private String name;
-	private String hostname = "10.121.71.42";
+	private String hostname = "10.121.89.124";
 	
 	private HashMap<String, TruncatedPlayer> allPlayers;
 	
-	public Game(String alias)
+	public Game(String alias, String hostname,StartGUI sg)
 	{		
 		try {
-			name = alias;
-			
+			this.name = alias;
+			this.hostname = hostname;
+
 			//Gameplay socket set up and initialization
 			gameplaySocket = new Socket(hostname, 10000);
 			
@@ -74,14 +73,16 @@ public class Game extends Thread {
 			chatOOS.flush();
 						
 			//this receives the list of all players
-			//TODO: store the aliases somewhere
 			NetworkMessage received2 = (NetworkMessage) gameplayOIS.readObject();
 			allPlayers = new HashMap<String, TruncatedPlayer>();
 			String[] receivedAliases = (String[])received2.getValue();
-			for(int i=0; i<3; i++){
+			for(int i=0; i<4; i++){
 				allPlayers.put(receivedAliases[i], new TruncatedPlayer(0, 100,
 								receivedAliases[i]));
 			}
+			
+			//Create localPlayer instance
+			localPlayer = new Player(this, name);
 			
 			//Receive the draw GUI message
 			gameplayOIS.readObject();
@@ -90,6 +91,10 @@ public class Game extends Thread {
 			
 			//Receive the start game message
 			gameplayOIS.readObject();
+			
+			//Remove StartGUI
+			sg.setVisible(false);
+			sg.dispose();
 			
 			//Create the GUI, gameplay, and chat threads for client
 			new GUIThread(this, gameplayOOS, chatOOS).start();
@@ -100,6 +105,7 @@ public class Game extends Thread {
 			chatThread = new ReadChatMessageThread(this, chatOIS);
 			chatThread.start();
 			updateThread = new SendPlayerUpdatesThread(this, gameplayOOS);
+			updateThread.start();
 			
 		} catch (UnknownHostException e) {
 			System.out.println("UHE");
@@ -138,12 +144,6 @@ public class Game extends Thread {
 	}
 	
 //Not sure about all methods below this comment
-	public void initializeGame()
-	{
-		gameFrame.setVisible(true);
-		localPlayer = new Player("aaa"/* alias */, this);
-	}
-	
 	public Player getLocalPlayer() {
 		return localPlayer;
 	}
@@ -165,20 +165,20 @@ public class Game extends Thread {
 	
 	public static void main(String[] args)
 	{
-		new Game(args[0]);
+		//new Game(args[0]);
 	}
 
-	public Set<String> getOpponents() {
-		Set<String> withoutLocalPlayer = allPlayers.keySet();
+	public synchronized Set<String> getOpponents() {
+		Set<String> withoutLocalPlayer = new HashSet<String>(allPlayers.keySet());
 		withoutLocalPlayer.remove(name);
 		return withoutLocalPlayer;
 	}
 	
-	public TruncatedPlayer getTruncatedPlayerByAlias(String alias){
+	public synchronized TruncatedPlayer getTruncatedPlayerByAlias(String alias){
 		return allPlayers.get(alias);
 	}
 
-	public void updateOpponent(TruncatedPlayer update) {
+	public synchronized void updateOpponent(TruncatedPlayer update) {
 		allPlayers.put(update.getAlias(), update);
 	}
 }
@@ -222,12 +222,12 @@ class ReadGameplayMessageThread extends Thread {
 					myGame.getLocalPlayer().getHandler().handleIncomingMessage(myGame, received);
 				}
 			} catch(SocketException e){
-			}
-			catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
+				break;
+			} catch (ClassNotFoundException | IOException e) {
+				break;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+				break;
+			} 
 		}
 	}
 }
@@ -292,9 +292,15 @@ class SendPlayerUpdatesThread extends Thread{
 			TruncatedPlayer update = new TruncatedPlayer(myGame.getLocalPlayer().getCoins(),
 														myGame.getLocalPlayer().getHealth(),
 														myGame.getLocalPlayer().getAlias());
+			NetworkMessage updateMessage = new NetworkMessage();
+			updateMessage.setMessageType(NetworkMessage.UPDATE_MESSAGE);
+			updateMessage.setSender(myGame.getLocalPlayer().getAlias());
+			updateMessage.setRecipient(NetworkMessage.BROADCAST);
+			updateMessage.setValue(update);
+			
 			synchronized(gameplayOOS){
 				try {
-					gameplayOOS.writeObject(update);
+					gameplayOOS.writeObject(updateMessage);
 				} catch(SocketException e){
 				} catch (IOException e) {
 					e.printStackTrace();

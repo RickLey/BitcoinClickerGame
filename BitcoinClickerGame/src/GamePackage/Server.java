@@ -9,15 +9,14 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class Server {
 	
 	//TODO timeouts?
-	//TODO whisper sends to recipient AND sender
 	//TODO when players die, do they still send updates? Can they be revived?
-	//TODO leech and EMP
 	
 	private HashMap<String, ObjectOutputStream> gameplayOutputs;
 	private HashMap<String, ObjectOutputStream> chatOutputs;
@@ -62,6 +61,7 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
+			System.out.println("Got gameplay sockets");
 			
 			//send message to connect chat sockets
 			NetworkMessage connectChatSocketsMessage = new NetworkMessage();
@@ -83,11 +83,15 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
+			System.out.println("Got chat sockets");
+			
 			//Send list of all players to all players
 			NetworkMessage distributeAliases = new NetworkMessage();
 			distributeAliases.setSender(NetworkMessage.SERVER_ALIAS);
 			distributeAliases.setMessageType(NetworkMessage.GAME_INITIALIZATION_MESSAGE);
-			distributeAliases.setValue(gameplayOutputs.keySet().toArray());
+			String [] aliasesArray = Arrays.copyOf(gameplayOutputs.keySet().toArray(), gameplayOutputs.keySet().size(), String[].class);
+			distributeAliases.setValue(aliasesArray);
+			//distributeAliases.setValue((String[])gameplayOutputs.keySet().toArray());
 			
 			sendGameplayMessageToAll(distributeAliases);
 			
@@ -126,11 +130,6 @@ public class Server {
 		}
 	}
 	
-	/*TODO
-	 * There will be 4 threads for chat and 4 for gameplay. Each is polling a separate input socket.
-	 * When it receives a message, it can still get the recipient, etc. We'll just create a method - send message -
-	 * that synchronizes to make sure only one writes at a time.
-	 */
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
 		Server s = new Server();
@@ -259,15 +258,14 @@ class GamePlayThread extends Thread{
 						}
 					}
 					
-					//TODO update constant
-					else if(playerUpdate.getMoney() == 10000){
+					else if(playerUpdate.getMoney() == Constants.MAX_COIN_LIMIT){
 						sendEndGame(received);
 						parentServer.endGame();
 					}
 					
 				}
 				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE) ||
-						received.getMessageType().equals(NetworkMessage.LEECH_MESSAGE)){
+						received.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 					
 					//update how many times the item has been seen
 					String itemType = received.getItemType();
@@ -281,13 +279,14 @@ class GamePlayThread extends Thread{
 					parentServer.sendGameplayMessageToPlayer(received, received.getRecipient());
 				}
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				break;
 			} catch (SocketException e){
 				System.out.println("Caught socket exception");
+				break;
 			} catch (IOException e) {
-				e.printStackTrace();
+				break;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				break;
 			} 
 			
 		}
@@ -344,16 +343,19 @@ class ChatThread extends Thread{
 				}
 				else if(messageType.equals(NetworkMessage.WHISPER_MESSAGE)){
 					parentServer.sendChatMessageToPlayer(received, received.getRecipient());
+					parentServer.sendChatMessageToPlayer(received, received.getSender());
+					System.out.println("Got whisper. Sender: " + received.getSender() + " Recipient: " + received.getRecipient());
 				}
 			} 
 			catch (SocketException e){
 				System.out.println("Caught socket exception");
-			}catch (IOException e) {
-				e.printStackTrace();
+				break;
+			} catch (IOException e) {
+				break;
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				break;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				break;
 			}
 		}
 	}

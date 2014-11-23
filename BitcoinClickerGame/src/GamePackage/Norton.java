@@ -1,6 +1,7 @@
 package GamePackage;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Norton extends DefenseItem {
 
@@ -16,17 +17,26 @@ public class Norton extends DefenseItem {
 		
 	}
 
+	//TODO: make it actually stop a virus
 	@Override
 	public void run() {
-		ArrayList<Item> activeItems = target.getActiveItems();
+		Vector<Item> activeItems = target.getActiveItems();
+		Item virus = null;
+		boolean found = false;
 		for(Item i : activeItems) {
 			if (i instanceof Virus) {
-				boolean removedVirus = activeItems.remove(i);
-				if(!removedVirus) {
-					throw new RuntimeException("Norton.run(): failed to remove virus from active threads");
-				}
+				virus = i;
+				found = true;
+				break;
+			}
+		}
+		if(found){
+			virus.interrupt();
+			boolean removedVirus = activeItems.remove(virus);
+			if(!removedVirus) {
+				throw new RuntimeException("Norton.run(): failed to remove virus from active threads");
 			}
 		}
 	}
-
 }
+

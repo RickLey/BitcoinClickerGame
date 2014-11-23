@@ -6,7 +6,6 @@ public class Virus extends AttackItem {
 	private final static int COST = Constants.virusCost;
 	private final static int COOLDOWN = Constants.virusCooldown;
 	private final static int DPS = 1;
-	private boolean running;
 
 	public Virus() {
 		super(COST, COOLDOWN);
@@ -15,20 +14,19 @@ public class Virus extends AttackItem {
 		this.joke = Constants.virusJoke;
 	}
 
+	//TODO: blocking other items from running
 	@Override
 	public void run() {
-		while(running)
+		
+		while(!Thread.interrupted())
 		{
 			try {
 				target.deductHealth(DPS);
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				break;
 			}
 		}
-	}
-	
-	public void die() {
-		running = false;
+		System.out.println("Virus was terminated");
 	}
 }
