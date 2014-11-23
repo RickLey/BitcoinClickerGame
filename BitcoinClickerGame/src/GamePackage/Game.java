@@ -16,7 +16,7 @@ import java.util.Set;
 
 import javax.swing.JButton;
 
-public class Game extends Thread {
+public class Game {
 
 	private final double critChanceRate = 0.005;
 	private final double clickerComboMultiplier = 1.2;
