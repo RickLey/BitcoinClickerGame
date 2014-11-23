@@ -35,8 +35,7 @@ public class Player {
 		multiplier = 1;
 		moneyRecipient = this.getAlias();
 		ioHandler = new NullHandler();
-		//TODO:uncomment this when finished testing
-		//opponentAliases = container.getOpponents();
+		opponentAliases = container.getOpponents();
 		activeItems = new Vector<Item>();
 	}
 	
