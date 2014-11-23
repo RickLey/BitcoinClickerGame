@@ -20,7 +20,6 @@ public class Player {
 	private String moneyRecipient;		//As a string of their alias
 	private String alias;
 	private Game container;
-	private String alias;
 	
 	public Player(String alias, Game container) {
 		this.container = container;
@@ -42,7 +41,7 @@ public class Player {
 		coins = 0;
 		combo = 0;
 		multiplier = 1;
-		moneyRecipient = this;
+		moneyRecipient = alias;
 		threadHandler = new NullHandler();
 	}
 	
@@ -165,10 +164,6 @@ public class Player {
 
 	public List<JButton> getButtons() { 
 		return Collections.synchronizedList(container.getButtons());
-	}
-
-	public String getAlias() {
-		return alias;
 	}
 
 }
