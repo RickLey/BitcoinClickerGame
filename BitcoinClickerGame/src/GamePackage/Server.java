@@ -287,13 +287,14 @@ class GamePlayThread extends Thread{
 					parentServer.sendGameplayMessageToPlayer(received, received.getRecipient());
 				}
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				break;
 			} catch (SocketException e){
 				System.out.println("Caught socket exception");
+				break;
 			} catch (IOException e) {
-				e.printStackTrace();
+				break;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				break;
 			} 
 			
 		}
@@ -354,12 +355,13 @@ class ChatThread extends Thread{
 			} 
 			catch (SocketException e){
 				System.out.println("Caught socket exception");
-			}catch (IOException e) {
-				e.printStackTrace();
+				break;
+			} catch (IOException e) {
+				break;
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				break;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				break;
 			}
 		}
 	}
