@@ -21,6 +21,8 @@ public class Player {
 	private String alias;
 	private Game container;
 	
+	
+	
 	public Player(String alias, Game container) {
 		this.container = container;
 		health = 100;
