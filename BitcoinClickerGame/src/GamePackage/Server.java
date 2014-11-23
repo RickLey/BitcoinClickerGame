@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -62,6 +63,7 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
+			System.out.println("Got gameplay sockets");
 			
 			//send message to connect chat sockets
 			NetworkMessage connectChatSocketsMessage = new NetworkMessage();
@@ -83,11 +85,15 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
+			System.out.println("Got chat sockets");
+			
 			//Send list of all players to all players
 			NetworkMessage distributeAliases = new NetworkMessage();
 			distributeAliases.setSender(NetworkMessage.SERVER_ALIAS);
 			distributeAliases.setMessageType(NetworkMessage.GAME_INITIALIZATION_MESSAGE);
-			distributeAliases.setValue(gameplayOutputs.keySet().toArray());
+			String [] aliasesArray = Arrays.copyOf(gameplayOutputs.keySet().toArray(), gameplayOutputs.keySet().size(), String[].class);
+			distributeAliases.setValue(aliasesArray);
+			//distributeAliases.setValue((String[])gameplayOutputs.keySet().toArray());
 			
 			sendGameplayMessageToAll(distributeAliases);
 			
