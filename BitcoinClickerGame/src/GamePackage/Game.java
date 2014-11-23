@@ -44,10 +44,11 @@ public class Game extends Thread {
 	
 	private HashMap<String, TruncatedPlayer> allPlayers;
 	
-	public Game(String alias)
+	public Game(String alias, String hostname)
 	{		
 		try {
-			name = alias;
+			this.name = alias;
+			this.hostname = hostname;
 
 			//Gameplay socket set up and initialization
 			gameplaySocket = new Socket(hostname, 10000);
@@ -163,7 +164,7 @@ public class Game extends Thread {
 	
 	public static void main(String[] args)
 	{
-		new Game(args[0]);
+		//new Game(args[0]);
 	}
 
 	public Set<String> getOpponents() {
