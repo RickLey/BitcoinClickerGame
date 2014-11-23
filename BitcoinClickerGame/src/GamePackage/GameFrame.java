@@ -60,9 +60,8 @@ public class GameFrame extends JFrame{
 		
 		//DEBUG: Hardcoding in player
 
-		selfPlayer = new Player("Stephen", null);
+		selfPlayer = game.getLocalPlayer();
 
-		
 		setSize(1200,700);
 		setLocation(100,200);
 		
