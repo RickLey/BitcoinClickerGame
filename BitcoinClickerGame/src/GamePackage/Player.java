@@ -3,7 +3,9 @@ package GamePackage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 
@@ -14,7 +16,7 @@ public class Player {
 	private boolean alive;		//To disable a player when he/she dies
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
-	private HashSet<String> opponentAliases;
+	private Set<String> opponentAliases;
 	private ArrayList<Item> activeItems;
 	private IOHandler threadHandler;
 	private Item currentSelectedItem;
@@ -47,6 +49,15 @@ public class Player {
 		moneyRecipient = this.getAlias();
 		threadHandler = new NullHandler();
 		opponentAliases = container.getOpponents();
+	}
+	
+	public String getOpponentAliasByIndex(int index){
+		Iterator<String> it = opponentAliases.iterator();
+		String alias = it.next();
+		for(int i = 0; i < index; ++i){
+			alias = it.next();
+		}
+		return alias;
 	}
 	
 	public String getAlias(){
@@ -131,6 +142,9 @@ public class Player {
 			if(nm.getSender().equals(alias)){
 				return;
 			}
+			else{
+				container.updateOpponent((TruncatedPlayer)nm.getValue());
+			}
 		}
 
 	}
@@ -169,5 +183,5 @@ public class Player {
 	public List<JButton> getButtons() { 
 		return Collections.synchronizedList(container.getButtons());
 	}
-
+	
 }

@@ -355,25 +355,26 @@ public class GameFrame extends JFrame{
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		newButton = new PlayerButton(selfPlayer);
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()));
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		newButton = new PlayerButton(new Player(null, "Player 1"));
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)));
+//		newButton = new PlayerButton(TruncatedPlayer[Opponent]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		newButton = new PlayerButton(new Player(null, "Player 2"));
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(1)));
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 
 		gbc.gridx = 1;
 		gbc.gridy = 1;
-		newButton = new PlayerButton(new Player(null, "Player 3"));
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)));
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 
@@ -382,9 +383,9 @@ public class GameFrame extends JFrame{
 	}
 	
 	class PlayerButton extends JButton{
-		private Player player;
+		private TruncatedPlayer player;
 		
-		public PlayerButton(Player player){
+		public PlayerButton(TruncatedPlayer player){
 			super(player.getAlias());
 			
 			this.player = player;

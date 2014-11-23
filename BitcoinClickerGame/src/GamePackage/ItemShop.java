@@ -217,6 +217,10 @@ abstract class AbstractItemButton extends JButton {
 					player.deductMoney(cost);
 					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
 					new Thread(new CooldownThread(button)).start();
+					
+					//Make a new networkMessage object and fill in fields
+					NetworkMessage newMessage;
+					
 				}
 			}
 		});
