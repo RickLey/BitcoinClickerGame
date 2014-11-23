@@ -1,5 +1,6 @@
 package GamePackage;
 
+import java.awt.event.WindowEvent;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -44,7 +45,7 @@ public class Game extends Thread {
 	
 	private HashMap<String, TruncatedPlayer> allPlayers;
 	
-	public Game(String alias, String hostname)
+	public Game(String alias, String hostname,StartGUI sg)
 	{		
 		try {
 			this.name = alias;
@@ -94,6 +95,10 @@ public class Game extends Thread {
 			
 			//Receive the start game message
 			gameplayOIS.readObject();
+			
+			//Remove StartGUI
+			sg.setVisible(false);
+			sg.dispose();
 			
 			//Create the GUI, gameplay, and chat threads for client
 			new GUIThread(this, gameplayOOS, chatOOS).start();

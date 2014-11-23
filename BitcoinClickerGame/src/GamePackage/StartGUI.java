@@ -60,7 +60,7 @@ public class StartGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(!hostnameField.getText().equals("") && !aliasField.getText().equals("")) {
-			new Game(aliasField.getText(), hostnameField.getText());
+			new Game(aliasField.getText(), hostnameField.getText(), this);
 		}
 	}
 	
