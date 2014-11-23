@@ -18,24 +18,11 @@ public class Player {
 	private double multiplier;	//Purchased multiplier
 	private Set<String> opponentAliases;
 	private ArrayList<Item> activeItems;
-	private IOHandler threadHandler;
+	private IOHandler ioHandler;
 	private Item currentSelectedItem;
 	private String moneyRecipient;		//As a string of their alias
 	private String alias;
 	private Game container;
-	
-	
-	
-	public Player(String alias, Game container) {
-		this.container = container;
-		health = 100;
-		alive = true;
-		coins = 0;
-		combo = 0;
-		multiplier = 1;
-		moneyRecipient = alias;
-		threadHandler = new NullHandler();
-	}
 	
 	//Stephen's testing constructor
 	public Player(Game container, String alias) {
@@ -47,7 +34,7 @@ public class Player {
 		combo = 0;
 		multiplier = 1;
 		moneyRecipient = this.getAlias();
-		threadHandler = new NullHandler();
+		ioHandler = new NullHandler();
 		opponentAliases = container.getOpponents();
 	}
 	
@@ -69,11 +56,11 @@ public class Player {
 	}
 	
 	public IOHandler getHandler() {
-		return threadHandler;
+		return ioHandler;
 	}
 	
 	public synchronized void setHandler(IOHandler replacement) {
-		threadHandler = replacement;
+		ioHandler = replacement;
 	}
 	
 	public synchronized void setMoneyRecipient(String stringAlias) {
@@ -96,7 +83,7 @@ public class Player {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
 		}
-		if(moneyRecipient.equals(this)) {	//TODO: moneyRecipient is a string, not a player object, need to account for this
+		if(moneyRecipient.equals(this.getAlias())) {	//TODO: moneyRecipient is a string, not a player object, need to account for this
 			coins += amount;
 		} else {
 			//TODO: send information via stream to other player so that they get money.
@@ -147,7 +134,7 @@ public class Player {
 				container.updateOpponent((TruncatedPlayer)nm.getValue());
 			}
 		}
-
+			
 	}
 	
 	public void startItem(Item item) {
@@ -183,6 +170,10 @@ public class Player {
 
 	public List<JButton> getButtons() { 
 		return Collections.synchronizedList(container.getButtons());
+	}
+	
+	public Game getGame() {
+		return container;
 	}
 	
 }

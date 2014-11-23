@@ -1,5 +1,6 @@
 package GamePackage;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -47,7 +48,7 @@ public class Game extends Thread {
 	{		
 		try {
 			name = alias;
-			
+
 			//Gameplay socket set up and initialization
 			gameplaySocket = new Socket(hostname, 10000);
 			
@@ -74,14 +75,16 @@ public class Game extends Thread {
 			chatOOS.flush();
 						
 			//this receives the list of all players
-			//TODO: store the aliases somewhere
 			NetworkMessage received2 = (NetworkMessage) gameplayOIS.readObject();
 			allPlayers = new HashMap<String, TruncatedPlayer>();
 			String[] receivedAliases = (String[])received2.getValue();
-			for(int i=0; i<3; i++){
+			for(int i=0; i<4; i++){
 				allPlayers.put(receivedAliases[i], new TruncatedPlayer(0, 100,
 								receivedAliases[i]));
 			}
+			
+			//Create localPlayer instance
+			localPlayer = new Player(this, name);
 			
 			//Receive the draw GUI message
 			gameplayOIS.readObject();
@@ -138,12 +141,6 @@ public class Game extends Thread {
 	}
 	
 //Not sure about all methods below this comment
-	public void initializeGame()
-	{
-		gameFrame.setVisible(true);
-		localPlayer = new Player("aaa"/* alias */, this);
-	}
-	
 	public Player getLocalPlayer() {
 		return localPlayer;
 	}
@@ -169,7 +166,7 @@ public class Game extends Thread {
 	}
 
 	public Set<String> getOpponents() {
-		Set<String> withoutLocalPlayer = allPlayers.keySet();
+		Set<String> withoutLocalPlayer = new HashSet<String>(allPlayers.keySet());
 		withoutLocalPlayer.remove(name);
 		return withoutLocalPlayer;
 	}
@@ -222,12 +219,12 @@ class ReadGameplayMessageThread extends Thread {
 					myGame.getLocalPlayer().getHandler().handleIncomingMessage(myGame, received);
 				}
 			} catch(SocketException e){
-			}
-			catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
+				break;
+			} catch (ClassNotFoundException | IOException e) {
+				break;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+				break;
+			} 
 		}
 	}
 }
