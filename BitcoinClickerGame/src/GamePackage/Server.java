@@ -132,11 +132,6 @@ public class Server {
 		}
 	}
 	
-	/*TODO
-	 * There will be 4 threads for chat and 4 for gameplay. Each is polling a separate input socket.
-	 * When it receives a message, it can still get the recipient, etc. We'll just create a method - send message -
-	 * that synchronizes to make sure only one writes at a time.
-	 */
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
 		Server s = new Server();
