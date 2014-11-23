@@ -168,17 +168,17 @@ public class Game {
 		//new Game(args[0]);
 	}
 
-	public Set<String> getOpponents() {
+	public synchronized Set<String> getOpponents() {
 		Set<String> withoutLocalPlayer = new HashSet<String>(allPlayers.keySet());
 		withoutLocalPlayer.remove(name);
 		return withoutLocalPlayer;
 	}
 	
-	public TruncatedPlayer getTruncatedPlayerByAlias(String alias){
+	public synchronized TruncatedPlayer getTruncatedPlayerByAlias(String alias){
 		return allPlayers.get(alias);
 	}
 
-	public void updateOpponent(TruncatedPlayer update) {
+	public synchronized void updateOpponent(TruncatedPlayer update) {
 		allPlayers.put(update.getAlias(), update);
 	}
 }

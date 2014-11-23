@@ -24,7 +24,6 @@ public class Virus extends AttackItem {
 				target.deductHealth(DPS);
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 				break;
 			}
 		}

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JButton;
 
@@ -16,7 +17,7 @@ public class Player {
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
 	private Set<String> opponentAliases;
-	private ArrayList<Item> activeItems;
+	private Vector<Item> activeItems;
 	private IOHandler ioHandler;
 	private Item currentSelectedItem;
 	private String moneyRecipient;		//As a string of their alias
@@ -34,11 +35,12 @@ public class Player {
 		multiplier = 1;
 		moneyRecipient = this.getAlias();
 		ioHandler = new NullHandler();
-		opponentAliases = container.getOpponents();
-		activeItems = new ArrayList<Item>();
+		//TODO:uncomment this when finished testing
+		//opponentAliases = container.getOpponents();
+		activeItems = new Vector<Item>();
 	}
 	
-	public String getOpponentAliasByIndex(int index){
+	public synchronized String getOpponentAliasByIndex(int index){
 		Iterator<String> it = opponentAliases.iterator();
 		String alias = it.next();
 		for(int i = 0; i < index; ++i){
@@ -51,11 +53,11 @@ public class Player {
 		return alias;
 	}
 	
-	public int getHealth(){
+	public synchronized int getHealth(){
 		return health;
 	}
 	
-	public IOHandler getHandler() {
+	public synchronized IOHandler getHandler() {
 		return ioHandler;
 	}
 	
@@ -67,11 +69,11 @@ public class Player {
 		moneyRecipient = stringAlias;
 	}
 	
-	public ArrayList<Item> getActiveItems() {
+	public synchronized Vector<Item> getActiveItems() {
 		return activeItems;
 	}
 	
-	public double getCoins() {
+	public synchronized double getCoins() {
 		return coins;
 	}
 	
@@ -150,23 +152,23 @@ public class Player {
 		}
 	}
 	
-	private void purchaseItem(Item item) {
+	private synchronized void purchaseItem(Item item) {
 		deductMoney(item.getCost());
 	}
 
-	public String getCoinString(){
+	public synchronized String getCoinString(){
 		String coinString = "" + coins;
 		
 		return coinString.substring(0, coinString.indexOf('.')+2);
 	}
 	
-	public void incrementFromButtonClick() {
+	public synchronized void incrementFromButtonClick() {
 		double amount = Constants.BASE_COINS_PER_CLICK + combo;
 		receiveMoney(amount);
 		combo += Constants.COMBO_INCREMENT_AMOUNT;
 	}
 	
-	public void resetCombo() {
+	public synchronized void resetCombo() {
 		combo = 0;
 	}
 
