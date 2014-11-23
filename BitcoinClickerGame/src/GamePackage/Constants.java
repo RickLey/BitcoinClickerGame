@@ -41,6 +41,7 @@ class Constants {
 		
 		//Duration
 		public static final int leechDuration = 10;
+		public static final int EMPDuration = 10;
 
 		//Joke
 		public static final String EMPJoke = "The EMP is meant to be used against other players for a tactical advantage, but don’t let that stop you from the incredible fun of EMPing your friends while they’re playing a game of FIFA.";

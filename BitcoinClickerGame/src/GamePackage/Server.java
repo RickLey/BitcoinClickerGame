@@ -344,6 +344,7 @@ class ChatThread extends Thread{
 				else if(messageType.equals(NetworkMessage.WHISPER_MESSAGE)){
 					parentServer.sendChatMessageToPlayer(received, received.getRecipient());
 					parentServer.sendChatMessageToPlayer(received, received.getSender());
+					System.out.println("Got whisper. Sender: " + received.getSender() + " Recipient: " + received.getRecipient());
 				}
 			} 
 			catch (SocketException e){

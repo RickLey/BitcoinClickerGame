@@ -35,6 +35,7 @@ public class Player {
 		moneyRecipient = this.getAlias();
 		ioHandler = new NullHandler();
 		opponentAliases = container.getOpponents();
+		activeItems = new ArrayList<Item>();
 	}
 	
 	public String getOpponentAliasByIndex(int index){

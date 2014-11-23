@@ -14,6 +14,7 @@ public class Virus extends AttackItem {
 		this.joke = Constants.virusJoke;
 	}
 
+	//TODO: blocking other items from running
 	@Override
 	public void run() {
 		
@@ -24,7 +25,9 @@ public class Virus extends AttackItem {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				break;
 			}
 		}
+		System.out.println("Virus was terminated");
 	}
 }

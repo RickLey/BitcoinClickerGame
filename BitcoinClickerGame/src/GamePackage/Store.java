@@ -16,9 +16,6 @@ public class Store {
 		return new Store(); //SOMEONE IMPLEMENT THIS SHIT
 	}
 
-	
-
-
 	// @return: returns 
 	public boolean prepareItem(Player target, Item item) {
 		//TODO: network code to send item

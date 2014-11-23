@@ -176,6 +176,7 @@ public class GameFrame extends JFrame{
 		private void sendTextMessage() {
 			NetworkMessage textMessage = new NetworkMessage();
 			//TODO: add invalid whisper syntax warning label
+			//TODO: whisper doesn't work
 			String text = writingArea.getText();
 			
 			if(!writingArea.getText().equals("")) {
@@ -183,8 +184,16 @@ public class GameFrame extends JFrame{
 				if(text.startsWith("/Whisper:")){
 					int begin = text.indexOf(':') + 1;
 					int end = text.indexOf(" ");
-					String alias = text.substring(begin, end);
-					String messageValue = text.substring(end+alias.length());
+					String alias;
+					String messageValue;
+					if(end < 0){
+						alias = text.substring(begin);
+						messageValue = "";
+					}
+					else{
+						alias = text.substring(begin, end);
+						messageValue = text.substring(begin+alias.length());
+					}
 					
 					textMessage.setMessageType(NetworkMessage.WHISPER_MESSAGE);
 					textMessage.setRecipient(alias);

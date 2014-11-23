@@ -218,7 +218,7 @@ abstract class AbstractItemButton extends JButton {
 					
 					newMessage.setSender(player.getAlias());
 					newMessage.setRecipient("3");
-					newMessage.setItemType("Nokia Phone");
+					newMessage.setItemType(item.getItemName());
 					newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
 					newMessage.setValue(item);
 					player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);

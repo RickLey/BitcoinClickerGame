@@ -14,6 +14,7 @@ public class HealthPack extends DefenseItem {
 		this.name = "Health Pack";
 	}
 
+	//TODO: Doesn't work if virus is running
 	@Override
 	public void run() {
 		target.addHealth(HEALING);

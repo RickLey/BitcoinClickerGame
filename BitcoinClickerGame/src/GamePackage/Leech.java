@@ -17,6 +17,7 @@ public class Leech extends AttackItem {
 		this.senderAlias = senderAlias;
 	}
 
+	//TODO: Works but only updates received money after clicking button again
 	@Override
 	public void run() {
 		
@@ -46,6 +47,8 @@ public class Leech extends AttackItem {
 		leechMessage.setSender(target.getAlias());
 		leechMessage.setMessageType(NetworkMessage.LEECH_RESULT_MESSAGE);
 		leechMessage.setValue(leechedAmount);
+		
+		target.getHandler().handleOutgoingMessage(target.getGame(), leechMessage);
 		
 		
 		

@@ -16,12 +16,16 @@ public class Norton extends DefenseItem {
 		
 	}
 
+	//TODO: make it actually stop a virus
 	@Override
 	public void run() {
 		ArrayList<Item> activeItems = target.getActiveItems();
+		System.out.println("Listing running threads:");
 		for(Item i : activeItems) {
+			System.out.println(i.getClass().getName());
 			if (i instanceof Virus) {
 				i.interrupt();
+				System.out.println("Found virus");
 				boolean removedVirus = activeItems.remove(i);
 				if(!removedVirus) {
 					throw new RuntimeException("Norton.run(): failed to remove virus from active threads");
