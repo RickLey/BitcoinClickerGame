@@ -30,7 +30,9 @@ public class Server {
 	
 	public Server(){
 		try {
+			@SuppressWarnings("resource")
 			ServerSocket gameplaySS = new ServerSocket(10000);
+			@SuppressWarnings("resource")
 			ServerSocket chatSS = new ServerSocket(20000);
 			
 			gpThreads = new ArrayList<GamePlayThread>();
@@ -130,6 +132,7 @@ public class Server {
 	 * that synchronizes to make sure only one writes at a time.
 	 */
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		Server s = new Server();
 		while(true){
 		}

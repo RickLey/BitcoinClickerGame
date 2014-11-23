@@ -2,6 +2,7 @@ package GamePackage;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,7 +14,7 @@ public class Player {
 	private boolean alive;		//To disable a player when he/she dies
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
-	private ArrayList<String> opponentAliases;
+	private HashSet<String> opponentAliases;
 	private ArrayList<Item> activeItems;
 	private IOHandler threadHandler;
 	private Item currentSelectedItem;
@@ -43,8 +44,9 @@ public class Player {
 		coins = 0;
 		combo = 0;
 		multiplier = 1;
-		moneyRecipient = alias;
+		moneyRecipient = this.getAlias();
 		threadHandler = new NullHandler();
+		opponentAliases = container.getOpponents();
 	}
 	
 	public String getAlias(){
