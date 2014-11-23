@@ -79,7 +79,7 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 		
 		if(source.getText().equals("0")){
 			toSend.setMessageType(NetworkMessage.UPDATE_MESSAGE);
-			toSend.setValue(new TruncatedPlayer(5,5));
+			toSend.setValue(new TruncatedPlayer(5,5, client.getAlias()));
 			toSend.setRecipient(NetworkMessage.BROADCAST);
 			try {
 				myGameplayOutput.writeObject(toSend);
@@ -118,7 +118,7 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 		}
 		if(source.getText().equals("3")){
 			toSend.setMessageType(NetworkMessage.UPDATE_MESSAGE);
-			toSend.setValue(new TruncatedPlayer(0,0));
+			toSend.setValue(new TruncatedPlayer(0,0, client.getAlias()));
 			toSend.setRecipient(NetworkMessage.BROADCAST);
 			try {
 				myGameplayOutput.writeObject(toSend);
@@ -130,7 +130,7 @@ public class NetworkTestGui extends JFrame implements ActionListener {
 		}
 		if(source.getText().equals("4")){
 			toSend.setMessageType(NetworkMessage.UPDATE_MESSAGE);
-			toSend.setValue(new TruncatedPlayer(10000,10000));
+			toSend.setValue(new TruncatedPlayer(10000,10000, client.getAlias()));
 			toSend.setRecipient(NetworkMessage.BROADCAST);
 			try {
 				myGameplayOutput.writeObject(toSend);
