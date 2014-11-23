@@ -12,21 +12,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToolTip;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 class ShopPanel extends JPanel{
-	private Player player;
+
 	
 	private JLabel titleLabel = new JLabel("Bitcoin Shop", SwingConstants.CENTER);
 	
@@ -42,7 +39,6 @@ class ShopPanel extends JPanel{
 	
 	public ShopPanel(GameFrame main, Player player){
 		mainFrame = main;
-		this.player = player;
 		setPreferredSize(new Dimension(650,400));
 		setBackground(Color.WHITE);
 		setBorder(new LineBorder(Color.BLACK, 1));

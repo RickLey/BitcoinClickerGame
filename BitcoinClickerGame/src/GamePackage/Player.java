@@ -2,7 +2,6 @@ package GamePackage;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -156,7 +155,6 @@ public class Player {
 
 	public String getCoinString(){
 		String coinString = "" + coins;
-		String buildString = "";
 		
 		return coinString.substring(0, coinString.indexOf('.')+2);
 	}

@@ -2,8 +2,6 @@ package GamePackage;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,11 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class StartGUI extends JFrame implements ActionListener {
 	
-	private JPanel jp;
 	private JPanel topPanel;
-	private JPanel bottomPanel;
 	private JTextField aliasField;
 	private JTextField hostnameField;
 	private JLabel aliasLabel;
@@ -29,7 +26,6 @@ public class StartGUI extends JFrame implements ActionListener {
 		super("Bitcoin Clicker");
 		
 		topPanel 		= new JPanel();
-		bottomPanel 	= new JPanel();
 		
 		hostnameLabel	= new JLabel("Enter Server IP:");
 		hostnameField	= new JTextField(10);
