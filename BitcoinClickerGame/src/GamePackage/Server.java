@@ -165,7 +165,10 @@ public class Server {
 		try {
 			gameplayOutputs.get(recipientAlias).writeObject(m);
 			gameplayOutputs.get(recipientAlias).flush();
-			
+			if(m.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
+				System.out.println("Sent " + m.getItemType());
+				System.out.println("From: " + m.getSender() + " To: " + m.getRecipient());
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

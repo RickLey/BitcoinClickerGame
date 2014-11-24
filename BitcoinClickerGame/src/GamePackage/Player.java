@@ -136,12 +136,14 @@ public class Player {
 	
 	public void startItem(Item item) {
 		item.setPlayer(this);
-		item.run();
+		item.start();
+
 		if(item instanceof Virus || item instanceof Leech) {
 			synchronized(this) {
 				activeItems.add(item);
 			}
 		}
+		System.out.println(activeItems.size());
 	}
 	
 	private synchronized void purchaseItem(Item item) {

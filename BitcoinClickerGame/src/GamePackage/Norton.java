@@ -1,6 +1,5 @@
 package GamePackage;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class Norton extends DefenseItem {
