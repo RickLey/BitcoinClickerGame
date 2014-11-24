@@ -347,19 +347,15 @@ class DefenseButton extends AbstractItemButton{
 			new Thread(new CooldownThread(button)).start();
 			
 			//Make a new networkMessage object and fill in fields
-			if (player.getTargetAlias().equals("")){
-				System.out.println("SELECT PLAYER");
-			}
-			else{
-				NetworkMessage newMessage = new NetworkMessage();
-				
-				newMessage.setSender(player.getAlias());
-				newMessage.setRecipient(player.getAlias());
-				newMessage.setItemType(item.getItemName());
-				newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
-				newMessage.setValue(item);
-				player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
-			}
+			NetworkMessage newMessage = new NetworkMessage();
+			
+			newMessage.setSender(player.getAlias());
+			System.out.println("HealthPack to: " + player.getAlias());
+			newMessage.setRecipient(player.getAlias());
+			newMessage.setItemType(item.getItemName());
+			newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+			newMessage.setValue(item);
+			player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
 		}
 	}
 }
