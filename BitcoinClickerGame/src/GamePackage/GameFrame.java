@@ -412,7 +412,7 @@ public class GameFrame extends JFrame{
 		int moneyLabelY = healthBarY + 30;
 		
 		public PlayerButton(TruncatedPlayer player){
-			super(player.getAlias());
+			super("");
 			
 			this.setPlayer(player);
 			setBackground(Color.WHITE);
@@ -432,6 +432,7 @@ public class GameFrame extends JFrame{
 					}
 					
 					//TODO: assign target when clicked
+					selfPlayer.setTargetAlias(player.getAlias());
 				}
 			});
 			

@@ -23,6 +23,7 @@ public class Player {
 	private String moneyRecipient;		//As a string of their alias
 	private String alias;
 	private Game container;
+	private String targetAlias = "";
 	
 	//Stephen's testing constructor
 	public Player(Game container, String alias) {
@@ -177,6 +178,14 @@ public class Player {
 	
 	public Game getGame() {
 		return container;
+	}
+	
+	public String getTargetAlias(){
+		return targetAlias;
+	}
+	
+	public void setTargetAlias(String alias){
+		targetAlias = alias;
 	}
 	
 }
