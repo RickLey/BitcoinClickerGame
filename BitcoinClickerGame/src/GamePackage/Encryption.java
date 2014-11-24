@@ -12,12 +12,14 @@ public class Encryption extends DefenseItem implements IOHandler {
 		this.name = "Encryption";
 		this.joke = Constants.encryptionJoke;
 		this.description = Constants.encryptionDescription;
+		duration = Constants.EncryptionDuration;
 	}
 	
 	public void run() {
-		target.setHandler(this);
-		
-		
+		Encryption e = new Encryption();
+		e.setPlayer(target);
+		target.setHandler(e);
+	
 		//The thread that accesses the handleMessage methods aren't going to be on this thread that is running
 		pause(duration);
 		

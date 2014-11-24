@@ -104,7 +104,7 @@ public class Game {
 			new ReadGameplayMessageThread(this, gameplayOIS).start();
 			chatThread = new ReadChatMessageThread(this, chatOIS);
 			chatThread.start();
-			updateThread = new SendPlayerUpdatesThread(this, gameplayOOS);
+			updateThread = new SendPlayerUpdatesThread(this);
 			updateThread.start();
 			
 		} catch (UnknownHostException e) {
@@ -143,7 +143,6 @@ public class Game {
 		chatThread.interrupt();
 		chatThread.endGame();
 		updateThread.interrupt();
-		updateThread.endGame();
 		
 		//TODO: Calls to post game gui and stats
 	}
@@ -283,19 +282,13 @@ class ReadChatMessageThread extends Thread {
 
 class SendPlayerUpdatesThread extends Thread{
 	Game myGame;
-	ObjectOutputStream gameplayOOS;
+
 	
-	public SendPlayerUpdatesThread(Game g, ObjectOutputStream oos){
+	public SendPlayerUpdatesThread(Game g){
 		myGame = g;
-		gameplayOOS = oos;
 	}
 	
 	public void endGame(){
-		try {
-			gameplayOOS.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void run(){
@@ -309,13 +302,8 @@ class SendPlayerUpdatesThread extends Thread{
 			updateMessage.setRecipient(NetworkMessage.BROADCAST);
 			updateMessage.setValue(update);
 			
-			synchronized(gameplayOOS){
-				try {
-					gameplayOOS.writeObject(updateMessage);
-				} catch(SocketException e){
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			synchronized(myGame.getLocalPlayer()){
+				myGame.getLocalPlayer().getHandler().handleOutgoingMessage(myGame, updateMessage);
 			}
 			try {
 				Thread.sleep(500);

@@ -430,7 +430,6 @@ public class GameFrame extends JFrame{
 						setBorder(new LineBorder(Color.RED, 1));
 					}
 					
-					//TODO: assign target when clicked
 					selfPlayer.setTargetAlias(player.getAlias());
 				}
 			});
@@ -441,22 +440,29 @@ public class GameFrame extends JFrame{
 			super.paintComponent(g);
 			g.setFont(Constants.getFont(18));
 			g.drawString(player.getAlias(), 10, 20);
-			g.drawString("Health: ", healthBarX, healthBarY);
-			g.setColor(Color.GREEN);
-			g.fillRect(healthBarX + 70, healthBarY - 10, game.getOpponentInformation().get(player.getAlias()).getHealth(), 10);
-			g.setColor(Color.BLACK);
-			g.drawRect(healthBarX + 70, healthBarY - 10, 100, 10);
-			
-			g.drawString("Money: ", healthBarX, moneyLabelY);
-			g.drawString("$" + game.getOpponentInformation().get(player.getAlias()).getMoney(), healthBarX + 70, moneyLabelY);
-	
+		
+			TruncatedPlayer updatedPlayer = game.getOpponentInformation().get(player.getAlias());
+
+			if(updatedPlayer.getHealth() == -1 && updatedPlayer.getMoney() == -1){
+				g.fillRect(healthBarX, healthBarY, 200, 200);
+			}
+			else{
+				g.drawString("Health: ", healthBarX, healthBarY);
+				g.setColor(Color.GREEN);
+				g.fillRect(healthBarX + 70, healthBarY - 10, game.getOpponentInformation().get(player.getAlias()).getHealth(), 10);
+				g.setColor(Color.BLACK);
+				g.drawRect(healthBarX + 70, healthBarY - 10, 100, 10);
+				
+				g.drawString("Money: ", healthBarX, moneyLabelY);
+				g.drawString("$" + game.getOpponentInformation().get(player.getAlias()).getMoney(), healthBarX + 70, moneyLabelY);
+			}
 		}
 
-		public TruncatedPlayer getPlayer() {
+		public synchronized TruncatedPlayer getPlayer() {
 			return player;
 		}
 
-		public void setPlayer(TruncatedPlayer player) {
+		public synchronized void setPlayer(TruncatedPlayer player) {
 			this.player = player;
 		}
 	}
