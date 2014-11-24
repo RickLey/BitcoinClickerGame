@@ -445,10 +445,10 @@ public class GameFrame extends JFrame{
 	public void setupPlayerButtons(){
 		//first is the player
 		GridBagConstraints gbc = new GridBagConstraints();
-		Color[] playerColors = {new Color(255,96,43),	//RED 
-						  		new Color(55,208,255),	//BLUE 
-						  		new Color(255,255,82),	//YELLOW 
-						  		new Color(48,255,104)};	
+		Color[] playerColors = {new Color(255,96,43),		//RED 
+						  		new Color(55,208,255),		//BLUE 
+						  		new Color(255,255,82),		//YELLOW 
+						  		new Color(167,240,210)};	//GREEN
 		
 		JButton newButton;
 		
