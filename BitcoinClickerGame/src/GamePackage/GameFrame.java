@@ -94,8 +94,7 @@ public class GameFrame extends JFrame{
 	//Setup Functions
 	
 	//	********************* ChatPanel *************************
-	private JPanel		chatSouthPanel	= new JPanel();
-	
+	private JPanel chatSouthPanel		= new JPanel();
 	private JTextArea writingArea 		= new JTextArea();
 	private JTextArea chatArea			= new JTextArea();
 	private JLabel chatTitleLabel		= new JLabel("BitCoin Chat");
