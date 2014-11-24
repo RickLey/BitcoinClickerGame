@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
@@ -27,10 +28,13 @@ public class StartGUI extends JFrame implements ActionListener {
 		private JButton bitcoinLabel;
 		private JButton instructionButton 	= new JButton("Instructions");
 		
-	private JPanel instructionPanel 		= new JPanel();
-		private JButton backButton 			= new JButton("Back");
-		private JScrollPane instructionScroller;
-	
+	private JPanel instructionPanel 			= new JPanel();
+		private JButton backButton 				= new JButton("Back");
+		private JTextArea instructionsArea		= new JTextArea();
+		private JScrollPane instructionScroller = new JScrollPane(instructionsArea, 
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
 	//CardLayout
 	private JPanel outerPanel 				= new JPanel();
 	
@@ -65,6 +69,8 @@ public class StartGUI extends JFrame implements ActionListener {
 		
 		//Instructions
 		instructionPanel.setLayout(new BorderLayout());
+		instructionsArea.setText("Instructions go here\nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \n");
+		instructionPanel.add(instructionScroller, BorderLayout.CENTER);
 		
 		backButton.addActionListener(new CardAction("login", outerPanel));
 		instructionPanel.add(backButton, BorderLayout.SOUTH);
