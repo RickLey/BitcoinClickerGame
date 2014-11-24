@@ -256,7 +256,7 @@ public class GameFrame extends JFrame{
 					}
 					else{
 						alias = text.substring(begin, end);
-						messageValue = text.substring(begin+alias.length());
+						messageValue = text.substring(begin + alias.length());
 					}
 					
 					textMessage.setMessageType(NetworkMessage.WHISPER_MESSAGE);
@@ -614,9 +614,20 @@ public class GameFrame extends JFrame{
 	}
 
 	public synchronized void displayMessage(NetworkMessage m) {
-		if(m.getMessageType().equals(NetworkMessage.CHAT_MESSAGE) || m.getMessageType().equals(NetworkMessage.WHISPER_MESSAGE)) {
+		if (m.getMessageType().equals(NetworkMessage.CHAT_MESSAGE)) {
 			chatArea.append(m.getSender() + ": ");
 			chatArea.append((String)m.getValue() + "\n");
+		}
+		else if (m.getMessageType().equals(NetworkMessage.WHISPER_MESSAGE)) {
+			chatArea.append(m.getSender() + ": ");
+			if (m.getSender().equals(selfPlayer.getAlias())) {
+				chatArea.append((String)m.getValue() + "[To: " + m.getRecipient() + "]\n\n");
+			}
+			else {
+				chatArea.append((String)m.getValue() + "[Whisper]\n\n");
+			}
+			
+			
 		}
 	}
 	
