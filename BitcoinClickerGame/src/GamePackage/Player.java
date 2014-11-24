@@ -17,7 +17,7 @@ public class Player {
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
 	private Set<String> opponentAliases;
-	private Vector<Item> activeItems;
+	private Vector<Thread> activeItems;
 	private IOHandler ioHandler;
 	private Item currentSelectedItem;	
 	private String alias;
@@ -35,7 +35,7 @@ public class Player {
 		multiplier = 1;
 		ioHandler = new NullHandler();
 		opponentAliases = container.getOpponents();
-		activeItems = new Vector<Item>();
+		activeItems = new Vector<Thread>();
 	}
 	
 	public Player(String alias){
@@ -46,7 +46,7 @@ public class Player {
 		combo = 0;
 		multiplier = 1;
 		ioHandler = new NullHandler();
-		activeItems = new Vector<Item>();
+		activeItems = new Vector<Thread>();
 	}
 	
 	public synchronized String getOpponentAliasByIndex(int index){
@@ -74,7 +74,7 @@ public class Player {
 		ioHandler = replacement;
 	}
 	
-	public synchronized Vector<Item> getActiveItems() {
+	public synchronized Vector<Thread> getActiveItems() {
 		return activeItems;
 	}
 	
@@ -135,12 +135,7 @@ public class Player {
 			//TODO: call graphics stuff, too
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
-			/*if(nm.getSender().equals(alias)){
-				return;
-			}
-			else{*/
-				container.updateOpponent((TruncatedPlayer)nm.getValue());
-		//	}
+			container.updateOpponent((TruncatedPlayer)nm.getValue());
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 			int amount = (Integer)nm.getValue();
@@ -151,11 +146,12 @@ public class Player {
 	
 	public void startItem(Item item) {
 		item.setPlayer(this);
-		item.start();
-
+		Thread myThread = new Thread(item);
+		myThread.start();
 		if(item instanceof Virus || item instanceof Leech) {
 			synchronized(this) {
-				activeItems.add(item);
+				activeItems.add(myThread);
+				myThread.setName("Virus");
 			}
 		}
 		System.out.println(activeItems.size());

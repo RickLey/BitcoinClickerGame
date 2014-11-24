@@ -20,11 +20,11 @@ public class Norton extends DefenseItem {
 	@Override
 	public void run() {
 		System.out.println("Norton running");
-		Vector<Item> activeItems = target.getActiveItems();
-		Item virus = null;
+		Vector<Thread> activeItems = target.getActiveItems();
+		Thread virus = null;
 		boolean found = false;
-		for(Item i : activeItems) {
-			if (i instanceof Virus) {
+		for(Thread i : activeItems) {
+			if (i.getName().compareTo("Virus")==0) {
 				virus = i;
 				found = true;
 				break;
