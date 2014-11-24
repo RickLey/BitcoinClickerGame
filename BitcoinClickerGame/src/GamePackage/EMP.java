@@ -1,6 +1,6 @@
 package GamePackage;
 
-import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JButton;
 
@@ -21,15 +21,15 @@ public class EMP extends AttackItem {
 	//TODO: Updates coin graphic, but doesn't disable buttons and doesn't undo itself or disable everyone
 	@Override
 	public void run() {
-		List<JButton> buttonList = target.getButtons();
-		for(int i = 0; i < buttonList.size(); i ++)
+		Vector<JButton> buttons = target.getButtons();
+		for(int i = 0; i < buttons.size(); i ++)
 		{
-			buttonList.get(i).setEnabled(false);
+			buttons.get(i).setVisible(false);
 		}
 		pause(DURATION);
-		for(int i = 0; i < buttonList.size(); i ++)
+		for(int i = 0; i < buttons.size(); i ++)
 		{
-			buttonList.get(i).setEnabled(true);
+			buttons.get(i).setVisible(true);
 		}
 	}
 

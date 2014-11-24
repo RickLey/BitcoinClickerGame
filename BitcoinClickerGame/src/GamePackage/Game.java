@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JButton;
 
@@ -162,14 +163,14 @@ public class Game {
 		}
 	}
 	
-	public List<JButton> getButtons()
-	{
-		return gameFrame.getButtons();
-	}
-	
 	public static void main(String[] args)
 	{
 		//new Game(args[0]);
+	}
+	
+	public Vector<JButton> getButtons()
+	{
+		return gameFrame.getButtons();
 	}
 
 	public synchronized Set<String> getOpponents() {
@@ -184,6 +185,10 @@ public class Game {
 
 	public synchronized void updateOpponent(TruncatedPlayer update) {
 		allPlayers.put(update.getAlias(), update);
+	}
+
+	public void endGame(String winner) {
+		gameFrame.showEndGame(winner);
 	}
 }
 

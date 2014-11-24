@@ -1,5 +1,6 @@
 package GamePackage;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -110,7 +111,13 @@ public class Player {
 		if(amount < 0) {
 			throw new RuntimeException("addHealth(): amount " + amount + " is negative.");
 		}
-		health += amount;
+		
+		if((health + amount) >= 100) {
+			health = 100;
+		}
+		else {
+			health += amount;
+		}
 	}
 
 	public synchronized void deductMoney(double amount) {
@@ -140,6 +147,9 @@ public class Player {
 		else if(nm.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 			int amount = (Integer)nm.getValue();
 			receiveMoney(amount);
+		}
+		else if(nm.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)) {
+			container.endGame((String) nm.getValue());
 		}
 			
 	}
@@ -177,12 +187,13 @@ public class Player {
 		combo = 0;
 	}
 
-	public List<JButton> getButtons() { 
-		return Collections.synchronizedList(container.getButtons());
-	}
-	
 	public Game getGame() {
 		return container;
+	}
+	
+	public Vector<JButton> getButtons()
+	{
+		return container.getButtons();
 	}
 	
 	public String getTargetAlias(){
