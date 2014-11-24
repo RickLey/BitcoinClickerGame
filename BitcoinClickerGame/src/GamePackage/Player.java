@@ -136,7 +136,7 @@ public class Player {
 	
 	public void startItem(Item item) {
 		item.setPlayer(this);
-		new Thread(item).start();
+		item.start();
 		if(item instanceof Virus || item instanceof Leech) {
 			synchronized(this) {
 				activeItems.add(item);
