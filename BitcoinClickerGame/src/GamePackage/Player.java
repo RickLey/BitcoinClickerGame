@@ -113,6 +113,11 @@ public class Player {
 
 	public void receiveGameplayMessage(NetworkMessage nm) {
 
+		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)) {
+			System.out.println("After handler");
+			System.out.println("Received: " + nm.getItemType());
+		}
+		
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			Item item = (Item)nm.getValue();
 			startItem(item);

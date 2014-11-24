@@ -224,6 +224,12 @@ class ReadGameplayMessageThread extends Thread {
 					myGame.shutDown();
 				}
 				else{
+					
+					if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)) {
+						System.out.println("In receive gameplay message thread");
+						System.out.println("Received: " + received.getItemType());
+					}
+					
 					myGame.getLocalPlayer().getHandler().handleIncomingMessage(myGame, received);
 				}
 			} catch(SocketException e){
