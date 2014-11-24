@@ -318,7 +318,7 @@ class SendPlayerUpdatesThread extends Thread{
 				}
 			}
 			try {
-				Thread.sleep(500);
+				Thread.sleep(1000/36);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
