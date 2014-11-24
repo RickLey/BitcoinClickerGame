@@ -167,12 +167,13 @@ public class Player {
 		combo = 0;
 	}
 
-	public List<JButton> getButtons() { 
-		return Collections.synchronizedList(container.getButtons());
-	}
-	
 	public Game getGame() {
 		return container;
+	}
+	
+	public Vector<JButton> getButtons()
+	{
+		return container.getButtons();
 	}
 	
 	public String getTargetAlias(){

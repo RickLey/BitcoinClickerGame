@@ -45,8 +45,7 @@ public class GameFrame extends JFrame{
 	private Vector<JButton> buttonVector = new Vector<JButton>();
 	
 	private GameFrame self = this;
-//	private JPanel glass = (JPanel)self.getGlassPane();
-	
+
 	//Networking related variables that are needed as reference
 	private Game game;
 	private ObjectOutputStream myGameplayOutput;
@@ -103,13 +102,6 @@ public class GameFrame extends JFrame{
 		victoryGlass.add(victoryPanel);
 		victoryGlass.setVisible(true);
 		setGlassPane(victoryGlass);
-		disableAllButtons();
-	}
-	
-	public void disableAllButtons() {
-		for(JButton button : getButtons()) {
-			button.setEnabled(false);
-		}
 	}
 	
 	public void paintComponent(Graphics g){
@@ -173,7 +165,7 @@ public class GameFrame extends JFrame{
 		
 	}
 	
-	class ChatListener implements ActionListener, KeyListener{
+	class ChatListener implements ActionListener, KeyListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -254,11 +246,9 @@ public class GameFrame extends JFrame{
 	private JLabel				moneyLabel		= new JLabel();
 	private JPanel				coinCenterPanel	= new JPanel();
 	private JPanel				statusPanel		= new JPanel();
-		private JLabel			healthLabel		= new JLabel("Health");
-		private HealthPanel		healthPanel	;
+	private JLabel				healthLabel		= new JLabel("Health");
+	private HealthPanel			healthPanel	;
 		
-//	private int testWallet = 0;
-	
 	private void setupBitcoinPanel(){
 		healthPanel = new HealthPanel(selfPlayer);
 		bitcoinPanel.setLayout(new GridBagLayout());
@@ -353,6 +343,8 @@ public class GameFrame extends JFrame{
 		JButton newButton = new DefenseButton(new ClickRewardUpgrade(), selfPlayer, this);
 		bitcoinPanel.add(newButton, mainConstraints);
 		
+		buttonVector.add(newButton);
+		buttonVector.add(bitcoinButton);
 	}
 	
 	class HealthPanel extends JPanel{
@@ -381,18 +373,23 @@ public class GameFrame extends JFrame{
 	
 	private void setupCenterPanel(){
 		shopPanel = new ShopPanel(this, selfPlayer);
+		
 		centerPanel.setBackground(Color.WHITE);
-
+		
 		playerPanel.setBackground(Color.WHITE);
 		playerPanel.setLayout(new GridBagLayout());
 		playerPanel.setPreferredSize(new Dimension(650,250));
 		
 		setupPlayerButtons();
-
 		
 		centerPanel.add(playerPanel, BorderLayout.CENTER);
 		centerPanel.add(shopPanel, BorderLayout.SOUTH);
 		
+		Vector<JButton> temporaryButtonVector = shopPanel.getItemShopButtons();
+		for(int i = 0 ; i < temporaryButtonVector.size();i++)
+		{
+			buttonVector.add(temporaryButtonVector.get(i));
+		}
 	}
 	
 	//	********************* playerPanel *************************
@@ -500,32 +497,18 @@ public class GameFrame extends JFrame{
 		}
 	}
 	
-
-	// Getters and setters
-	public List<JButton> getButtons()
-	{
-		List<JButton> buttonList = shopPanel.getButtons();
-		buttonList.add(bitcoinButton);
-		
-		return buttonList;
-	}
-	
 	public JLabel getMoneyLabel(){
 		return moneyLabel;
 	}
 
-//	public JPanel getGlass(){
-////		return glass;
-//	}
-	
 	public Player getPlayer(){
 		return selfPlayer;
 	}
 	
-	public Vector<JButton> getButtonVector(){
+	public Vector<JButton> getButtons()
+	{
 		return buttonVector;
 	}
-	
 	
 	// Main repaint thread
 	class MainRepaintThread extends Thread{
