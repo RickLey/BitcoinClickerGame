@@ -29,14 +29,14 @@ class Constants {
 		public static final int firewallCost 	= 500;
 		
 		//Cool down
-		public static final int EMPCooldown 		= 10;//240;
+		public static final int EMPCooldown 		= 60;//240;
 		public static final int leechCooldown 		= 10;//60;
 		public static final int nokiaCooldown 		= 3;//10;
 		public static final int nortonCooldown 		= 5;
-		public static final int virusCooldown 		= 10;//120;
-		public static final int encryptionCooldown 	= 0;//120;
+		public static final int virusCooldown 		= 60;//120;
+		public static final int encryptionCooldown 	= 20;//120;
 		public static final int healthPackCooldown 	= 0;
-		public static final int firewallCooldown 	= 0;//30;
+		public static final int firewallCooldown 	= 20;//30;
 		
 		//Duration
 		public static final int leechDuration 		= 10;
