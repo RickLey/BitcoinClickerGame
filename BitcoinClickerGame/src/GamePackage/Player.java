@@ -163,7 +163,7 @@ public class Player {
 	}
 	
 	public synchronized void incrementFromButtonClick() {
-		double amount = Constants.BASE_COINS_PER_CLICK + combo;
+		double amount = multiplier + combo;
 		receiveMoney(amount);
 		combo += Constants.COMBO_INCREMENT_AMOUNT;
 	}

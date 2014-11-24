@@ -165,7 +165,7 @@ public class Game {
 	
 	public static void main(String[] args)
 	{
-//		new Game(args[0]);
+		//new Game(args[0]);
 	}
 
 	public synchronized Set<String> getOpponents() {
