@@ -407,9 +407,12 @@ public class GameFrame extends JFrame{
 	
 	class PlayerButton extends JButton{
 		private TruncatedPlayer player;
+		int healthBarX = 50;
+		int healthBarY = 50;
+		int moneyLabelY = healthBarY + 30;
 		
 		public PlayerButton(TruncatedPlayer player){
-			super(player.getAlias());
+			super("");
 			
 			this.setPlayer(player);
 			setBackground(Color.WHITE);
@@ -429,6 +432,7 @@ public class GameFrame extends JFrame{
 					}
 					
 					//TODO: assign target when clicked
+					selfPlayer.setTargetAlias(player.getAlias());
 				}
 			});
 			
@@ -436,7 +440,17 @@ public class GameFrame extends JFrame{
 		
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
+			g.setFont(Constants.getFont(18));
+			g.drawString(player.getAlias(), 10, 20);
+			g.drawString("Health: ", healthBarX, healthBarY);
+			g.setColor(Color.GREEN);
+			g.fillRect(healthBarX + 70, healthBarY - 10, player.getHealth(), 10);
+			g.setColor(Color.BLACK);
+			g.drawRect(healthBarX + 70, healthBarY - 10, 100, 10);
 			
+			g.drawString("Money: ", healthBarX, moneyLabelY);
+			g.drawString("$" + player.getCoinString(), healthBarX + 70, moneyLabelY);
+	
 		}
 
 		public TruncatedPlayer getPlayer() {

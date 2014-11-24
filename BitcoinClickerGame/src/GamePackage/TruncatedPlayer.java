@@ -21,6 +21,13 @@ public class TruncatedPlayer implements Serializable {
 		return alias;
 	}
 	
+	public String getCoinString(){
+		String coinString = "" + money;
+		String buildString = "";
+		
+		return coinString.substring(0, coinString.indexOf('.')+2);
+	}
+	
 	public TruncatedPlayer(double m, int h, String a){
 		money = m;
 		health = h;

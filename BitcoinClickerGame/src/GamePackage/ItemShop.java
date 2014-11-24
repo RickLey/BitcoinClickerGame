@@ -215,14 +215,19 @@ abstract class AbstractItemButton extends JButton {
 					new Thread(new CooldownThread(button)).start();
 					
 					//Make a new networkMessage object and fill in fields
-					NetworkMessage newMessage = new NetworkMessage();
-					
-					newMessage.setSender(player.getAlias());
-					newMessage.setRecipient("3");
-					newMessage.setItemType(item.getItemName());
-					newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
-					newMessage.setValue(item);
-					player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
+					if (player.getTargetAlias().equals("")){
+						System.out.println("SELECT PLAYER");
+					}
+					else{
+						NetworkMessage newMessage = new NetworkMessage();
+						
+						newMessage.setSender(player.getAlias());
+						newMessage.setRecipient("3");
+						newMessage.setItemType(item.getItemName());
+						newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+						newMessage.setValue(item);
+						player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
+					}
 				}
 			}
 		});
