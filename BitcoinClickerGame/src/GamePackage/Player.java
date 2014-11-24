@@ -34,8 +34,18 @@ public class Player {
 		combo = 0;
 		multiplier = 1;
 		ioHandler = new NullHandler();
-//		TODO: uncomment when finished testing
 		opponentAliases = container.getOpponents();
+		activeItems = new Vector<Item>();
+	}
+	
+	public Player(String alias){
+		this.alias = alias;
+		health = 100;
+		alive = true;
+		coins = 0;
+		combo = 0;
+		multiplier = 1;
+		ioHandler = new NullHandler();
 		activeItems = new Vector<Item>();
 	}
 	
