@@ -141,18 +141,20 @@ class ShopPanel extends JPanel{
 @SuppressWarnings("serial")
 abstract class AbstractItemButton extends JButton {
 	//Info
-	private int cost = 0;
-	private int cooldown;
+	protected int cost = 0;
+	protected int cooldown;
 	private String description = "DESCRIPTION";
 	private String joke = "JOKE";
+	protected Player player;
+	protected GameFrame mainFrame;
 	
 	//Layout
 	Border raisedBorder = BorderFactory.createRaisedBevelBorder();
 	Border loweredBorder = BorderFactory.createLoweredBevelBorder();
 
 	//Backend
-	private Item item;
-	private AbstractItemButton button;
+	protected Item item;
+	protected AbstractItemButton button;
 	protected boolean isDisabled = false;
 	
 //	private GameFrame mainFrame;													<---------Can we delete this???
@@ -160,6 +162,8 @@ abstract class AbstractItemButton extends JButton {
 	public AbstractItemButton(Item item, Player player, GameFrame mainFrame){
 		super(item.getItemName());
 		
+		this.player = player;
+		this.mainFrame = mainFrame;
 		this.item = item;
 		this.button = this;
 		this.description = item.description;
@@ -205,7 +209,6 @@ abstract class AbstractItemButton extends JButton {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println(player.getCoins());
 				if (player.getCoins() < cost || isDisabled){
 					//Display error message
 				} else{
@@ -222,7 +225,7 @@ abstract class AbstractItemButton extends JButton {
 						NetworkMessage newMessage = new NetworkMessage();
 						
 						newMessage.setSender(player.getAlias());
-						newMessage.setRecipient("3");
+						newMessage.setRecipient(player.getTargetAlias());
 						newMessage.setItemType(item.getItemName());
 						newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
 						newMessage.setValue(item);
@@ -332,6 +335,32 @@ class DefenseButton extends AbstractItemButton{
 			setBackground(Color.GRAY);
 		}
 
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		if (super.player.getCoins() < cost || isDisabled){
+			//Display error message
+		} else{
+			System.out.println("Cost: " + cost);
+			player.deductMoney(cost);
+			mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
+			new Thread(new CooldownThread(button)).start();
+			
+			//Make a new networkMessage object and fill in fields
+			if (player.getTargetAlias().equals("")){
+				System.out.println("SELECT PLAYER");
+			}
+			else{
+				NetworkMessage newMessage = new NetworkMessage();
+				
+				newMessage.setSender(player.getAlias());
+				newMessage.setRecipient(player.getAlias());
+				newMessage.setItemType(item.getItemName());
+				newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+				newMessage.setValue(item);
+				player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
+			}
+		}
 	}
 }
 
