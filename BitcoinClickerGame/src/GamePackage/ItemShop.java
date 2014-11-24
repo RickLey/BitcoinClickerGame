@@ -179,62 +179,6 @@ abstract class AbstractItemButton extends JButton {
 		setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
 		//TODO: These boxes could be prettier if description and joke had line breaks inserted into them and we played with colors
 		
-		this.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if (!isDisabled){
-					setBorder(loweredBorder);
-					repaint();
-					
-				}
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (!isDisabled){
-					setBorder(raisedBorder);
-					repaint();
-				}
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (player.getCoins() < cost || isDisabled){
-					//Display error message
-				} else{
-					System.out.println("Cost: " + cost);
-					player.deductMoney(cost);
-					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
-					new Thread(new CooldownThread(button)).start();
-					
-					//Make a new networkMessage object and fill in fields
-					if (player.getTargetAlias().equals("")){
-						System.out.println("SELECT PLAYER");
-					}
-					else{
-						NetworkMessage newMessage = new NetworkMessage();
-						
-						newMessage.setSender(player.getAlias());
-						newMessage.setRecipient(player.getTargetAlias());
-						newMessage.setItemType(item.getItemName());
-						newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
-						newMessage.setValue(item);
-						player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
-					}
-				}
-			}
-		});
-		
 	}
 	
 	public void setIsOnCooldown(boolean b){
@@ -309,6 +253,66 @@ class EconomyButton extends AbstractItemButton{
 class AttackButton extends AbstractItemButton{
 	public AttackButton(Item item, Player player, GameFrame mainFrame){
 		super(item, player, mainFrame);
+		
+		
+		
+		this.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (!isDisabled){
+					setBorder(loweredBorder);
+					repaint();
+					
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (!isDisabled){
+					setBorder(raisedBorder);
+					repaint();
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (player.getCoins() < cost || isDisabled){
+					//Display error message
+				} else{
+					System.out.println("Cost: " + cost);
+					player.deductMoney(cost);
+					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
+					new Thread(new CooldownThread(button)).start();
+					
+					//Make a new networkMessage object and fill in fields
+					if (player.getTargetAlias().equals("")){
+						System.out.println("SELECT PLAYER");
+					}
+					else{
+						NetworkMessage newMessage = new NetworkMessage();
+						
+						newMessage.setSender(player.getAlias());
+						newMessage.setRecipient(player.getTargetAlias());
+						newMessage.setItemType(item.getItemName());
+						newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+						newMessage.setValue(item);
+						player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
+					}
+				}
+			}
+		});
+		
+		
 	}
 	
 	public void paintComponent(Graphics g){
@@ -326,6 +330,60 @@ class AttackButton extends AbstractItemButton{
 class DefenseButton extends AbstractItemButton{
 	public DefenseButton(Item item, Player player, GameFrame mainFrame){
 		super(item, player, mainFrame);
+		
+		
+		this.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (!isDisabled){
+					setBorder(loweredBorder);
+					repaint();
+					
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (!isDisabled){
+					setBorder(raisedBorder);
+					repaint();
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (player.getCoins() < cost || isDisabled){
+					//Display error message
+				} else{
+					System.out.println("Cost: " + cost);
+					player.deductMoney(cost);
+					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
+					new Thread(new CooldownThread(button)).start();
+					
+					//Make a new networkMessage object and fill in fields
+					NetworkMessage newMessage = new NetworkMessage();
+					
+					newMessage.setSender(player.getAlias());
+					newMessage.setRecipient(player.getAlias());
+					newMessage.setItemType(item.getItemName());
+					newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+					newMessage.setValue(item);
+					player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
+				}
+			}
+		});
+		
+		
 	}
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -335,28 +393,6 @@ class DefenseButton extends AbstractItemButton{
 			setBackground(Color.GRAY);
 		}
 
-	}
-	
-	public void mouseClicked(MouseEvent e) {
-		if (super.player.getCoins() < cost || isDisabled){
-			//Display error message
-		} else{
-			System.out.println("Cost: " + cost);
-			player.deductMoney(cost);
-			mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
-			new Thread(new CooldownThread(button)).start();
-			
-			//Make a new networkMessage object and fill in fields
-			NetworkMessage newMessage = new NetworkMessage();
-			
-			newMessage.setSender(player.getAlias());
-			System.out.println("HealthPack to: " + player.getAlias());
-			newMessage.setRecipient(player.getAlias());
-			newMessage.setItemType(item.getItemName());
-			newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
-			newMessage.setValue(item);
-			player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
-		}
 	}
 }
 
