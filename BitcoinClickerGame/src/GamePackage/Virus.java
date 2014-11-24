@@ -14,7 +14,7 @@ public class Virus extends AttackItem {
 		this.joke = Constants.virusJoke;
 	}
 
-	//TODO: blocking other items from running
+	//TODO: blocking other items from running but only across the network
 	@Override
 	public void run() {
 		
@@ -22,6 +22,7 @@ public class Virus extends AttackItem {
 		{
 			try {
 				target.deductHealth(DPS);
+				//TODO: Switch to 3000 again
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				break;
