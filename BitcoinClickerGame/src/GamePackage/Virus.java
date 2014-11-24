@@ -14,7 +14,7 @@ public class Virus extends AttackItem {
 		this.joke = Constants.virusJoke;
 	}
 
-	//TODO: blocking other items from running but only across the network
+
 	@Override
 	public void run() {
 		

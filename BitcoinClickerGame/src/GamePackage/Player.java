@@ -1,26 +1,19 @@
 package GamePackage;
 
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JButton;
 
 public class Player {
-	private Store myStore;
 	private double coins;
 	private int health;			
-	private boolean alive;		//To disable a player when he/she dies
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
 	private Set<String> opponentAliases;
 	private Vector<Thread> activeItems;
-	private IOHandler ioHandler;
-	private Item currentSelectedItem;	
+	private IOHandler ioHandler;	
 	private String alias;
 	private Game container;
 	private String targetAlias = "";
@@ -30,7 +23,6 @@ public class Player {
 		this.container = container;
 		this.alias = alias;
 		health = 100;
-		alive = true;
 		coins = 0;
 		combo = 0;
 		multiplier = 1;
@@ -42,7 +34,6 @@ public class Player {
 	public Player(String alias){
 		this.alias = alias;
 		health = 100;
-		alive = true;
 		coins = 0;
 		combo = 0;
 		multiplier = 1;

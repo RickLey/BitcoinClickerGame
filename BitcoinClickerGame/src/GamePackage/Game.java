@@ -35,7 +35,6 @@ public class Game {
 	private ReadChatMessageThread chatThread;
 	private SendPlayerUpdatesThread updateThread;
 	
-	//TODO These will need to change as we get closer to finishing
 	private String name;
 	private String hostname = "10.121.89.124";
 	
@@ -48,7 +47,7 @@ public class Game {
 			this.hostname = hostname;
 
 			//Gameplay socket set up and initialization
-			gameplaySocket = new Socket(hostname, 10000);
+			gameplaySocket = new Socket(this.hostname, 10000);
 			
 			gameplayOOS = new ObjectOutputStream(gameplaySocket.getOutputStream());
 			gameplayOIS = new ObjectInputStream(gameplaySocket.getInputStream());

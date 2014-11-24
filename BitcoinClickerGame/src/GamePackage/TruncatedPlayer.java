@@ -23,7 +23,6 @@ public class TruncatedPlayer implements Serializable {
 	
 	public String getCoinString(){
 		String coinString = "" + money;
-		String buildString = "";
 		
 		return coinString.substring(0, coinString.indexOf('.')+2);
 	}

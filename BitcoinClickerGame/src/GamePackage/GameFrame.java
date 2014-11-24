@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.SocketException;
-import java.util.List;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -240,7 +239,6 @@ public class GameFrame extends JFrame{
 		private void sendTextMessage() {
 			NetworkMessage textMessage = new NetworkMessage();
 			//TODO: add invalid whisper syntax warning label
-			//TODO: whisper doesn't work
 			String text = writingArea.getText();
 			
 			if(!writingArea.getText().equals("")) {

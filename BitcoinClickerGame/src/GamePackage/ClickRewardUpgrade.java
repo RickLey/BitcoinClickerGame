@@ -13,7 +13,6 @@ public class ClickRewardUpgrade extends Item {
 	
 	public void run()
 	{
-		//TODO Prevent spamming
 		target.upgradeClicker();
 	}
 
