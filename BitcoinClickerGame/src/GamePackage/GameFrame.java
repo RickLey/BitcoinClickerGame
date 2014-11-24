@@ -388,7 +388,6 @@ public class GameFrame extends JFrame{
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)));
-//		newButton = new PlayerButton(TruncatedPlayer[Opponent]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		
