@@ -187,6 +187,10 @@ public class Game {
 	public synchronized void updateOpponent(TruncatedPlayer update) {
 		allPlayers.put(update.getAlias(), update);
 	}
+
+	public void endGame(String winner) {
+		gameFrame.showEndGame(winner);
+	}
 }
 
 class GUIThread extends Thread {

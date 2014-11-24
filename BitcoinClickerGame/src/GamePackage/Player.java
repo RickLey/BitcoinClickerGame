@@ -138,6 +138,9 @@ public class Player {
 			int amount = (Integer)nm.getValue();
 			receiveMoney(amount);
 		}
+		else if(nm.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)) {
+			container.endGame((String) nm.getValue());
+		}
 			
 	}
 	

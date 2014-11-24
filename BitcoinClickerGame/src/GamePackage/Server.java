@@ -202,6 +202,7 @@ public class Server {
 	}
 
 	public void endGame() {
+		
 		for(int i=0; i<4; i++){
 			gpThreads.get(i).interrupt();
 			cThreads.get(i).interrupt();
@@ -297,7 +298,7 @@ class GamePlayThread extends Thread{
 		NetworkMessage endGame = new NetworkMessage();
 		endGame.setMessageType(NetworkMessage.END_GAME_MESSAGE);
 		endGame.setSender(NetworkMessage.SERVER_ALIAS);
-		if(((TruncatedPlayer)received.getValue()).getMoney() == 10000){
+		if(((TruncatedPlayer)received.getValue()).getMoney() == Constants.MAX_COIN_LIMIT){
 			endGame.setValue(received.getSender());
 		}
 		else{
