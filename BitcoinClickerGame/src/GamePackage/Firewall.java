@@ -17,6 +17,7 @@ public class Firewall extends DefenseItem implements IOHandler {
 		hitsRemaining = 3;
 	}
 
+	//TODO: possible race condition when setting the handlers (if an item grabs an out of date handler)
 	@Override
 	public void handleIncomingMessage(Game game, NetworkMessage nm) {
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)) {

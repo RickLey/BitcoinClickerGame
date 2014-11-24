@@ -19,8 +19,7 @@ public class Player {
 	private Set<String> opponentAliases;
 	private Vector<Item> activeItems;
 	private IOHandler ioHandler;
-	private Item currentSelectedItem;
-	private String moneyRecipient;		//As a string of their alias
+	private Item currentSelectedItem;	
 	private String alias;
 	private Game container;
 	private String targetAlias = "";
@@ -34,8 +33,8 @@ public class Player {
 		coins = 0;
 		combo = 0;
 		multiplier = 1;
-		moneyRecipient = this.getAlias();
 		ioHandler = new NullHandler();
+//		TODO: uncomment when finished testing
 		opponentAliases = container.getOpponents();
 		activeItems = new Vector<Item>();
 	}
@@ -65,10 +64,6 @@ public class Player {
 		ioHandler = replacement;
 	}
 	
-	public synchronized void setMoneyRecipient(String stringAlias) {
-		moneyRecipient = stringAlias;
-	}
-	
 	public synchronized Vector<Item> getActiveItems() {
 		return activeItems;
 	}
@@ -85,11 +80,7 @@ public class Player {
 		if(amount < 0) {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
 		}
-		if(moneyRecipient.equals(this.getAlias())) {
-			coins += amount;
-		} else {
-			//TODO: send information via stream to other player so that they get money.
-		}
+		coins += amount;
 	}
 	
 	public synchronized void deductHealth(double amount) {
@@ -125,6 +116,7 @@ public class Player {
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			Item item = (Item)nm.getValue();
 			startItem(item);
+			System.out.println("Got Item: " + item.getItemName());
 			//TODO: call graphics stuff, too
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
