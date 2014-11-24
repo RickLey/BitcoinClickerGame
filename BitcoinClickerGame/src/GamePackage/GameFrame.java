@@ -448,7 +448,7 @@ public class GameFrame extends JFrame{
 			g.drawRect(healthBarX + 70, healthBarY - 10, 100, 10);
 			
 			g.drawString("Money: ", healthBarX, moneyLabelY);
-			g.drawString("$" + game.getOpponentInformation().get(player.getAlias()).getCoinString(), healthBarX + 70, moneyLabelY);
+			g.drawString("$" + game.getOpponentInformation().get(player.getAlias()).getMoney(), healthBarX + 70, moneyLabelY);
 	
 		}
 
