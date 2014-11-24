@@ -22,7 +22,6 @@ public class Virus extends AttackItem {
 		{
 			try {
 				target.deductHealth(DPS);
-				//TODO: Switch to 3000 again
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				break;

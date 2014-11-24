@@ -17,7 +17,6 @@ public class Leech extends AttackItem {
 		this.senderAlias = senderAlias;
 	}
 
-	//TODO: Works but only updates received money after clicking button again
 	@Override
 	public void run() {
 		

@@ -194,7 +194,6 @@ abstract class AbstractItemButton extends JButton {
 		
 		//MouseOverLabel
 		setToolTipText("<html><b>" + description + "</b><br>" + "<i>" + joke + "</i>" + "</html>");
-		//TODO: These boxes could be prettier if description and joke had line breaks inserted into them and we played with colors
 		
 	}
 	
