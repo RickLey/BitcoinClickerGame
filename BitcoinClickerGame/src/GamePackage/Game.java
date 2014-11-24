@@ -9,15 +9,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 import java.util.Vector;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 
 public class Game {
@@ -112,8 +106,6 @@ public class Game {
 			chatThread.start();
 			updateThread = new SendPlayerUpdatesThread(this);
 			updateThread.start();
-			AmbianceThread at = new AmbianceThread();
-			at.start();
 			
 		} catch (UnknownHostException e) {
 			System.out.println("UHE");
@@ -323,25 +315,6 @@ class SendPlayerUpdatesThread extends Thread{
 				e.printStackTrace();
 			}
 		}
-	}
-}
-
-class AmbianceThread extends Thread{
-	
-	public void run(){
-		try {
-			AudioInputStream ais = AudioSystem.getAudioInputStream(this.getClass().getResource("Eye of the tiger -Lyrics-.mp3"));
-			Clip clip = AudioSystem.getClip();
-			clip.open(ais);
-			clip.start();
-		} catch (UnsupportedAudioFileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		}
-		
 	}
 }
 
