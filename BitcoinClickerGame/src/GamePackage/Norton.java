@@ -20,6 +20,7 @@ public class Norton extends DefenseItem {
 	//TODO: make it actually stop a virus
 	@Override
 	public void run() {
+		System.out.println("Norton");
 		Vector<Item> activeItems = target.getActiveItems();
 		Item virus = null;
 		boolean found = false;
@@ -31,6 +32,7 @@ public class Norton extends DefenseItem {
 			}
 		}
 		if(found){
+			System.out.println("Interrupting Virus");
 			virus.interrupt();
 			boolean removedVirus = activeItems.remove(virus);
 			if(!removedVirus) {

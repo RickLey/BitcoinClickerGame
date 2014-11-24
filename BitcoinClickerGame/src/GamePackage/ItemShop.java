@@ -289,24 +289,27 @@ class AttackButton extends AbstractItemButton{
 				if (player.getCoins() < cost || isDisabled){
 					//Display error message
 				} else{
-					System.out.println("Cost: " + cost);
-					player.deductMoney(cost);
-					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
-					new Thread(new CooldownThread(button)).start();
-					
-					//Make a new networkMessage object and fill in fields
-					if (player.getTargetAlias().equals("")){
-						System.out.println("SELECT PLAYER");
-					}
-					else{
-						NetworkMessage newMessage = new NetworkMessage();
+					if (!player.getTargetAlias().equals("")){
+						player.deductMoney(cost);
+						mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
+						new Thread(new CooldownThread(button)).start();
 						
-						newMessage.setSender(player.getAlias());
-						newMessage.setRecipient(player.getTargetAlias());
-						newMessage.setItemType(item.getItemName());
-						newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
-						newMessage.setValue(item);
-						player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
+						//Make a new networkMessage object and fill in fields
+						if (player.getTargetAlias().equals("")){
+							System.out.println("SELECT PLAYER");
+						}
+						else{
+							NetworkMessage newMessage = new NetworkMessage();
+							
+							newMessage.setSender(player.getAlias());
+							newMessage.setRecipient(player.getTargetAlias());
+							newMessage.setItemType(item.getItemName());
+							newMessage.setMessageType(NetworkMessage.ITEM_MESSAGE);
+							newMessage.setValue(item);
+							player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
+						}
+					} else{
+						//Display select player message
 					}
 				}
 			}
@@ -365,7 +368,6 @@ class DefenseButton extends AbstractItemButton{
 				if (player.getCoins() < cost || isDisabled){
 					//Display error message
 				} else{
-					System.out.println("Cost: " + cost);
 					player.deductMoney(cost);
 					mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
 					new Thread(new CooldownThread(button)).start();
