@@ -202,6 +202,10 @@ public class Server {
 	}
 
 	public void endGame() {
+		NetworkMessage endGameMessage = new NetworkMessage();
+		endGameMessage.setMessageType(NetworkMessage.END_GAME_MESSAGE);
+		endGameMessage.setValue(value);
+		
 		for(int i=0; i<4; i++){
 			gpThreads.get(i).interrupt();
 			cThreads.get(i).interrupt();
