@@ -43,10 +43,10 @@ public class GameFrame extends JFrame{
 	private boolean showingEncryption;
 	private boolean showingFirewall;
 	private boolean showingEndgame;
-	
+	private JPanel failureGlass = new JPanel();
 	private JPanel chatPanel	= new JPanel();
 	private JPanel bitcoinPanel	= new JPanel();
-	private JPanel centerPanel = new JPanel();
+	private JPanel centerPanel  = new JPanel();
 	private Vector<JButton> buttonVector = new Vector<JButton>();
 	private Vector<JButton> allButtonVector = new Vector<JButton>();
 	
@@ -59,6 +59,7 @@ public class GameFrame extends JFrame{
 	
 	
 	public GameFrame(Game g, ObjectOutputStream goos, ObjectOutputStream coos){
+		super("Bitcoin Clicker");
 		this.game = g;
 		this.myGameplayOutput = goos;
 		this.myChatOutput = coos;
@@ -108,8 +109,8 @@ public class GameFrame extends JFrame{
 		
 		victoryPanel.add(victoryLabel);
 		victoryGlass.add(victoryPanel);
-		victoryGlass.setVisible(true);
 		setGlassPane(victoryGlass);
+		victoryGlass.setVisible(true);
 		disableAllButtons();
 	}
 	
@@ -117,16 +118,23 @@ public class GameFrame extends JFrame{
 		if(showingEndgame)
 			return;
 		else if(!showingDeath) {
+			System.out.println("entered if block");
 			showingDeath = true;
-			JFrame failureGlass = new JFrame(); //	:(
-			failureGlass.setBackground(Color.BLACK);
-			failureGlass.setOpacity((float) 0.5);
+			failureGlass = new JPanel(); //	:(
+			failureGlass.setLayout(new BorderLayout());
+			//TODO: remove "FUCKING"
+			failureGlass.add(new JLabel("YOU ARE FUCKING DEAD!!!!!!!!!!"), BorderLayout.CENTER);
+			failureGlass.setBackground(new Color(0,0,0,125));
+			//failureGlass.setOpacity((float) 0.5);
 			setGlassPane(failureGlass);
+			failureGlass.setVisible(true);
 			disableAllButtons();
+			System.out.println("exited if block");
 		}
 	}
 	
 	public void disableAllButtons() {
+		System.out.println("size is: " + getAllButtonVector().size());
 		for(JButton button : getAllButtonVector()) {
 			button.setEnabled(false);
 		}
@@ -135,9 +143,7 @@ public class GameFrame extends JFrame{
 	public void paintComponent(Graphics g){
 		super.paintComponents(g);
 		healthPanel.repaint();
-		if(selfPlayer.getHealth() == 0) {
-			showDeath();
-		}
+		System.out.println("painting");
 	}
 	
 	//Setup Functions
@@ -423,7 +429,10 @@ public class GameFrame extends JFrame{
 	public void setupPlayerButtons(){
 		//first is the player
 		GridBagConstraints gbc = new GridBagConstraints();
-		Color[] colors = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN};	//For player colors
+		Color[] playerColors = {new Color(255,96,43),	//RED 
+						  		new Color(55,208,255),	//BLUE 
+						  		new Color(255,255,82),	//YELLOW 
+						  		new Color(48,255,104)};	
 		
 		JButton newButton;
 		
@@ -431,28 +440,28 @@ public class GameFrame extends JFrame{
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()), colors[0]);
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()), playerColors[0]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		allButtonVector.add(newButton);
 		
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)), colors[1]);
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)), playerColors[1]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		allButtonVector.add(newButton);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(1)), colors[2]);
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(1)), playerColors[2]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		allButtonVector.add(newButton);
 
 		gbc.gridx = 1;
 		gbc.gridy = 1;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)), colors[3]);
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)), playerColors[3]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		allButtonVector.add(newButton);
@@ -472,6 +481,7 @@ public class GameFrame extends JFrame{
 			panelColor = color;
 			this.setPlayer(player);
 			setBackground(panelColor);
+			setOpaque(true);
 			setBorder(new LineBorder(Color.BLACK, 1));
 			setPreferredSize(new Dimension(310,110));
 			
@@ -571,6 +581,9 @@ public class GameFrame extends JFrame{
 				try{
 					sleep(1000/24);
 					gf.repaint();
+					if(selfPlayer.getHealth() == 0) {
+						showDeath();
+					}
 					
 				} catch(InterruptedException IE){
 					IE.printStackTrace();
