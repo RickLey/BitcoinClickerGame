@@ -100,7 +100,13 @@ public class Player {
 		if(amount < 0) {
 			throw new RuntimeException("addHealth(): amount " + amount + " is negative.");
 		}
-		health += amount;
+		
+		if((health + amount) >= 100) {
+			health = 100;
+		}
+		else {
+			health += amount;
+		}
 	}
 
 	public synchronized void deductMoney(double amount) {
