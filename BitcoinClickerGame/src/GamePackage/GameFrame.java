@@ -120,6 +120,10 @@ public class GameFrame extends JFrame{
 	public void repaint(){
 		healthNumber.setText(selfPlayer.getHealth() + "/100");
 		healthNumber.repaint();
+		healthPanel.repaint();
+		for(JButton bt : playerButtonVector){
+			bt.repaint();
+		}
 	}
 	
 	//Setup Functions
