@@ -35,6 +35,7 @@ public class Player {
 		multiplier = 1;
 		moneyRecipient = this.getAlias();
 		ioHandler = new NullHandler();
+//		TODO: uncomment when finished testing
 		opponentAliases = container.getOpponents();
 		activeItems = new Vector<Item>();
 	}
@@ -124,6 +125,7 @@ public class Player {
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			Item item = (Item)nm.getValue();
 			startItem(item);
+			System.out.println("Got Item: " + item.getItemName());
 			//TODO: call graphics stuff, too
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){

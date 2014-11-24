@@ -17,9 +17,10 @@ public class Norton extends DefenseItem {
 		
 	}
 
-	//TODO: make it actually stop a virus
+	//TODO: stops virus locally. Doesn't successfully send across network
 	@Override
 	public void run() {
+		System.out.println("Norton running");
 		Vector<Item> activeItems = target.getActiveItems();
 		Item virus = null;
 		boolean found = false;

@@ -18,7 +18,7 @@ public class EMP extends AttackItem {
 		this.description = Constants.EMPDescription;
 	}
 
-	//TODO: Updates graphic, but doesn't disable buttons and doesn't undo itself or disable everyone
+	//TODO: Updates coin graphic, but doesn't disable buttons and doesn't undo itself or disable everyone
 	@Override
 	public void run() {
 		List<JButton> buttonList = target.getButtons();

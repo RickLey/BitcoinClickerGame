@@ -146,7 +146,6 @@ public class Server {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Sent message to everyone");
 	}
 	
 	public synchronized void sendChatMessageToAll(NetworkMessage nm){
@@ -243,7 +242,6 @@ class GamePlayThread extends Thread{
 				Thread.sleep(1000/36);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
-					System.out.println("Got update");
 					TruncatedPlayer playerUpdate = (TruncatedPlayer)received.getValue();
 					parentServer.sendGameplayMessageToAll(received);
 					
