@@ -347,6 +347,7 @@ class DefenseButton extends AbstractItemButton{
 			new Thread(new CooldownThread(button)).start();
 			
 			//Make a new networkMessage object and fill in fields
+
 			if (player.getTargetAlias().equals("")){
 				System.out.println("SELECT PLAYER");
 			}
