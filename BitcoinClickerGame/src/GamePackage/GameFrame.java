@@ -114,8 +114,12 @@ public class GameFrame extends JFrame{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponents(g);
-		
 		healthPanel.repaint();
+	}
+	
+	public void repaint(){
+		healthNumber.setText(selfPlayer.getHealth() + "/100");
+		healthNumber.repaint();
 	}
 	
 	//Setup Functions
@@ -254,8 +258,9 @@ public class GameFrame extends JFrame{
 	private JLabel				moneyLabel		= new JLabel();
 	private JPanel				coinCenterPanel	= new JPanel();
 	private JPanel				statusPanel		= new JPanel();
-		private JLabel			healthLabel		= new JLabel("Health");
+		private JLabel			healthLabel		= new JLabel("Health ");
 		private HealthPanel		healthPanel	;
+		private JLabel			healthNumber	= new JLabel("100/100");
 		
 //	private int testWallet = 0;
 	
@@ -272,6 +277,7 @@ public class GameFrame extends JFrame{
 		statusPanel.setLayout(new FlowLayout());
 		statusPanel.add(healthLabel);
 		statusPanel.add(healthPanel);
+		statusPanel.add(healthNumber);
 		statusPanel.setBackground(null);
 		statusPanel.setPreferredSize(new Dimension(250, 30));
 		
