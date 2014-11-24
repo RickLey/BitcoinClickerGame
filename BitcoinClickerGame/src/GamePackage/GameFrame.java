@@ -39,13 +39,17 @@ public class GameFrame extends JFrame{
 	
 	private Player selfPlayer;
 	
+	private boolean showingDeath;
+	private boolean showingEncryption;
+	private boolean showingFirewall;
+	private boolean showingEndgame;
+	
 	private JPanel chatPanel	= new JPanel();
 	private JPanel bitcoinPanel	= new JPanel();
 	private JPanel centerPanel = new JPanel();
 	private Vector<JButton> buttonVector = new Vector<JButton>();
 	private Vector<JButton> allButtonVector = new Vector<JButton>();
 	
-	private GameFrame self = this;
 //	private JPanel glass = (JPanel)self.getGlassPane();
 	
 	//Networking related variables that are needed as reference
@@ -58,10 +62,12 @@ public class GameFrame extends JFrame{
 		this.game = g;
 		this.myGameplayOutput = goos;
 		this.myChatOutput = coos;
-		
-		//DEBUG: Hardcoding in player
-
 		selfPlayer = game.getLocalPlayer();
+		
+		showingDeath = false;
+		showingEncryption = false;
+		showingFirewall = false;
+		showingEndgame = false;
 
 		setSize(1200,700);
 		setLocation(100,200);
@@ -76,9 +82,7 @@ public class GameFrame extends JFrame{
 		
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		//Glass
-		self.setLayout(null);
+		setLayout(null);
 		
 		//Start main repaint thread
 		Thread mainRepaint = new MainRepaintThread(this);
@@ -87,7 +91,9 @@ public class GameFrame extends JFrame{
 	}
 	
 	public void showEndGame(String winnerAlias) {
-		JFrame victoryGlass = new JFrame();
+		showingEndgame = true;
+		
+		JFrame victoryGlass = new JFrame(); //	:)
 		JPanel victoryPanel = new JPanel(new BorderLayout());
 		JLabel victoryLabel = new JLabel();
 		
@@ -107,16 +113,31 @@ public class GameFrame extends JFrame{
 		disableAllButtons();
 	}
 	
+	public void showDeath() {
+		if(showingEndgame)
+			return;
+		else if(!showingDeath) {
+			showingDeath = true;
+			JFrame failureGlass = new JFrame(); //	:(
+			failureGlass.setBackground(Color.BLACK);
+			failureGlass.setOpacity((float) 0.5);
+			setGlassPane(failureGlass);
+			disableAllButtons();
+		}
+	}
+	
 	public void disableAllButtons() {
-		for(JButton button : getButtons()) {
+		for(JButton button : getAllButtonVector()) {
 			button.setEnabled(false);
 		}
 	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponents(g);
-		
 		healthPanel.repaint();
+		if(selfPlayer.getHealth() == 0) {
+			showDeath();
+		}
 	}
 	
 	//Setup Functions
