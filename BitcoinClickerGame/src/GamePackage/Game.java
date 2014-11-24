@@ -118,6 +118,11 @@ public class Game {
 			e.printStackTrace();
 		}
 	}
+	
+	public HashMap<String, TruncatedPlayer> getOpponentInformation()
+	{
+		return allPlayers;
+	}
 
 	public String getAlias(){
 		return name;
