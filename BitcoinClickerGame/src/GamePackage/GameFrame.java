@@ -43,6 +43,7 @@ public class GameFrame extends JFrame{
 	private JPanel bitcoinPanel	= new JPanel();
 	private JPanel centerPanel = new JPanel();
 	private Vector<JButton> buttonVector = new Vector<JButton>();
+	private Vector<JButton> allButtonVector = new Vector<JButton>();
 	
 	private GameFrame self = this;
 //	private JPanel glass = (JPanel)self.getGlassPane();
@@ -165,7 +166,8 @@ public class GameFrame extends JFrame{
 		chatSouthPanel.setBackground(Color.WHITE);
 		chatSouthPanel.add(writeScroller, BorderLayout.CENTER);
 		chatSouthPanel.add(sendButton, BorderLayout.EAST);
-		
+		allButtonVector.add(sendButton);
+
 		
 		chatPanel.add(chatTitleLabel, BorderLayout.NORTH);
 		chatPanel.add(chatScroller, BorderLayout.CENTER);
@@ -336,6 +338,7 @@ public class GameFrame extends JFrame{
 		coinGBC.gridx = 0;
 		coinGBC.gridy = 1;
 		coinCenterPanel.add(bitcoinButton, coinGBC);
+		allButtonVector.add(bitcoinButton);
 		
 		coinGBC.gridx = 0;
 		coinGBC.gridy = 2;
@@ -410,24 +413,29 @@ public class GameFrame extends JFrame{
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()), colors[0]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
+		allButtonVector.add(newButton);
 		
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)), colors[1]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
-		
+		allButtonVector.add(newButton);
+
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(1)), colors[2]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
+		allButtonVector.add(newButton);
 
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)), colors[3]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
+		allButtonVector.add(newButton);
+
 	}
 	
 	class PlayerButton extends JButton{
@@ -524,6 +532,10 @@ public class GameFrame extends JFrame{
 	
 	public Vector<JButton> getButtonVector(){
 		return buttonVector;
+	}
+	
+	public Vector<JButton> getAllButtonVector(){
+		return allButtonVector;
 	}
 	
 	
