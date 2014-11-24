@@ -10,8 +10,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,7 +34,7 @@ class ShopPanel extends JPanel{
 	
 	private GameFrame mainFrame;
 	
-	private List<JButton> shopButtons = new ArrayList<JButton>();
+	private Vector<JButton> buttonList = new Vector<JButton>();
 	
 	public ShopPanel(GameFrame main, Player player){
 		mainFrame = main;
@@ -80,25 +79,31 @@ class ShopPanel extends JPanel{
 		newButton = new AttackButton(new NokiaPhone(), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
+		buttonList.add(newButton);
 		
 		gbc.gridy = 1;
 		gbc.gridx = 2;
 		newButton = new AttackButton(new EMP(), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
+		buttonList.add(newButton);
+
 		
 		gbc.gridy = 2;
 		gbc.gridx = 0;
 		newButton = new AttackButton(new Virus(), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
-
+		buttonList.add(newButton);
+		
 		gbc.gridy = 2;
 		gbc.gridx = 2;
 		newButton = new AttackButton(new Leech(player.getAlias()), player, mainFrame);
 		attackPanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
 
+		buttonList.add(newButton);
+		
 		//DefensePanel
 
 		gbc.gridx = 1;
@@ -112,24 +117,30 @@ class ShopPanel extends JPanel{
 		defensePanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
 
+		buttonList.add(newButton);
+		
 		gbc.gridy = 1;
 		gbc.gridx = 2;
 		newButton = new DefenseButton(new Norton(), player, mainFrame);
 		defensePanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
-
+		buttonList.add(newButton);
 		gbc.gridy = 2;
 		gbc.gridx = 0;
 		newButton = new DefenseButton(new Firewall(), player, mainFrame);
 		defensePanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
 
+		buttonList.add(newButton);
+		
 		gbc.gridy = 2;
 		gbc.gridx = 2;
 		newButton = new DefenseButton(new HealthPack(), player, mainFrame);
 		defensePanel.add(newButton, gbc);
 		mainFrame.getAllButtonVector().add(newButton);
 
+		buttonList.add(newButton);
+		
 		add(titleLabel);
 		add(attackPanel);
 		add(defensePanel);
@@ -139,9 +150,9 @@ class ShopPanel extends JPanel{
 		super.paintComponent(g);
 	}
 	
-	public List<JButton> getButtons()
+	public Vector<JButton> getItemShopButtons()
 	{
-		return shopButtons;
+		return buttonList;
 	}
 	
 }
@@ -164,9 +175,7 @@ abstract class AbstractItemButton extends JButton {
 	protected Item item;
 	protected AbstractItemButton button;
 	protected boolean isDisabled = false;
-	
-//	private GameFrame mainFrame;													<---------Can we delete this???
-	
+
 	public AbstractItemButton(Item item, Player player, GameFrame mainFrame){
 		super(item.getItemName());
 		

@@ -18,7 +18,7 @@ public class Player {
 	private double combo;		//Consecutive click combo
 	private double multiplier;	//Purchased multiplier
 	private Set<String> opponentAliases;
-	private Vector<Item> activeItems;
+	private Vector<Thread> activeItems;
 	private IOHandler ioHandler;
 	private Item currentSelectedItem;	
 	private String alias;
@@ -37,7 +37,7 @@ public class Player {
 		ioHandler = new NullHandler();
 //		TODO: uncomment when finished testing
 		opponentAliases = container.getOpponents();
-		activeItems = new Vector<Item>();
+		activeItems = new Vector<Thread>();
 	}
 	
 	public synchronized String getOpponentAliasByIndex(int index){
@@ -65,7 +65,7 @@ public class Player {
 		ioHandler = replacement;
 	}
 	
-	public synchronized Vector<Item> getActiveItems() {
+	public synchronized Vector<Thread> getActiveItems() {
 		return activeItems;
 	}
 	
@@ -101,7 +101,13 @@ public class Player {
 		if(amount < 0) {
 			throw new RuntimeException("addHealth(): amount " + amount + " is negative.");
 		}
-		health += amount;
+		
+		if((health + amount) >= 100) {
+			health = 100;
+		}
+		else {
+			health += amount;
+		}
 	}
 
 	public synchronized void deductMoney(double amount) {
@@ -140,10 +146,12 @@ public class Player {
 	
 	public void startItem(Item item) {
 		item.setPlayer(this);
-		item.start();
+		Thread myThread = new Thread(item);
+		myThread.start();
 		if(item instanceof Virus || item instanceof Leech) {
 			synchronized(this) {
-				activeItems.add(item);
+				activeItems.add(myThread);
+				myThread.setName("Virus");
 			}
 		}
 	}
@@ -168,12 +176,13 @@ public class Player {
 		combo = 0;
 	}
 
-	public List<JButton> getButtons() { 
-		return Collections.synchronizedList(container.getButtons());
-	}
-	
 	public Game getGame() {
 		return container;
+	}
+	
+	public Vector<JButton> getButtons()
+	{
+		return container.getButtons();
 	}
 	
 	public String getTargetAlias(){

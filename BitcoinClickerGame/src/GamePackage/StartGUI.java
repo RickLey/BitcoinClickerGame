@@ -1,6 +1,7 @@
 package GamePackage;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,23 +11,40 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class StartGUI extends JFrame implements ActionListener {
 	
-	private JPanel topPanel;
-	private JTextField aliasField;
-	private JTextField hostnameField;
-	private JLabel aliasLabel;
-	private JLabel hostnameLabel;
-	private JButton bitcoinLabel;
+	//LoginPanel
+	private JPanel loginPanel 				= new JPanel();
+		private JPanel topPanel;
+		private JTextField aliasField;
+		private JTextField hostnameField;
+		private JLabel aliasLabel;
+		private JLabel hostnameLabel;
+		private JButton bitcoinLabel;
+		private JButton instructionButton 	= new JButton("Instructions");
+		
+	private JPanel instructionPanel 			= new JPanel();
+		private JButton backButton 				= new JButton("Back");
+		private JTextArea instructionsArea		= new JTextArea();
+		private JScrollPane instructionScroller = new JScrollPane(instructionsArea, 
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+	//CardLayout
+	private JPanel outerPanel 				= new JPanel();
 	
 	public StartGUI() {
 		super("Bitcoin Clicker");
 		
-		topPanel 		= new JPanel();
+		//Login
+		loginPanel.setLayout(new BorderLayout());
 		
+		topPanel 		= new JPanel();
 		hostnameLabel	= new JLabel("Enter Server IP:");
 		hostnameField	= new JTextField(10);
 		aliasLabel		= new JLabel("Enter your alias:");
@@ -43,9 +61,26 @@ public class StartGUI extends JFrame implements ActionListener {
 		bitcoinLabel.setFont(new Font("Arial", Font.BOLD, 36));
 		bitcoinLabel.setIcon(img);
 		bitcoinLabel.addActionListener(this);
+		instructionButton.addActionListener(new CardAction("instruction", outerPanel));
+		loginPanel.add(instructionButton, BorderLayout.SOUTH);
 		
-		this.add(topPanel, BorderLayout.NORTH);
-		this.add(bitcoinLabel, BorderLayout.CENTER);
+		loginPanel.add(topPanel, BorderLayout.NORTH);
+		loginPanel.add(bitcoinLabel, BorderLayout.CENTER);
+		
+		//Instructions
+		instructionPanel.setLayout(new BorderLayout());
+		instructionsArea.setText("Instructions go here\nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \n");
+		instructionPanel.add(instructionScroller, BorderLayout.CENTER);
+		
+		backButton.addActionListener(new CardAction("login", outerPanel));
+		instructionPanel.add(backButton, BorderLayout.SOUTH);
+		
+		//Card Layout
+		outerPanel.setLayout(new CardLayout());
+		outerPanel.add(loginPanel, "login");
+		outerPanel.add(instructionPanel, "instruction");
+
+		add(outerPanel);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
@@ -62,6 +97,19 @@ public class StartGUI extends JFrame implements ActionListener {
 	
 	public static void main(String [] args) {
 		new StartGUI();
+	}
+	
+	class CardAction implements ActionListener{
+		private String cardString;
+		private JPanel cardPanel;
+		public CardAction(String cardString, JPanel cardPanel){
+			this.cardString = cardString;
+			this.cardPanel  = cardPanel;
+		}
+		public void actionPerformed(ActionEvent ae){
+			CardLayout cl   = (CardLayout)cardPanel.getLayout();
+			cl.show(cardPanel, cardString);		
+		}
 	}
 	
 }
