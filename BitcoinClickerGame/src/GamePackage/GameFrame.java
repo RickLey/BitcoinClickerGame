@@ -113,6 +113,7 @@ public class GameFrame extends JFrame{
 		healthNumber.setText(selfPlayer.getHealth() + "/100");
 		healthNumber.repaint();
 		healthPanel.repaint();
+		moneyLabel.setText("$" + selfPlayer.getCoinString());
 		for(JButton bt : playerButtonVector){
 			bt.repaint();
 		}
