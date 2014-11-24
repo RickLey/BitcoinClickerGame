@@ -267,6 +267,9 @@ class GamePlayThread extends Thread{
 				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE) ||
 						received.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 					
+					System.out.println("Received " + received.getItemType());
+					
+					
 					//update how many times the item has been seen
 					String itemType = received.getItemType();
 					if(parentServer.isTrackingItem(itemType)){
