@@ -85,6 +85,33 @@ public class GameFrame extends JFrame{
 		
 	}
 	
+	public void showEndGame(String winnerAlias) {
+		JFrame victoryGlass = new JFrame();
+		JPanel victoryPanel = new JPanel(new BorderLayout());
+		JLabel victoryLabel = new JLabel();
+		
+		if(selfPlayer.getAlias().equals(winnerAlias)) {
+			victoryLabel.setText("You win");
+			victoryPanel.setBackground(Color.GREEN);
+
+		} else {
+			victoryLabel.setText("You lose");
+			victoryPanel.setBackground(Color.RED);
+		}
+		
+		victoryPanel.add(victoryLabel);
+		victoryGlass.add(victoryPanel);
+		victoryGlass.setVisible(true);
+		setGlassPane(victoryGlass);
+		disableAllButtons();
+	}
+	
+	public void disableAllButtons() {
+		for(JButton button : getButtons()) {
+			button.setEnabled(false);
+		}
+	}
+	
 	public void paintComponent(Graphics g){
 		super.paintComponents(g);
 		
@@ -372,7 +399,7 @@ public class GameFrame extends JFrame{
 	public void setupPlayerButtons(){
 		//first is the player
 		GridBagConstraints gbc = new GridBagConstraints();
-
+		Color[] colors = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN};	//For player colors
 		
 		JButton newButton;
 		
@@ -380,42 +407,43 @@ public class GameFrame extends JFrame{
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()));
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()), colors[0]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)));
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)), colors[1]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(1)));
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(1)), colors[2]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 
 		gbc.gridx = 1;
 		gbc.gridy = 1;
-		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)));
+		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(2)), colors[3]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 	}
 	
 	class PlayerButton extends JButton{
 		private TruncatedPlayer player;
+		private Color panelColor;
 		int healthBarX = 50;
 		int healthBarY = 50;
 		int moneyLabelY = healthBarY + 30;
 		
-		public PlayerButton(TruncatedPlayer player){
+		public PlayerButton(TruncatedPlayer player, Color color){
 			super("");
 			
+			panelColor = color;
 			this.setPlayer(player);
-			setBackground(Color.WHITE);
+			setBackground(panelColor);
 			setBorder(new LineBorder(Color.BLACK, 1));
-			setBackground(Color.WHITE);
 			setPreferredSize(new Dimension(310,110));
 			
 			//Add action
@@ -438,6 +466,18 @@ public class GameFrame extends JFrame{
 		
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
+			
+			switch(player.getHealth()) {
+			case 0:
+				panelColor = Color.DARK_GRAY;
+				setBackground(panelColor);
+				break;
+			case -1:
+				setBackground(new Color((int)(255*Math.random()),(int)(255*Math.random()),(int)(255*Math.random())));
+				break;
+			}
+
+			
 			g.setFont(Constants.getFont(18));
 			g.drawString(player.getAlias(), 10, 20);
 			g.drawString("Health: ", healthBarX, healthBarY);
