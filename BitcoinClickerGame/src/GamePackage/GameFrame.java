@@ -388,7 +388,6 @@ public class GameFrame extends JFrame{
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getOpponentAliasByIndex(0)));
-//		newButton = new PlayerButton(TruncatedPlayer[Opponent]);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		
@@ -444,12 +443,12 @@ public class GameFrame extends JFrame{
 			g.drawString(player.getAlias(), 10, 20);
 			g.drawString("Health: ", healthBarX, healthBarY);
 			g.setColor(Color.GREEN);
-			g.fillRect(healthBarX + 70, healthBarY - 10, player.getHealth(), 10);
+			g.fillRect(healthBarX + 70, healthBarY - 10, game.getOpponentInformation().get(player.getAlias()).getHealth(), 10);
 			g.setColor(Color.BLACK);
 			g.drawRect(healthBarX + 70, healthBarY - 10, 100, 10);
 			
 			g.drawString("Money: ", healthBarX, moneyLabelY);
-			g.drawString("$" + player.getCoinString(), healthBarX + 70, moneyLabelY);
+			g.drawString("$" + game.getOpponentInformation().get(player.getAlias()).getMoney(), healthBarX + 70, moneyLabelY);
 	
 		}
 

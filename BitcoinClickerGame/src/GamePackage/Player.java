@@ -120,12 +120,12 @@ public class Player {
 			//TODO: call graphics stuff, too
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
-			if(nm.getSender().equals(alias)){
+			/*if(nm.getSender().equals(alias)){
 				return;
 			}
-			else{
+			else{*/
 				container.updateOpponent((TruncatedPlayer)nm.getValue());
-			}
+		//	}
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 			int amount = (Integer)nm.getValue();
