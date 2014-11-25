@@ -147,12 +147,19 @@ public class Player {
 		item.setPlayer(this);
 		Thread myThread = new Thread(item);
 		myThread.start();
-		if(item instanceof Virus || item instanceof Leech) {
+		if(item instanceof Virus) {
 			synchronized(this) {
 				activeItems.add(myThread);
 				myThread.setName("Virus");
 			}
 		}
+		else if(item instanceof Leech)
+		{
+			synchronized(this) {
+				activeItems.add(myThread);
+			}
+		}
+		System.out.println(activeItems.size());
 	}
 	
 	private synchronized void purchaseItem(Item item) {

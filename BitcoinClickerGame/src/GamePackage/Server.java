@@ -138,6 +138,8 @@ public class Server {
 			try {
 				oos.writeObject(nm);
 				oos.flush();
+			} catch (SocketException se) {
+				//Do nothing here
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -149,6 +151,8 @@ public class Server {
 			try {
 				oos.writeObject(nm);
 				oos.flush();
+			} catch (SocketException se) {
+				//Do nothing here
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -162,9 +166,11 @@ public class Server {
 			gameplayOutputs.get(recipientAlias).flush();
 			if(m.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			}
+		} catch (SocketException se) {
+			//Do nothing here
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 	public synchronized void sendChatMessageToPlayer(NetworkMessage m, String recipientAlias){
@@ -172,6 +178,8 @@ public class Server {
 			chatOutputs.get(recipientAlias).writeObject(m);
 			chatOutputs.get(recipientAlias).flush();
 			
+		} catch (SocketException se) {
+			//Do nothing here
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

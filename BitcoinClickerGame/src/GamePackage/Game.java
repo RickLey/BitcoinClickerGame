@@ -1,5 +1,6 @@
 package GamePackage;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,9 +10,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
 import java.util.Set;
 import java.util.Vector;
+
 import javax.swing.JButton;
 
 public class Game {
@@ -153,6 +154,8 @@ public class Game {
 			synchronized(gameplayOOS){
 				gameplayOOS.writeObject(nm);
 			}
+		} catch (SocketException se) {
+			//Do nothing
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -229,7 +232,9 @@ class ReadGameplayMessageThread extends Thread {
 					
 					myGame.getLocalPlayer().getHandler().handleIncomingMessage(myGame, received);
 				}
-			} catch(SocketException e){
+			} catch (SocketException e){
+				break;
+			} catch (EOFException eofe) {
 				break;
 			} catch (ClassNotFoundException | IOException e) {
 				break;
@@ -267,6 +272,8 @@ class ReadChatMessageThread extends Thread {
 				e.printStackTrace();
 				break;
 			} catch(SocketException e){
+				break;
+			} catch (EOFException eofe) {
 				break;
 			} catch (IOException e) {
 				e.printStackTrace();
