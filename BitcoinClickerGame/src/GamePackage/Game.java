@@ -229,6 +229,7 @@ class ReadGameplayMessageThread extends Thread {
 //					myGameplayInput.close();
 //					myGame.shutDown();
 					myGame.endGame((String)received.getValue());
+					break;
 				}
 				else{
 					
