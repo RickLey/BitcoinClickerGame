@@ -312,6 +312,7 @@ class AttackButton extends AbstractItemButton{
 						
 						//Make a new networkMessage object and fill in fields
 						if (player.getTargetAlias().equals("")){
+							//TODO: Put warning on the GUI
 							System.out.println("SELECT PLAYER");
 						}
 						else{
@@ -416,7 +417,6 @@ class DefenseButton extends AbstractItemButton{
 		if (super.player.getCoins() < cost || isDisabled){
 			//Display error message
 		} else{
-			System.out.println("Cost: " + cost);
 			player.deductMoney(cost);
 			mainFrame.getMoneyLabel().setText("$" + player.getCoinString());
 			new Thread(new CooldownThread(button)).start();

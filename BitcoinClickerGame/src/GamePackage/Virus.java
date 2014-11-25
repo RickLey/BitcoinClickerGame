@@ -27,6 +27,5 @@ public class Virus extends AttackItem {
 				break;
 			}
 		}
-		System.out.println("Virus was terminated");
 	}
 }

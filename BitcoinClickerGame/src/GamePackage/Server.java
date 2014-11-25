@@ -61,8 +61,6 @@ public class Server {
 				playerSockets.add(tempSocket);
 			}
 			
-			System.out.println("Got gameplay sockets");
-			
 			//send message to connect chat sockets
 			NetworkMessage connectChatSocketsMessage = new NetworkMessage();
 			connectChatSocketsMessage.setSender(NetworkMessage.SERVER_ALIAS);
@@ -82,8 +80,6 @@ public class Server {
 				cThreads.add(new ChatThread(tempOutput, tempInput, this));
 				playerSockets.add(tempSocket);
 			}
-			
-			System.out.println("Got chat sockets");
 			
 			//Send list of all players to all players
 			NetworkMessage distributeAliases = new NetworkMessage();
@@ -157,7 +153,6 @@ public class Server {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Sent message to everyone");
 	}
 	
 
@@ -166,8 +161,6 @@ public class Server {
 			gameplayOutputs.get(recipientAlias).writeObject(m);
 			gameplayOutputs.get(recipientAlias).flush();
 			if(m.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
-				System.out.println("Sent " + m.getItemType());
-				System.out.println("From: " + m.getSender() + " To: " + m.getRecipient());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -269,9 +262,6 @@ class GamePlayThread extends Thread{
 				else if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE) ||
 						received.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 					
-					System.out.println("Received " + received.getItemType());
-					System.out.println("From: " + received.getSender() + " To: " + received.getRecipient());
-					
 					//update how many times the item has been seen
 					String itemType = received.getItemType();
 					if(parentServer.isTrackingItem(itemType)){
@@ -286,7 +276,6 @@ class GamePlayThread extends Thread{
 			} catch (ClassNotFoundException e) {
 				break;
 			} catch (SocketException e){
-				System.out.println("Caught socket exception");
 				break;
 			} catch (IOException e) {
 				break;
@@ -344,16 +333,13 @@ class ChatThread extends Thread{
 				
 				if(messageType.equals(NetworkMessage.CHAT_MESSAGE)){
 					parentServer.sendChatMessageToAll(received);
-					System.out.println("Received chat on the chat thread");
 				}
 				else if(messageType.equals(NetworkMessage.WHISPER_MESSAGE)){
 					parentServer.sendChatMessageToPlayer(received, received.getRecipient());
 					parentServer.sendChatMessageToPlayer(received, received.getSender());
-					System.out.println("Got whisper. Sender: " + received.getSender() + " Recipient: " + received.getRecipient());
 				}
 			} 
 			catch (SocketException e){
-				System.out.println("Caught socket exception");
 				break;
 			} catch (IOException e) {
 				break;

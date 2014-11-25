@@ -107,13 +107,10 @@ public class Game {
 			updateThread.start();
 			
 		} catch (UnknownHostException e) {
-			System.out.println("UHE");
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("IOE");
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			System.out.println("CNFE");
 			e.printStackTrace();
 		}
 	}
@@ -228,8 +225,6 @@ class ReadGameplayMessageThread extends Thread {
 				else{
 					
 					if(received.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)) {
-						System.out.println("In receive gameplay message thread");
-						System.out.println("Received: " + received.getItemType());
 					}
 					
 					myGame.getLocalPlayer().getHandler().handleIncomingMessage(myGame, received);

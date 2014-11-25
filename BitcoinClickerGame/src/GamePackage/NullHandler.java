@@ -7,8 +7,6 @@ public class NullHandler implements IOHandler {
 	public void handleIncomingMessage(Game game, NetworkMessage nm) {
 		
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)) {
-			System.out.println("In handler");
-			System.out.println("Received: " + nm.getItemType());
 		}
 		
 		game.getLocalPlayer().receiveGameplayMessage(nm);

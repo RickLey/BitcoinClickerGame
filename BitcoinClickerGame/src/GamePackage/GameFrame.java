@@ -116,7 +116,6 @@ public class GameFrame extends JFrame{
 		if(showingEndgame)
 			return;
 		else if(!showingDeath) {
-			System.out.println("entered if block");
 			showingDeath = true;
 			failureGlass = new JPanel(); //	:(
 			failureGlass.setLayout(new BorderLayout());
@@ -127,12 +126,10 @@ public class GameFrame extends JFrame{
 			setGlassPane(failureGlass);
 			failureGlass.setVisible(true);
 			disableAllButtons();
-			System.out.println("exited if block");
 		}
 	}
 	
 	public void disableAllButtons() {
-		System.out.println("size is: " + getAllButtonVector().size());
 		for(JButton button : getAllButtonVector()) {
 			button.setEnabled(false);
 		}
@@ -141,7 +138,6 @@ public class GameFrame extends JFrame{
 	public void paintComponent(Graphics g){
 		super.paintComponents(g);
 		healthPanel.repaint();
-		System.out.println("painting");
 	}
 	
 	public void repaint(){

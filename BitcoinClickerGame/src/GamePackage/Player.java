@@ -122,14 +122,11 @@ public class Player {
 	public void receiveGameplayMessage(NetworkMessage nm) {
 
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)) {
-			System.out.println("After handler");
-			System.out.println("Received: " + nm.getItemType());
 		}
 		
 		if(nm.getMessageType().equals(NetworkMessage.ITEM_MESSAGE)){
 			Item item = (Item)nm.getValue();
 			startItem(item);
-			System.out.println("Got Item: " + item.getItemName());
 			//TODO: call graphics stuff, too
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
@@ -140,6 +137,7 @@ public class Player {
 			receiveMoney(amount);
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)) {
+			System.out.println("Game ended");
 			container.endGame((String) nm.getValue());
 		}
 			
@@ -155,7 +153,6 @@ public class Player {
 				myThread.setName("Virus");
 			}
 		}
-		System.out.println(activeItems.size());
 	}
 	
 	private synchronized void purchaseItem(Item item) {
