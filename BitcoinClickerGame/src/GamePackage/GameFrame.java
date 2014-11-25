@@ -591,6 +591,7 @@ public class GameFrame extends JFrame{
 					gf.repaint();
 					if(selfPlayer.getHealth() == 0) {
 						showDeath();
+						break;
 					}
 					
 				} catch(InterruptedException IE){

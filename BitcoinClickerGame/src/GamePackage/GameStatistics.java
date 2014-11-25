@@ -21,7 +21,7 @@ public class GameStatistics extends JFrame {
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.95.154/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
+			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.95.158/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 		
 			/**** Finding the most used item ****/
 			java.sql.Statement statement = conn.createStatement();
@@ -122,6 +122,7 @@ public class GameStatistics extends JFrame {
 			Object crossgameRows[][] = { {mostUsedItem, gamesPlayed, averageGameTime + " Minutes",
 				longestGameTime + " Minutes", deadliestPlayer, totalCoinsGenerated, totalClicks,
 				highestCombo, mostDominantUser} };
+			
 			
 			Object crossgameColumns[] = { "Most Used Item", "Total Games Played", "Average Game Time",
 					"Longest Game Time", "Deadliest Player", "Total Coins Farmed",

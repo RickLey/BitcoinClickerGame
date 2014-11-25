@@ -25,7 +25,9 @@ public class Server {
 	private HashMap<String, Integer> itemUseCount;
 	private ArrayList<ChatThread> cThreads;
 	private ArrayList<GamePlayThread> gpThreads;
-	ArrayList<Socket> playerSockets; //for closing the sockets
+	private ArrayList<Socket> playerSockets; //for closing the sockets
+	private long startTime;
+
 	
 	public Server(){
 		try {
@@ -104,7 +106,6 @@ public class Server {
 				iis.get(i).readObject();
 			}
 			
-			//TODO everything disabled until receives start message
 			
 			//start threads
 			for(int i=0; i<4; i++){
@@ -117,6 +118,8 @@ public class Server {
 			startGame.setSender(NetworkMessage.SERVER_ALIAS);
 			startGame.setMessageType(NetworkMessage.START_GAME_MESSAGE);
 			sendGameplayMessageToAll(startGame);
+			
+			startTime = System.currentTimeMillis();
 			
 			
 		} catch (IOException e) {
@@ -222,6 +225,17 @@ public class Server {
 //				e.printStackTrace();
 //			}
 //		}
+		
+		long duration = System.currentTimeMillis() - startTime;
+		duration /= 1000;
+		
+		/*TODO: DATABASE item use count is a map of each item to how many times it
+		 * was used. Duration, calculated above, is how long the game was.
+		 * Send a message to the database to update those. If you want, you can also
+		 * use the logic for keeping track of whole-game item usage to track
+		 * item usage per player by essentially mirroring the logic here (having a map
+		 * on the client side, and updating every time it sends an item)
+		 */
 	}
 
 	public String getRemainingPlayer() {
@@ -258,14 +272,14 @@ class GamePlayThread extends Thread{
 						
 						//one player left- end the game
 						if(parentServer.onePlayerRemaining()){
-							sendEndGame(received);
 							parentServer.endGame();
+							sendEndGame(received);
 						}
 					}
 					
 					else if(playerUpdate.getMoney() == Constants.MAX_COIN_LIMIT){
-						sendEndGame(received);
 						parentServer.endGame();
+						sendEndGame(received);
 					}
 					
 				}
@@ -306,7 +320,6 @@ class GamePlayThread extends Thread{
 		else{
 			endGame.setValue(parentServer.getRemainingPlayer());
 		}
-		System.out.println("Sent end game");
 		parentServer.sendGameplayMessageToAll(endGame);
 	}
 	

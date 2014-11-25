@@ -83,6 +83,7 @@ public class Player {
 			throw new RuntimeException("receiveMoney(): amount " + amount + " is negative.");
 		}
 		coins += amount;
+		container.addToCoinsAccumulated(amount);
 	}
 	
 	public synchronized void deductHealth(double amount) {
@@ -130,7 +131,17 @@ public class Player {
 			//TODO: call graphics stuff, too
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
-			container.updateOpponent((TruncatedPlayer)nm.getValue());
+			TruncatedPlayer update = (TruncatedPlayer)nm.getValue();
+			container.updateOpponent(update);
+			if(update.getAlias().equals(alias) && update.getHealth() == 0 && 
+					!container.statsWritten()){
+				
+				/*TODO: DATABASE write out stats. The game has a field for total
+				 * coins clicked and the highest combo. Just pull that data
+				 * and send the query
+				 */
+				container.markStatsWritten();
+			}
 		}
 		else if(nm.getMessageType().equals(NetworkMessage.LEECH_RESULT_MESSAGE)){
 			int amount = (Integer)nm.getValue();
@@ -175,6 +186,7 @@ public class Player {
 	}
 	
 	public synchronized void resetCombo() {
+		container.trySetHighestCombo(combo);
 		combo = 0;
 	}
 

@@ -149,7 +149,6 @@ class readGamePlayMessageThread extends Thread{
 		while(!Thread.interrupted()){
 			try {
 				NetworkMessage received = (NetworkMessage)myInput.readObject();
-				System.out.println("Read message");
 				client.displayMessage(received);
 				if(received.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)){
 					this.interrupt();

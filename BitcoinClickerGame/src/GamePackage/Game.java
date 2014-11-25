@@ -23,6 +23,8 @@ public class Game {
 	private int inProgress;
 	private Player localPlayer;
 	private GameFrame gameFrame;
+	private double coinsAccumulated;
+	private boolean statsWritten;
 	
 	//contains threads for GUI, gameplay, graphics, and chat 
 	ArrayList<Item> activeThreads;
@@ -40,6 +42,7 @@ public class Game {
 	private String hostname = "10.121.89.124";
 	
 	private HashMap<String, TruncatedPlayer> allPlayers;
+	private double highestCombo = 0;
 	
 	public Game(String alias, String hostname,StartGUI sg)
 	{		
@@ -47,6 +50,7 @@ public class Game {
 			this.name = alias;
 			this.hostname = hostname;
 
+			statsWritten = false;
 			//Gameplay socket set up and initialization
 			gameplaySocket = new Socket(this.hostname, 10000);
 			
@@ -141,7 +145,6 @@ public class Game {
 		chatThread.endGame();
 		updateThread.interrupt();
 		
-		//TODO: Calls to post game gui and stats
 	}
 	
 //Not sure about all methods below this comment
@@ -188,8 +191,26 @@ public class Game {
 	public void endGame(String winner) {
 		System.out.println("game ended");
 //		gameFrame.showEndGame(winner);
-		gameFrame.dispose();
+		gameFrame.dispose(); 
 		new GameStatistics();
+	}
+
+	public void addToCoinsAccumulated(double amount) {
+		coinsAccumulated += amount;
+	}
+
+	public void trySetHighestCombo(double combo) {
+		if(highestCombo < combo){
+			highestCombo = combo;
+		}
+	}
+	
+	public boolean statsWritten(){
+		return statsWritten;
+	}
+
+	public void markStatsWritten() {
+		statsWritten = true;
 	}
 
 }
