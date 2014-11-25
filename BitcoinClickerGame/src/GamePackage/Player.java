@@ -166,7 +166,6 @@ public class Player {
 				activeItems.add(myThread);
 			}
 		}
-		System.out.println(activeItems.size());
 	}
 	
 	private synchronized void purchaseItem(Item item) {

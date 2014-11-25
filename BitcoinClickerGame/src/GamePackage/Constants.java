@@ -23,8 +23,8 @@ class Constants {
 	//==== Item Info ====
 		//Cost
 		public static final int EMPCost 		= 1400;
-		public static final int leechCost 		= 600;
-		public static final int nokiaCost 		= 500;
+		public static final int leechCost 		= 1000;
+		public static final int nokiaCost 		= 750;
 		public static final int nortonCost 		= 2000;
 		public static final int virusCost 		= 8000;
 		public static final int encryptionCost 	= 4000;

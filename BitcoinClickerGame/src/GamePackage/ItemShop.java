@@ -325,7 +325,6 @@ class AttackButton extends AbstractItemButton{
 						//Make a new networkMessage object and fill in fields
 						if (player.getTargetAlias().equals("")){
 							//TODO: Put warning on the GUI
-							System.out.println("SELECT PLAYER");
 						}
 						else{
 							NetworkMessage newMessage = new NetworkMessage();
@@ -439,7 +438,7 @@ class DefenseButton extends AbstractItemButton{
 			//Make a new networkMessage object and fill in fields
 
 			if (player.getTargetAlias().equals("")){
-				System.out.println("SELECT PLAYER");
+				//TODO: Dislay warning
 			}
 			else{
 				NetworkMessage newMessage = new NetworkMessage();
