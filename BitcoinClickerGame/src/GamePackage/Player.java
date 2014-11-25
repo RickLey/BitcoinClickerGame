@@ -136,10 +136,6 @@ public class Player {
 			int amount = (Integer)nm.getValue();
 			receiveMoney(amount);
 		}
-		else if(nm.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)) {
-			System.out.println("Game ended");
-			container.endGame((String) nm.getValue());
-		}
 			
 	}
 	

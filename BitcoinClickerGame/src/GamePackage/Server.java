@@ -186,10 +186,12 @@ public class Server {
 	}
 
 	public void eliminatePlayer(String sender) {
+		System.out.println("Eliminated: " + sender);
 		remainingPlayers.remove(sender);
 	}
 
 	public boolean onePlayerRemaining() {
+		System.out.println("Players remaining: " + remainingPlayers.size());
 		return remainingPlayers.size() == 1;
 	}
 
@@ -207,19 +209,19 @@ public class Server {
 
 	public void endGame() {
 		
-		for(int i=0; i<4; i++){
-			gpThreads.get(i).interrupt();
-			cThreads.get(i).interrupt();
-			gpThreads.get(i).cleanThread();
-			cThreads.get(i).cleanThread();
-		}
-		for(int i=0; i<8; i++){
-			try {
-				playerSockets.get(i).close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+//		for(int i=0; i<4; i++){
+//			gpThreads.get(i).interrupt();
+//			cThreads.get(i).interrupt();
+//			gpThreads.get(i).cleanThread();
+//			cThreads.get(i).cleanThread();
+//		}
+//		for(int i=0; i<8; i++){
+//			try {
+//				playerSockets.get(i).close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 
 	public String getRemainingPlayer() {
@@ -304,16 +306,21 @@ class GamePlayThread extends Thread{
 		else{
 			endGame.setValue(parentServer.getRemainingPlayer());
 		}
+		System.out.println("Sent end game");
 		parentServer.sendGameplayMessageToAll(endGame);
 	}
 	
 	public void cleanThread(){
 		try {
 			ois.close();
-			oos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
+		try {
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
