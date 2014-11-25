@@ -246,7 +246,7 @@ class GamePlayThread extends Thread{
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
-				Thread.sleep(1000/36);
+				Thread.sleep(Constants.frameRate);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				if(received.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)){
 					TruncatedPlayer playerUpdate = (TruncatedPlayer)received.getValue();
@@ -342,7 +342,7 @@ class ChatThread extends Thread{
 	public void run(){
 		while(!Thread.interrupted()){
 			try{
-				Thread.sleep(1000/36);
+				Thread.sleep(Constants.frameRate);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
 				String messageType = received.getMessageType();
 				
