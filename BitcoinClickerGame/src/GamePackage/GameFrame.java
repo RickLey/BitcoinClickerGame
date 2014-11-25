@@ -588,7 +588,7 @@ public class GameFrame extends JFrame{
 		public void run(){
 			while(true){
 				try{
-					sleep(1000/24);
+					sleep(Constants.frameRate);
 					gf.repaint();
 					if(selfPlayer.getHealth() == 0) {
 						showDeath();

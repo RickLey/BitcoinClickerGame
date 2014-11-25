@@ -222,7 +222,7 @@ class ReadGameplayMessageThread extends Thread {
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
-				Thread.sleep(1000/36);
+				Thread.sleep(Constants.frameRate);
 				NetworkMessage received = (NetworkMessage)myGameplayInput.readObject();
 				if(received.getMessageType().equals(NetworkMessage.END_GAME_MESSAGE)){
 //					this.interrupt();
@@ -271,7 +271,7 @@ class ReadChatMessageThread extends Thread {
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
-				Thread.sleep(1000/36);
+				Thread.sleep(Constants.frameRate);
 				NetworkMessage received = (NetworkMessage)myChatInput.readObject();
 				myGame.displayMessage(received);
 			} catch (ClassNotFoundException e) {
