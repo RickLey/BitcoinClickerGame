@@ -154,6 +154,18 @@ class ShopPanel extends JPanel{
 	{
 		return buttonList;
 	}
+
+	public JLabel getTitleLabel() {
+		return titleLabel;
+	}
+
+	public JLabel getAttackLabel() {
+		return attackLabel;
+	}
+
+	public JLabel getDefenseLabel() {
+		return defenseLabel;
+	}
 	
 }
 
