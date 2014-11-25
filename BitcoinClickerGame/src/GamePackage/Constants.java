@@ -7,7 +7,7 @@ class Constants {
 	//Class for constants, a lot of them
 	
 	//Frame rate
-	public static final long frameRate = Constants.frameRate;
+	public static final long frameRate = 1000/24;
 
 	//==== GUI Constants ===
 	public static final int bitcoinButtonSize = 250;
