@@ -258,7 +258,7 @@ class GamePlayThread extends Thread{
 					parentServer.sendGameplayMessageToAll(received);
 					
 					//eliminate player if out of health
-					if(playerUpdate.getHealth() == 0){
+					if(playerUpdate.getHealth() <= 0){
 						parentServer.eliminatePlayer(received.getSender());
 						
 						//one player left- end the game

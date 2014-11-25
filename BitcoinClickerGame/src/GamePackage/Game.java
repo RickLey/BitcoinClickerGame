@@ -101,7 +101,7 @@ public class Game {
 			
 			//don't need a reference to the gameplay message thread because
 			//it shuts itself down
-			new ReadGameplayMessageThread(this, gameplayOIS).start();
+			new ReadGameplayMessageThread(this, gameplayOIS, gameFrame).start();
 			chatThread = new ReadChatMessageThread(this, chatOIS);
 			chatThread.start();
 			updateThread = new SendPlayerUpdatesThread(this);
@@ -212,10 +212,12 @@ class GUIThread extends Thread {
 class ReadGameplayMessageThread extends Thread {
 	Game myGame;
 	ObjectInputStream myGameplayInput;
+	GameFrame gameFrame;
 	
-	public ReadGameplayMessageThread(Game g, ObjectInputStream gois) {
+	public ReadGameplayMessageThread(Game g, ObjectInputStream gois, GameFrame gameFrame) {
 		this.myGame = g;
 		this.myGameplayInput = gois;
+		this.gameFrame = gameFrame;
 	}
 	
 	public void run(){
@@ -227,6 +229,9 @@ class ReadGameplayMessageThread extends Thread {
 					this.interrupt();
 					myGameplayInput.close();
 					myGame.shutDown();
+					
+					gameFrame.dispose();
+					new GameStatistics();
 				}
 				else{
 					
@@ -293,7 +298,6 @@ class ReadChatMessageThread extends Thread {
 class SendPlayerUpdatesThread extends Thread{
 	Game myGame;
 
-	
 	public SendPlayerUpdatesThread(Game g){
 		myGame = g;
 	}
@@ -318,7 +322,7 @@ class SendPlayerUpdatesThread extends Thread{
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
