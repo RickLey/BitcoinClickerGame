@@ -6,6 +6,9 @@ import java.awt.Font;
 class Constants {
 	//Class for constants, a lot of them
 	
+	//Frame rate
+	public static final long frameRate = Constants.frameRate;
+
 	//==== GUI Constants ===
 	public static final int bitcoinButtonSize = 250;
 	
