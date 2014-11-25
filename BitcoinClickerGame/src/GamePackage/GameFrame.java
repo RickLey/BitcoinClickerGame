@@ -234,7 +234,6 @@ public class GameFrame extends JFrame{
 		
 		private void sendTextMessage() {
 			NetworkMessage textMessage = new NetworkMessage();
-			//TODO: add invalid whisper syntax warning label
 			String text = writingArea.getText();
 			
 			if(!writingArea.getText().equals("")) {
