@@ -116,23 +116,28 @@ public class GameFrame extends JFrame{
 		if(showingEndgame)
 			return;
 		else if(!showingDeath) {
-			showingDeath = true;
-			failureGlass = new JPanel(); //	:(
-			failureGlass.setLayout(new BorderLayout());
-			//TODO: remove "FUCKING"
-			failureGlass.add(new JLabel("YOU ARE FUCKING DEAD!!!!!!!!!!"), BorderLayout.CENTER);
-			failureGlass.setBackground(new Color(0,0,0,125));
-			//failureGlass.setOpacity((float) 0.5);
-			setGlassPane(failureGlass);
-			failureGlass.setVisible(true);
+//			showingDeath = true;
+//			failureGlass = new JPanel(); //	:(
+//			failureGlass.setLayout(new BorderLayout());
+//			//TODO: remove "FUCKING"
+//			failureGlass.add(new JLabel("YOU ARE FUCKING DEAD!!!!!!!!!!"), BorderLayout.CENTER);
+//			failureGlass.setBackground(new Color(0,0,0,125));
+//			//failureGlass.setOpacity((float) 0.5);
+//			failureGlass.setOpaque(true);
+//			setGlassPane(failureGlass);
+//			failureGlass.setVisible(true);
 			disableAllButtons();
+			//bitcoinButton.setVisible(false);
 		}
 	}
 	
 	public void disableAllButtons() {
-		for(JButton button : getAllButtonVector()) {
-			button.setEnabled(false);
+		for(JButton button : getButtons()) {
+			button.setVisible(false);
 		}
+		shopPanel.getAttackLabel().setVisible(false);
+		shopPanel.getDefenseLabel().setVisible(false);
+		shopPanel.getTitleLabel().setText("YOU DIED!!!");
 	}
 	
 	public void paintComponent(Graphics g){
