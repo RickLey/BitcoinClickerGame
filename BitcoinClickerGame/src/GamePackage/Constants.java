@@ -22,21 +22,21 @@ class Constants {
 	
 	//==== Item Info ====
 		//Cost
-		public static final int EMPCost 		= 3500;
-		public static final int leechCost 		= 150;
-		public static final int nokiaCost 		= 250;
-		public static final int nortonCost 		= 500;
-		public static final int virusCost 		= 2000;
-		public static final int encryptionCost 	= 1000;
-		public static final int healthPackCost 	= 400;
-		public static final int firewallCost 	= 500;
+		public static final int EMPCost 		= 1400;
+		public static final int leechCost 		= 600;
+		public static final int nokiaCost 		= 1000;
+		public static final int nortonCost 		= 2000;
+		public static final int virusCost 		= 8000;
+		public static final int encryptionCost 	= 4000;
+		public static final int healthPackCost 	= 1600;
+		public static final int firewallCost 	= 2000;
 		
 		//Cool down
 		public static final int EMPCooldown 		= 60;//240;
-		public static final int leechCooldown 		= 10;//60;
-		public static final int nokiaCooldown 		= 3;//10;
+		public static final int leechCooldown 		= 30;//60;
+		public static final int nokiaCooldown 		= 2;//10;
 		public static final int nortonCooldown 		= 5;
-		public static final int virusCooldown 		= 60;//120;
+		public static final int virusCooldown 		= 30;//120;
 		public static final int encryptionCooldown 	= 20;//120;
 		public static final int healthPackCooldown 	= 0;
 		public static final int firewallCooldown 	= 20;//30;
