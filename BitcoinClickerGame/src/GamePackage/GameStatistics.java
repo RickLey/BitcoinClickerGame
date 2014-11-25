@@ -144,9 +144,9 @@ public class GameStatistics extends JFrame {
 			add(leaderboards);
 			
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		} catch (SQLException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		
