@@ -32,7 +32,6 @@ class Constants {
 		public static final int firewallCost 	= 2000;
 		
 		//Cool down
-<<<<<<< HEAD
 		public static final int EMPCooldown 		= 60;
 		public static final int leechCooldown 		= 60;
 		public static final int nokiaCooldown 		= 0;
