@@ -186,12 +186,10 @@ public class Server {
 	}
 
 	public void eliminatePlayer(String sender) {
-		System.out.println("Eliminated: " + sender);
 		remainingPlayers.remove(sender);
 	}
 
 	public boolean onePlayerRemaining() {
-		System.out.println("Players remaining: " + remainingPlayers.size());
 		return remainingPlayers.size() == 1;
 	}
 
@@ -306,7 +304,6 @@ class GamePlayThread extends Thread{
 		else{
 			endGame.setValue(parentServer.getRemainingPlayer());
 		}
-		System.out.println("Sent end game");
 		parentServer.sendGameplayMessageToAll(endGame);
 	}
 	

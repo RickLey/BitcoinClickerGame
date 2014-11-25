@@ -186,8 +186,6 @@ public class Game {
 	}
 
 	public void endGame(String winner) {
-		System.out.println("game ended");
-//		gameFrame.showEndGame(winner);
 		gameFrame.dispose();
 		new GameStatistics();
 	}
