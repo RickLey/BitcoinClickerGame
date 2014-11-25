@@ -456,6 +456,7 @@ public class GameFrame extends JFrame{
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		newButton = new PlayerButton(game.getTruncatedPlayerByAlias(selfPlayer.getAlias()), playerColors[0]);
+		newButton.setEnabled(false);
 		playerPanel.add(newButton, gbc);
 		playerButtonVector.add(newButton);
 		allButtonVector.add(newButton);
