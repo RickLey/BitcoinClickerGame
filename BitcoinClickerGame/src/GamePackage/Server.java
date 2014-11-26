@@ -241,11 +241,12 @@ public class Server {
 		 * on the client side, and updating every time it sends an item)
 		 */
 		
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.95.158/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 			
-			/**** Finding the most used item ****/
+			
 			java.sql.Statement statement = conn.createStatement();
 			ResultSet resultSet =  statement.executeQuery("SELECT SUM(Firewalls), SUM(Encryptions), "
 					+ "SUM(NokiaPhones), SUM(Viruses), SUM(Nortons), SUM(EMPs), SUM(HealthPacks),"
@@ -260,20 +261,20 @@ public class Server {
 				itemUseCount.put(items[i], itemUseCount.get(items[i]) + resultSet.getInt(i+1));
 			}
 			
+			java.sql.PreparedStatement insertStatement = conn.prepareStatement("INSERT INTO CrossGameStats (Firewalls, Encryptions, NokiaPhones"
+					+ ", Viruses, Nortons, EMPs, HealthPacks, Leeches, ClickRewards)VALUES (" + itemUseCount.get("Firewall") + "," + 
+					itemUseCount.get("Encryption") + "," + itemUseCount.get("Nokia Phone") + "," + itemUseCount.get("Virus") + "," +
+					itemUseCount.get("Norton") + "," + itemUseCount.get("EMP") + "," + itemUseCount.get("Health Pack") + "," +
+					itemUseCount.get("Leech") + "," + itemUseCount.get("Click Reward") + ")");		
+			insertStatement.execute();
+			
 			/*
 			Set<Entry<String, Integer>> itemUseSet = itemUseCount.entrySet();
 			for (Map.Entry<String, String> entry : map.entrySet())
 			{
 			    System.out.println(entry.getKey() + "/" + entry.getValue());
-			}
-			*/
-		
-			
-			java.sql.PreparedStatement insertStatement = conn.prepareStatement("INSERT INTO CrossGameStats (COLUMNS)VALUES (VALUES)");
-		
-			insertStatement.execute();
-
-			
+			}	
+			*/	
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class Not Found Exception" + e.toString());
@@ -281,7 +282,7 @@ public class Server {
 		} catch (SQLException e) {
 			System.out.println("SQL Exception" + e.toString());
 		}
-			
+		
 	}
 
 	public String getRemainingPlayer() {
