@@ -8,10 +8,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class Server {
 	
@@ -234,6 +240,48 @@ public class Server {
 		 * item usage per player by essentially mirroring the logic here (having a map
 		 * on the client side, and updating every time it sends an item)
 		 */
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.95.158/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
+			
+			/**** Finding the most used item ****/
+			java.sql.Statement statement = conn.createStatement();
+			ResultSet resultSet =  statement.executeQuery("SELECT SUM(Firewalls), SUM(Encryptions), "
+					+ "SUM(NokiaPhones), SUM(Viruses), SUM(Nortons), SUM(EMPs), SUM(HealthPacks),"
+					+ " SUM(Leeches), SUM(ClickRewards) FROM CrossGameStats");
+			resultSet.next();
+			
+			String [] items = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack", "Leech", "Click Reward"};
+			ResultSetMetaData rsmd = resultSet.getMetaData();
+			
+			for(int i = 0; i < rsmd.getColumnCount(); i ++)
+			{
+				itemUseCount.put(items[i], itemUseCount.get(items[i]) + resultSet.getInt(i+1));
+			}
+			
+			/*
+			Set<Entry<String, Integer>> itemUseSet = itemUseCount.entrySet();
+			for (Map.Entry<String, String> entry : map.entrySet())
+			{
+			    System.out.println(entry.getKey() + "/" + entry.getValue());
+			}
+			*/
+		
+			
+			java.sql.PreparedStatement insertStatement = conn.prepareStatement("INSERT INTO CrossGameStats (COLUMNS)VALUES (VALUES)");
+		
+			insertStatement.execute();
+
+			
+			
+		} catch (ClassNotFoundException e) {
+			System.out.println("Class Not Found Exception" + e.toString());
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("SQL Exception" + e.toString());
+		}
+			
 	}
 
 	public String getRemainingPlayer() {
