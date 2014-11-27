@@ -69,7 +69,8 @@ public class StartGUI extends JFrame implements ActionListener {
 		
 		//Instructions
 		instructionPanel.setLayout(new BorderLayout());
-		instructionsArea.setText("Instructions go here\nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \nLine \n");
+		instructionsArea.setEditable(false);
+		instructionsArea.setText(Constants.instructions);
 		instructionPanel.add(instructionScroller, BorderLayout.CENTER);
 		
 		backButton.addActionListener(new CardAction("login", outerPanel));
