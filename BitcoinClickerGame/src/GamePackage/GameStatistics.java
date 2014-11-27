@@ -21,7 +21,7 @@ public class GameStatistics extends JFrame {
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.95.158/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
+			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 		
 			/**** Finding the most used item ****/
 			java.sql.Statement statement = conn.createStatement();
@@ -29,7 +29,7 @@ public class GameStatistics extends JFrame {
 					+ "SUM(NokiaPhones), SUM(Viruses), SUM(Nortons), SUM(EMPs), SUM(HealthPacks),"
 					+ " SUM(Leeches), SUM(ClickRewards) FROM CrossGameStats");
 			resultSet.next();
-			int greatestItemUses = 0;
+			int greatestItemUses = -1;
 			ResultSetMetaData rsmd = resultSet.getMetaData();
 			String mostUsedItem = ""; 
 			for(int i = rsmd.getColumnCount(); i > 0; i --)
@@ -59,34 +59,11 @@ public class GameStatistics extends JFrame {
 			resultSet.next();
 			int longestGameTime = resultSet.getInt(1);
 			
-			/**** Find player who has dealt the most damage ****/
-			statement = conn.createStatement();
-			resultSet = statement.executeQuery("SELECT SUM(Player1Damage), SUM(Player2Damage), "
-					+ "SUM(Player3Damage), SUM(Player4Damage) FROM CrossGameStats");
-			resultSet.next();
-			rsmd = resultSet.getMetaData();
-			int highestDamage = 0;
-			String deadliestPlayer = "";
-			for(int i = rsmd.getColumnCount(); i > 0; i--)
-			{
-				if(resultSet.getInt(i) > highestDamage)
-				{
-					highestDamage = resultSet.getInt(i);
-					deadliestPlayer = players[i-1];
-				}
-			}
-			
 			/**** Find the amount of coins generated ****/
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery("SELECT SUM(CoinsGenerated) FROM CrossGameStats");
 			resultSet.next();
 			int totalCoinsGenerated = resultSet.getInt(1);
-			
-			/**** Find total number of clicks ****/
-			statement = conn.createStatement();
-			resultSet = statement.executeQuery("SELECT SUM(TotalClicks) FROM CrossGameStats");
-			resultSet.next();
-			int totalClicks = resultSet.getInt(1);
 			
 			/**** Find the highest combo ****/
 			statement = conn.createStatement();
@@ -96,8 +73,7 @@ public class GameStatistics extends JFrame {
 			
 			/**** Find the user with the most wins ****/
 			statement = conn.createStatement();
-			resultSet = statement.executeQuery("SELECT Winner, count(Winner) FROM CrossGameStats"
-					+ " GROUP BY Winner");
+			resultSet = statement.executeQuery("SELECT Winner, count(Winner) FROM CrossGameStats" + " GROUP BY Winner");
 			int mostWins = 0;
 			String mostDominantUser = "";
 			while(resultSet.next())
@@ -109,24 +85,42 @@ public class GameStatistics extends JFrame {
 				}
 			}
 			
-			
 			/**** Creating arrays to contain JTable data ****/
-			Object userRows[][] = { {"P1", "100", "---", "9999", "Firewall"},
-					{"P2", "50", "---", "4121", "Encryption"},
-					{"P3", "500", "---", "66543", "Nokia Phone"},
-					{"P4", "3", "---", "1144", "Health Pack"} };
+			Object userRows[][] = new Object[4][5];
 			
 			Object userColumns[] = { "Username", "Games Played", "Wins/Loss Ratio",
 					"Coins Farmed", "Most Used Item"};
 			
-			Object crossgameRows[][] = { {mostUsedItem, gamesPlayed, averageGameTime + " Minutes",
-				longestGameTime + " Minutes", deadliestPlayer, totalCoinsGenerated, totalClicks,
-				highestCombo, mostDominantUser} };
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery("SELECT * from UserStats");
+			for(int i = 0; i < 4; i ++)
+			{
+				resultSet.next();
+				userRows[i][0] = resultSet.getString("Username");
+				userRows[i][1] = resultSet.getInt("GamesPlayed");
+				userRows[i][2] = resultSet.getInt("Wins")/(resultSet.getInt("GamesPlayed")-resultSet.getInt("Wins")*1.0);
+				userRows[i][3] = resultSet.getDouble("TotalCoinsGenerated");
+				
+				String playerMostUsedItem = "";
+				int mostUses = -1;
+				for(int j = 5; j < 14; j++)
+				{
+					if(resultSet.getInt(j)>mostUses)
+					{
+						mostUses = resultSet.getInt(j);
+						playerMostUsedItem = itemArray[j-5];
+					}
+				}
+				
+				userRows[i][4] = playerMostUsedItem;
+			}
+			
+			Object crossgameRows[][] = { {mostUsedItem, gamesPlayed, averageGameTime + " Minutes", longestGameTime + " Minutes",
+				totalCoinsGenerated, highestCombo, mostDominantUser} };
 			
 			
 			Object crossgameColumns[] = { "Most Used Item", "Total Games Played", "Average Game Time",
-					"Longest Game Time", "Deadliest Player", "Total Coins Farmed",
-					"Total Number of Clicks", "Highest Combo", "Most Dominant Player"};
+					"Longest Game Time", "Total Coins Farmed", "Highest Combo", "Most Dominant Player"};
 			
 			
 			JTabbedPane leaderboards = new JTabbedPane();

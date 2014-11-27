@@ -17,6 +17,7 @@ public class Player {
 	private String alias;
 	private Game container;
 	private String targetAlias = "";
+	private int totalCoinsGenerated;
 	
 	//Stephen's testing constructor
 	public Player(Game container, String alias) {

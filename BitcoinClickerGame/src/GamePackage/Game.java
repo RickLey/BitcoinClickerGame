@@ -82,7 +82,7 @@ public class Game {
 			String[] receivedAliases = (String[])received2.getValue();
 			for(int i=0; i<4; i++){
 				allPlayers.put(receivedAliases[i], new TruncatedPlayer(0, 100,
-								receivedAliases[i]));
+								receivedAliases[i], getCoinsAccumulated(), getHighestCombo()));
 			}
 			
 			//Create localPlayer instance
@@ -211,6 +211,16 @@ public class Game {
 	public void markStatsWritten() {
 		statsWritten = true;
 	}
+	
+	public double getCoinsAccumulated()
+	{
+		return coinsAccumulated;
+	}
+	
+	public double getHighestCombo()
+	{
+		return highestCombo;
+	}
 
 }
 
@@ -326,7 +336,9 @@ class SendPlayerUpdatesThread extends Thread{
 		while(!Thread.interrupted()){
 			TruncatedPlayer update = new TruncatedPlayer(myGame.getLocalPlayer().getCoins(),
 														myGame.getLocalPlayer().getHealth(),
-														myGame.getLocalPlayer().getAlias());
+														myGame.getLocalPlayer().getAlias(),
+														myGame.getCoinsAccumulated(),
+														myGame.getHighestCombo());
 			NetworkMessage updateMessage = new NetworkMessage();
 			updateMessage.setMessageType(NetworkMessage.UPDATE_MESSAGE);
 			updateMessage.setSender(myGame.getLocalPlayer().getAlias());

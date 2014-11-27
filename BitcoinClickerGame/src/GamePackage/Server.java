@@ -34,6 +34,10 @@ public class Server {
 	private ArrayList<Socket> playerSockets; //for closing the sockets
 	private long startTime;
 
+	private HashMap<String, Double> coinsGenerated = new HashMap<String, Double>();
+	private double highestCombo =0;
+	
+	private HashMap<String, HashMap<String, Integer>> playerItemUseCount;
 	
 	public Server(){
 		try {
@@ -53,6 +57,7 @@ public class Server {
 			ArrayList<ObjectInputStream> iis = new ArrayList<ObjectInputStream>();
 			
 			itemUseCount = new HashMap<String, Integer>();
+			playerItemUseCount = new HashMap<String, HashMap<String, Integer>>();
 			
 			//Connect gameplay sockets and create threads
 			for(int i=0; i<4; i++){
@@ -141,6 +146,13 @@ public class Server {
 		while(true){
 		}
 	}
+	
+	public void updateStats(double combo, String playerName, double coins)
+	{
+		coinsGenerated.put(playerName, coins);
+		if(combo > highestCombo)
+			highestCombo = combo;
+	}
 
 	public synchronized void sendGameplayMessageToAll(NetworkMessage nm){
 		for(ObjectOutputStream oos: gameplayOutputs.values()){
@@ -202,8 +214,9 @@ public class Server {
 		return remainingPlayers.size() == 1;
 	}
 
-	public void incrementItemCount(String itemType) {
+	public void incrementItemCount(String itemType, String playerName) {
 		itemUseCount.put(itemType, itemUseCount.get(itemType) + 1);
+		playerItemUseCount.get(playerName).put(itemType, playerItemUseCount.get(playerName).get(itemType)+1);
 	}
 
 	public boolean isTrackingItem(String itemType) {
@@ -231,7 +244,7 @@ public class Server {
 //		}
 		
 		long duration = System.currentTimeMillis() - startTime;
-		duration /= 1000;
+		duration /= 60000;
 		
 		/*TODO: DATABASE item use count is a map of each item to how many times it
 		 * was used. Duration, calculated above, is how long the game was.
@@ -246,7 +259,7 @@ public class Server {
 			Class.forName("com.mysql.jdbc.Driver");
 			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.95.158/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 			
-			
+			//updating item uses
 			java.sql.Statement statement = conn.createStatement();
 			ResultSet resultSet =  statement.executeQuery("SELECT SUM(Firewalls), SUM(Encryptions), "
 					+ "SUM(NokiaPhones), SUM(Viruses), SUM(Nortons), SUM(EMPs), SUM(HealthPacks),"
@@ -261,21 +274,65 @@ public class Server {
 				itemUseCount.put(items[i], itemUseCount.get(items[i]) + resultSet.getInt(i+1));
 			}
 			
-			java.sql.PreparedStatement insertStatement = conn.prepareStatement("INSERT INTO CrossGameStats (Firewalls, Encryptions, NokiaPhones"
-					+ ", Viruses, Nortons, EMPs, HealthPacks, Leeches, ClickRewards)VALUES (" + itemUseCount.get("Firewall") + "," + 
-					itemUseCount.get("Encryption") + "," + itemUseCount.get("Nokia Phone") + "," + itemUseCount.get("Virus") + "," +
-					itemUseCount.get("Norton") + "," + itemUseCount.get("EMP") + "," + itemUseCount.get("Health Pack") + "," +
-					itemUseCount.get("Leech") + "," + itemUseCount.get("Click Reward") + ")");		
+			//add new crossgamestats row
+			
+			double totalCoinsGenerated =0;
+			for (Entry<String, Double> entry : coinsGenerated.entrySet())
+			{
+			    totalCoinsGenerated+=entry.getValue();
+			}	
+			
+			java.sql.PreparedStatement insertStatement = conn.prepareStatement("INSERT INTO CrossGameStats (Firewalls, Encryptions,"
+					+ " NokiaPhones, Viruses, Nortons, EMPs, HealthPacks, Leeches, ClickRewards, GameLength, Winner, CoinsGenerated, "
+					+ "HighestCombo)VALUES (" + itemUseCount.get("Firewall") + "," + itemUseCount.get("Encryption") + "," +
+					itemUseCount.get("Nokia Phone") + "," + itemUseCount.get("Virus") + "," + itemUseCount.get("Norton") + "," + 
+					itemUseCount.get("EMP") + "," + itemUseCount.get("Health Pack") + "," + itemUseCount.get("Leech") + "," +
+					itemUseCount.get("Click Reward") + "," + duration + "," + remainingPlayers.iterator().next() + "," + totalCoinsGenerated + "," + highestCombo + ")");		
 			insertStatement.execute();
 			
-			/*
-			Set<Entry<String, Integer>> itemUseSet = itemUseCount.entrySet();
-			for (Map.Entry<String, String> entry : map.entrySet())
+			for(Entry<String, HashMap<String, Integer>> entry : playerItemUseCount.entrySet())
 			{
-			    System.out.println(entry.getKey() + "/" + entry.getValue());
-			}	
-			*/	
+				insertStatement = conn.prepareStatement("UPDATE UserStats SET Firewalls='" + entry.getValue().get("Firewall") + "',"
+						+ " Encryptions='" + entry.getValue().get("Encryption") + "', NokiaPhones='" + entry.getValue().get("Nokia Phone") + "',"
+						+ " Viruses='" + entry.getValue().get("Virus") + "', Nortons='" + entry.getValue().get("Norton") + "',"
+								+ " EMPs='" + entry.getValue().get("EMP") + "', HealthPacks='" + entry.getValue().get("Health Pack") + "',"
+										+ " Leeches='" + entry.getValue().get("Leech") + "', ClickRewards='" + entry.getValue().get("Click Reward") +
+										"' WHERE Username='" + entry.getKey() + "'");		
+				insertStatement.execute();
+				
+				statement = conn.createStatement();
+				resultSet =  statement.executeQuery("SELECT GamesPlayed FROM UserStats WHERE Username ='" + entry.getKey() + "'");
+				resultSet.next();
+				
+				int gamesPlayed = resultSet.getInt(1) + 1;
+				
+				insertStatement = conn.prepareStatement("UPDATE UserStats SET GamesPlayed='" + gamesPlayed + "' WHERE Username = '" +
+				entry.getKey() + "'");
+				insertStatement.execute();
+				
+				
+				statement = conn.createStatement();
+				resultSet =  statement.executeQuery("SELECT TotalCoinsGenerated FROM UserStats WHERE Username ='" + entry.getKey() + "'");
+				resultSet.next();
+				
+				totalCoinsGenerated = resultSet.getInt(1) + coinsGenerated.get(entry.getKey());
+				
+				insertStatement = conn.prepareStatement("UPDATE UserStats SET TotalCoinsGenerated='" + totalCoinsGenerated + 
+						"' WHERE Username = '" + entry.getKey() + "'");
+				insertStatement.execute();
+			}
 			
+			statement = conn.createStatement();
+			resultSet =  statement.executeQuery("SELECT Wins FROM UserStats WHERE Username ='" + remainingPlayers.iterator().next() + "'");
+			resultSet.next();
+			
+			int wins = resultSet.getInt(1) + 1;
+			
+			insertStatement = conn.prepareStatement("UPDATE UserStats SET Wins='" + wins + "' WHERE Username = '" + remainingPlayers.iterator().next() + "'");
+			insertStatement.execute();
+			
+			
+				
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class Not Found Exception" + e.toString());
 			e.printStackTrace();
@@ -313,6 +370,7 @@ class GamePlayThread extends Thread{
 					TruncatedPlayer playerUpdate = (TruncatedPlayer)received.getValue();
 					parentServer.sendGameplayMessageToAll(received);
 					
+					parentServer.updateStats(playerUpdate.getHighestCombo(), playerUpdate.getAlias(), playerUpdate.getTotalCoinsGenerated());
 					//eliminate player if out of health
 					if(playerUpdate.getHealth() == 0){
 						parentServer.eliminatePlayer(received.getSender());
@@ -336,7 +394,7 @@ class GamePlayThread extends Thread{
 					//update how many times the item has been seen
 					String itemType = received.getItemType();
 					if(parentServer.isTrackingItem(itemType)){
-						parentServer.incrementItemCount(itemType);
+						parentServer.incrementItemCount(itemType, received.getSender());
 					}
 					else{
 						parentServer.addItemForTracking(itemType);

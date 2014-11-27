@@ -35,7 +35,7 @@ public class Encryption extends DefenseItem implements IOHandler {
 	@Override
 	public void handleOutgoingMessage(Game game, NetworkMessage nm) {
 		if(nm.getMessageType().equals(NetworkMessage.UPDATE_MESSAGE)) {
-			nm.setValue(new TruncatedPlayer(-1,-1, target.getAlias()));	//-1 signals encryption to GUI displays
+			nm.setValue(new TruncatedPlayer(-1,-1, target.getAlias(), -1, -1));	//-1 signals encryption to GUI displays
 		}
 		game.sendGameplayMessage(nm);
 	}
