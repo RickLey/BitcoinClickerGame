@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.SocketException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -119,8 +121,7 @@ public class GameFrame extends JFrame{
 //			showingDeath = true;
 //			failureGlass = new JPanel(); //	:(
 //			failureGlass.setLayout(new BorderLayout());
-//			//TODO: remove "FUCKING"
-//			failureGlass.add(new JLabel("YOU ARE FUCKING DEAD!!!!!!!!!!"), BorderLayout.CENTER);
+//			failureGlass.add(new JLabel("YOU ARE DEAD!!!!!!!!!!"), BorderLayout.CENTER);
 //			failureGlass.setBackground(new Color(0,0,0,125));
 //			//failureGlass.setOpacity((float) 0.5);
 //			failureGlass.setOpaque(true);
@@ -131,6 +132,14 @@ public class GameFrame extends JFrame{
 		}
 	}
 	
+	public void setEncryption(boolean e) {
+		showingEncryption = e;
+	}
+	
+	public void setFirewall(boolean b) {
+		showingFirewall = b;
+	}
+	
 	public void disableAllButtons() {
 		for(JButton button : getButtons()) {
 			button.setVisible(false);
@@ -138,6 +147,18 @@ public class GameFrame extends JFrame{
 		shopPanel.getAttackLabel().setVisible(false);
 		shopPanel.getDefenseLabel().setVisible(false);
 		shopPanel.getTitleLabel().setText("YOU DIED!!!");
+	}
+	
+	public Set<JPanel> getPanels() {
+		Set<JPanel> panels = new HashSet<JPanel>();
+		panels.add(chatPanel);
+		panels.add(bitcoinPanel);
+		panels.add(centerPanel);
+		panels.add(healthPanel);
+		panels.add(chatSouthPanel);
+		panels.add(statusPanel);
+		panels.add(shopPanel);
+		return panels;
 	}
 	
 	public void paintComponent(Graphics g){
@@ -584,9 +605,15 @@ public class GameFrame extends JFrame{
 		public MainRepaintThread(GameFrame gf){
 			this.gf = gf;
 		}
+		
+		
 		public void run(){
 			while(true){
 				try{
+					if(showFirewall() || showEncryption()) {}
+					else {
+						resetPanels();
+					}
 					sleep(Constants.frameRate);
 					gf.repaint();
 					if(selfPlayer.getHealth() == 0) {
@@ -598,6 +625,37 @@ public class GameFrame extends JFrame{
 				}
 			}
 		}
+		
+		public boolean showEncryption() {
+			if(showingEncryption) {
+				Set<JPanel> panels = getPanels();
+				for(JPanel jp : panels) {
+					jp.setBackground(new Color((int) (255*Math.random()),(int) (255*Math.random()),(int) (255*Math.random())));
+				}
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public boolean showFirewall() {
+			if(showingFirewall) {
+				Set<JPanel> panels = getPanels();
+				for(JPanel jp : panels) {
+					jp.setBackground(Color.DARK_GRAY);
+				}
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public void resetPanels() {
+			for(JPanel jp : getPanels()) {
+				jp.setBackground(Color.WHITE);
+			}
+ 		}
+		
 	}
 
 	//For closing the 
@@ -611,6 +669,8 @@ public class GameFrame extends JFrame{
 			e.printStackTrace();
 		}	
 	}
+
+
 
 	public synchronized void displayMessage(NetworkMessage m) {
 		if (m.getMessageType().equals(NetworkMessage.CHAT_MESSAGE)) {
@@ -629,5 +689,7 @@ public class GameFrame extends JFrame{
 			
 		}
 	}
+
+
 	
 }

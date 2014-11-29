@@ -138,6 +138,22 @@ public class Game {
 	public void setGui(GameFrame gameFrame) {
 		this.gameFrame = gameFrame;
 	}
+	
+	public void startEncryption() {
+		gameFrame.setEncryption(true);
+	}
+	
+	public void endEncryption() {
+		gameFrame.setEncryption(false);
+	}
+	
+	public void startFirewall() {
+		gameFrame.setFirewall(true);
+	}
+	
+	public void endFirewall() {
+		gameFrame.setFirewall(false);
+	}
 
 	public void shutDown() {
 		gameFrame.closeSockets();

@@ -19,9 +19,11 @@ public class Encryption extends DefenseItem implements IOHandler {
 		Encryption e = new Encryption();
 		e.setPlayer(target);
 		target.setHandler(e);
+		target.getGame().startEncryption();
 	
 		//The thread that accesses the handleMessage methods aren't going to be on this thread that is running
 		pause(duration);
+		target.getGame().endEncryption();
 		
 		target.setHandler(new NullHandler());
 		
