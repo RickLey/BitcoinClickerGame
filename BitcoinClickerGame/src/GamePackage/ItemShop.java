@@ -260,30 +260,28 @@ abstract class AbstractItemButton extends JButton {
 	
 }
 
-@SuppressWarnings("serial")
-class EconomyButton extends AbstractItemButton{
-	public EconomyButton(Item item, Player player, GameFrame mainFrame){
-		super(item, player, mainFrame);
-	}
-	
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		if (!isDisabled){
-			this.setBackground(new Color(191,239,255));
-		} else{
-			this.setBackground(Color.GRAY);
-		}
-
-	}
-}
+//@SuppressWarnings("serial")
+//class EconomyButton extends AbstractItemButton{
+//	public EconomyButton(Item item, Player player, GameFrame mainFrame){
+//		super(item, player, mainFrame);
+//	}
+//	
+//	public void paintComponent(Graphics g){
+//		super.paintComponent(g);
+//		if (!isDisabled){
+//			this.setBackground(new Color(191,239,255));
+//		} else{
+//			this.setBackground(Color.GRAY);
+//		}
+//		
+//	}
+//}
 
 @SuppressWarnings("serial")
 class AttackButton extends AbstractItemButton{
 	public AttackButton(Item item, Player player, GameFrame mainFrame){
 		super(item, player, mainFrame);
-		
-		
-		
+
 		this.addMouseListener(new MouseListener(){
 
 			@Override
@@ -352,6 +350,14 @@ class AttackButton extends AbstractItemButton{
 			this.setBackground(new Color(255, 140, 105));
 		} else{
 			setBackground(Color.GRAY);
+		}
+		
+		if (player.getCoins() < cost){
+			setBackground(Color.WHITE);
+			this.setForeground(Color.GRAY);
+		} else{
+			this.setBackground(new Color(255, 140, 105));
+			this.setForeground(Color.BLACK);
 		}
 
 	}
@@ -426,6 +432,14 @@ class DefenseButton extends AbstractItemButton{
 			setBackground(Color.GRAY);
 		}
 
+		if (player.getCoins() < cost){
+			this.setBackground(Color.WHITE);
+			this.setForeground(Color.GRAY);
+		} else{
+			this.setBackground(new Color(189, 252, 201));
+			this.setForeground(Color.BLACK);
+		}
+		
 	}
 	public void mouseClicked(MouseEvent e) {
 		if (super.player.getCoins() < cost || isDisabled){
