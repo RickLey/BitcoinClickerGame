@@ -281,7 +281,10 @@ public class Server {
 			
 			for(int i = 0; i < rsmd.getColumnCount(); i ++)
 			{
-				itemUseCount.put(items[i], itemUseCount.get(items[i]) + resultSet.getInt(i+1));
+				if(itemUseCount.get(items[i]) == null)
+					itemUseCount.put(items[i], resultSet.getInt(i+1));
+				else
+					itemUseCount.put(items[i], itemUseCount.get(items[i]) + resultSet.getInt(i+1));
 			}
 			
 			//add new crossgamestats row
