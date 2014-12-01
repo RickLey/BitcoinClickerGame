@@ -57,7 +57,10 @@ public class Server {
 			ArrayList<ObjectInputStream> iis = new ArrayList<ObjectInputStream>();
 			
 			itemUseCount = new HashMap<String, Integer>();
+			
+			
 			playerItemUseCount = new HashMap<String, HashMap<String, Integer>>();
+			
 			
 			//Connect gameplay sockets and create threads
 			for(int i=0; i<4; i++){
@@ -68,11 +71,15 @@ public class Server {
 				ObjectInputStream tempInput = new ObjectInputStream(tempSocket.getInputStream());
 				iis.add(tempInput);
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
+				
+				playerItemUseCount.put(alias, new HashMap<String, Integer>());
+				
 				gameplayOutputs.put(alias, tempOutput);
 				remainingPlayers.add(alias);
 				gpThreads.add(new GamePlayThread(tempOutput, tempInput, this));
 				playerSockets.add(tempSocket);
 			}
+			
 			
 			//send message to connect chat sockets
 			NetworkMessage connectChatSocketsMessage = new NetworkMessage();
