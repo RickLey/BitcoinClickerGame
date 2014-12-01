@@ -133,7 +133,8 @@ class Constants {
 				+ "> Player information\n"
 				+ " Above the shop panel are the player information. You will be able to see\n"
 				+ " every player's health and amount of bitcoins they have\n"
-				+ " Click on a player's panel to target them, and then buy an attack item to \n"
+				+ " Click on a player's panel to target them. The currently targed player will\n"
+				+ "be outlined in red. Once you have targeted a player, buy an attack item to \n"
 				+ " send the attack to them\n"
 				+ " All defense items are automatically sent to yourself, so there is no need\n"
 				+ " to target yourself\n"
@@ -151,5 +152,7 @@ class Constants {
 				+ " like to keep track of your progress and your cumulative statistics, just\n"
 				+ " use the same alias each time you play the game\n"
 				+ "\n"
+				+ " If you'd like to experience the intense fun again, close all the windows,\n"
+				+ " restart the server, and play again\n"
 				+ " Good luck, and have fun!\n";
 }
