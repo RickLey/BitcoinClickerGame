@@ -260,7 +260,7 @@ public class Server {
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.95.158/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
+			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.87.127/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 			
 			//updating item uses
 			java.sql.Statement statement = conn.createStatement();

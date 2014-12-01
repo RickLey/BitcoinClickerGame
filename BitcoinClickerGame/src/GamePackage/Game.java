@@ -120,6 +120,11 @@ public class Game {
 		}
 	}
 	
+	public String getHost()
+	{
+		return hostname;
+	}
+	
 	public HashMap<String, TruncatedPlayer> getOpponentInformation()
 	{
 		return allPlayers;
