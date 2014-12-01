@@ -92,6 +92,8 @@ public class Server {
 				temp.put("Click Reward", 0);
 				playerItemUseCount.put(alias, temp);
 				
+				coinsGenerated.put(alias,0.0);
+				
 				gameplayOutputs.put(alias, tempOutput);
 				remainingPlayers.add(alias);
 				gpThreads.add(new GamePlayThread(tempOutput, tempInput, this));
@@ -285,30 +287,13 @@ public class Server {
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.87.127/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
+			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 			
 			
 			//updating item uses
 			java.sql.Statement statement;
 			ResultSet resultSet;
-			/*
-			= conn.createStatement();
-			=  statement.executeQuery("SELECT SUM(Firewalls), SUM(Encryptions), "
-					+ "SUM(NokiaPhones), SUM(Viruses), SUM(Nortons), SUM(EMPs), SUM(HealthPacks),"
-					+ " SUM(Leeches), SUM(ClickRewards) FROM CrossGameStats");
-			resultSet.next();
-			
-			String [] items = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack", "Leech", "Click Reward"};
-			ResultSetMetaData rsmd = resultSet.getMetaData();
-			
-			for(int i = 0; i < rsmd.getColumnCount(); i ++)
-			{
-				if(itemUseCount.get(items[i]) == null)
-					itemUseCount.put(items[i], resultSet.getInt(i+1));
-				else
-					itemUseCount.put(items[i], itemUseCount.get(items[i]) + resultSet.getInt(i+1));
-			}
-			*/
+
 			//add new crossgamestats row
 			
 			double totalCoinsGenerated =0;
@@ -335,6 +320,25 @@ public class Server {
 			insertStatement.setInt(12, (int) totalCoinsGenerated);
 			insertStatement.setInt(13, (int) highestCombo);
 			insertStatement.execute();
+			
+			statement = conn.createStatement();
+			resultSet =  statement.executeQuery("SELECT Firewalls, Encryptions, NokiaPhones, Viruses, Nortons, EMPs, HealthPacks,"
+					+ " Leeches, ClickRewards FROM UserStats");
+			resultSet.next();
+			int INDEX = 0;
+			
+			String [] items = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack", "Leech", "Click Reward"};
+			ResultSetMetaData rsmd = resultSet.getMetaData();
+			
+			
+			for(Entry<String, HashMap<String,Integer>> entry : playerItemUseCount.entrySet())
+			{
+				for(int i = 0; i < rsmd.getColumnCount(); i ++)
+				{
+					entry.getValue().put(items[i], entry.getValue().get(items[i])+resultSet.getInt(i+1));
+				}
+			}
+			
 			
 			for(Entry<String, HashMap<String, Integer>> entry : playerItemUseCount.entrySet())
 			{
