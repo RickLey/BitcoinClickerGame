@@ -350,7 +350,8 @@ public class Server {
 			System.out.println("Class Not Found Exception" + e.toString());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("SQL Exception" + e.toString());
+			//System.out.println("SQL Exception " + e.toString());
+			e.printStackTrace();
 		}
 		
 	}
