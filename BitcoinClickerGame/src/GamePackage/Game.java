@@ -196,7 +196,7 @@ public class Game {
 	public void endGame(String winner) {
 
 		gameFrame.dispose();
-		new GameStatistics();
+		new GameStatistics(allPlayers);
 	}
 
 	public void addToCoinsAccumulated(double amount) {

@@ -274,9 +274,7 @@ public class Server {
 //			}
 //		}
 		
-		long duration = System.currentTimeMillis() - startTime;
-		duration /= 60000.0;
-		
+		double duration = (System.currentTimeMillis() - startTime)/60000.0;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/BitcoinClickerStats", "bitcoinuser2", "bitcoin");

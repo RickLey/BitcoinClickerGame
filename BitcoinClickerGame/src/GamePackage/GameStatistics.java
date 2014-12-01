@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -14,7 +16,7 @@ import javax.swing.JTable;
 @SuppressWarnings("serial")
 public class GameStatistics extends JFrame {
 	
-	public GameStatistics()
+	public GameStatistics(HashMap<String, TruncatedPlayer> allPlayers)
 	{
 		String [] itemArray = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack",
 				"Leech", "Click Reward" };
@@ -58,8 +60,9 @@ public class GameStatistics extends JFrame {
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery("SELECT MAX(GameLength) FROM CrossGameStats");
 			resultSet.next();
+			System.out.println(resultSet.getDouble(1));
 			String longestGameTime = df.format(resultSet.getDouble(1));
-			
+			System.out.println(longestGameTime);
 			/**** Find the amount of coins generated ****/
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery("SELECT SUM(CoinsGenerated) FROM CrossGameStats");
@@ -92,12 +95,13 @@ public class GameStatistics extends JFrame {
 			Object userColumns[] = { "Username", "Games Played", "Wins/Loss Ratio",
 					"Coins Farmed", "Most Used Item"};
 			
-			statement = conn.createStatement();
-			resultSet = statement.executeQuery("SELECT * from UserStats");
-			for(int i = 0; i < 4; i ++)
+			int i =0;
+			for(Entry<String, TruncatedPlayer> entry : allPlayers.entrySet())
 			{
+				statement = conn.createStatement();
+				resultSet = statement.executeQuery("SELECT * from UserStats WHERE Username='" + entry.getValue().getAlias() + "'");
 				resultSet.next();
-				userRows[i][0] = resultSet.getString("Username");
+				userRows[i][0] = entry.getValue().getAlias();
 				userRows[i][1] = resultSet.getInt("GamesPlayed");
 				userRows[i][2] = resultSet.getInt("Wins")/(resultSet.getInt("GamesPlayed")-resultSet.getInt("Wins")*1.0);
 				userRows[i][3] = resultSet.getDouble("TotalCoinsGenerated");
@@ -114,6 +118,7 @@ public class GameStatistics extends JFrame {
 				}
 				
 				userRows[i][4] = playerMostUsedItem;
+				i++;
 			}
 			
 			Object crossgameRows[][] = { {mostUsedItem, gamesPlayed, averageGameTime + " Minutes", longestGameTime + " Minutes",
@@ -152,8 +157,4 @@ public class GameStatistics extends JFrame {
 		setVisible(true);
 	}
 	
-	public static void main(String[] args)
-	{
-		new GameStatistics();
-	}
 }
