@@ -216,7 +216,10 @@ public class Server {
 
 	public void incrementItemCount(String itemType, String playerName) {
 		itemUseCount.put(itemType, itemUseCount.get(itemType) + 1);
-		playerItemUseCount.get(playerName).put(itemType, playerItemUseCount.get(playerName).get(itemType)+1);
+		if(playerItemUseCount.get(playerName).get(itemType) == null)
+			playerItemUseCount.get(playerName).put(itemType, 1);
+		else
+			playerItemUseCount.get(playerName).put(itemType, playerItemUseCount.get(playerName).get(itemType)+1);
 	}
 
 	public boolean isTrackingItem(String itemType) {
