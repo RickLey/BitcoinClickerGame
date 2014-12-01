@@ -70,6 +70,7 @@ public class StartGUI extends JFrame implements ActionListener {
 		//Instructions
 		instructionPanel.setLayout(new BorderLayout());
 		instructionsArea.setEditable(false);
+		instructionsArea.setFont(new Font("Courier", Font.PLAIN, 12));
 		instructionsArea.setText(Constants.instructions);
 		instructionPanel.add(instructionScroller, BorderLayout.CENTER);
 		
