@@ -3,7 +3,7 @@ package GamePackage;
 public class NokiaPhone extends AttackItem {
 
 	private static final long serialVersionUID = -7251336879107994886L;
-	private final static int DAMAGE = 100;
+	private final static int DAMAGE = 2;
 	private final static int COST = Constants.nokiaCost;
 	private final static int COOLDOWN = Constants.nokiaCooldown;;
 	
