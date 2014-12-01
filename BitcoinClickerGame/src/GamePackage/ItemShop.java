@@ -416,7 +416,7 @@ class DefenseButton extends AbstractItemButton{
 					newMessage.setValue(item);
 					player.getHandler().handleOutgoingMessage(player.getGame(), newMessage);
 					
-					if(item instanceof HealthPack)
+					if(item instanceof HealthPack || item instanceof ClickRewardUpgrade)
 						cost *= 2;
 				}
 			}
