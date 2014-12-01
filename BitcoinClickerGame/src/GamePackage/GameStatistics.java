@@ -18,9 +18,7 @@ public class GameStatistics extends JFrame {
 	{
 		String [] itemArray = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack",
 				"Leech", "Click Reward" };
-		
-		String [] players = {"Player 1", "Player 2", "Player 3", "Player 4"};
-		
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
@@ -54,13 +52,13 @@ public class GameStatistics extends JFrame {
 			resultSet = statement.executeQuery("SELECT SUM(GameLength) FROM CrossGameStats");
 			resultSet.next();
 			DecimalFormat df = new DecimalFormat("#.##");
-			String averageGameTime = df.format(resultSet.getInt(1)*1.0/gamesPlayed);
+			String averageGameTime = df.format(resultSet.getDouble(1)/gamesPlayed);
 			
 			/**** Find longest game time ****/
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery("SELECT MAX(GameLength) FROM CrossGameStats");
 			resultSet.next();
-			int longestGameTime = resultSet.getInt(1);
+			String longestGameTime = df.format(resultSet.getDouble(1));
 			
 			/**** Find the amount of coins generated ****/
 			statement = conn.createStatement();

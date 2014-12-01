@@ -234,16 +234,8 @@ public class Server {
 	}
 
 	public void eliminatePlayer(String sender) {
-		
-		System.out.println("Size before elimination: " + remainingPlayers.size());
-		/*for(String current : remainingPlayers)
-		{
-			if(current.compareTo(sender)==0)
-				System.out.println("Removing " + current);
-				remainingPlayers.remove(current);
-		}*/
+	
 		remainingPlayers.remove(sender);
-		System.out.println("Size after elimination: " + remainingPlayers.size());
 	}
 
 	public boolean onePlayerRemaining() {
@@ -283,16 +275,7 @@ public class Server {
 //		}
 		
 		long duration = System.currentTimeMillis() - startTime;
-		duration /= 60000;
-		
-		/*TODO: DATABASE item use count is a map of each item to how many times it
-		 * was used. Duration, calculated above, is how long the game was.
-		 * Send a message to the database to update those. If you want, you can also
-		 * use the logic for keeping track of whole-game item usage to track
-		 * item usage per player by essentially mirroring the logic here (having a map
-		 * on the client side, and updating every time it sends an item)
-		 */
-		
+		duration /= 60000.0;
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -314,7 +297,6 @@ public class Server {
 			java.sql.PreparedStatement insertStatement = conn.prepareStatement("INSERT INTO CrossGameStats (Firewalls, Encryptions,"
 					+ " NokiaPhones, Viruses, Nortons, EMPs, HealthPacks, Leeches, ClickRewards, GameLength, Winner, CoinsGenerated, "
 					+ "HighestCombo)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			System.out.println(insertStatement.toString());
 			insertStatement.setInt(1, itemUseCount.get("Firewall"));
 			insertStatement.setInt(2, itemUseCount.get("Encryption"));
 			insertStatement.setInt(3, itemUseCount.get("Nokia Phone"));
@@ -324,7 +306,7 @@ public class Server {
 			insertStatement.setInt(7, itemUseCount.get("Health Pack"));
 			insertStatement.setInt(8, itemUseCount.get("Leech"));
 			insertStatement.setInt(9, itemUseCount.get("Click Reward"));
-			insertStatement.setInt(10, (int) duration);
+			insertStatement.setDouble(10, duration);
 			insertStatement.setString(11, remainingPlayers.iterator().next());
 			insertStatement.setInt(12, (int) totalCoinsGenerated);
 			insertStatement.setInt(13, (int) highestCombo);
@@ -333,21 +315,20 @@ public class Server {
 			statement = conn.createStatement();
 			resultSet =  statement.executeQuery("SELECT Firewalls, Encryptions, NokiaPhones, Viruses, Nortons, EMPs, HealthPacks,"
 					+ " Leeches, ClickRewards FROM UserStats");
-			resultSet.next();
-			int INDEX = 0;
 			
 			String [] items = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack", "Leech", "Click Reward"};
 			ResultSetMetaData rsmd = resultSet.getMetaData();
 			
-			
-			for(Entry<String, HashMap<String,Integer>> entry : playerItemUseCount.entrySet())
+			while(resultSet.next())
 			{
-				for(int i = 0; i < rsmd.getColumnCount(); i ++)
+				for(Entry<String, HashMap<String,Integer>> entry : playerItemUseCount.entrySet())
 				{
-					entry.getValue().put(items[i], entry.getValue().get(items[i])+resultSet.getInt(i+1));
+					for(int i = 0; i < rsmd.getColumnCount(); i ++)
+					{
+						entry.getValue().put(items[i], entry.getValue().get(items[i])+resultSet.getInt(i+1));
+					}
 				}
 			}
-			
 			
 			for(Entry<String, HashMap<String, Integer>> entry : playerItemUseCount.entrySet())
 			{
@@ -440,7 +421,6 @@ class GamePlayThread extends Thread{
 						//one player left- end the game
 						if(parentServer.onePlayerRemaining()){
 							parentServer.endGame();
-							System.out.println("end game message sent from gameplay thread");
 							sendEndGame(received);
 							endGame = true;
 						}

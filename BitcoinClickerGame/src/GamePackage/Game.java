@@ -339,7 +339,8 @@ class SendPlayerUpdatesThread extends Thread{
 	}
 	
 	public void run(){
-		while(!Thread.interrupted()){
+		boolean isAlive = true;
+		while(isAlive){
 			TruncatedPlayer update = new TruncatedPlayer(myGame.getLocalPlayer().getCoins(),
 														myGame.getLocalPlayer().getHealth(),
 														myGame.getLocalPlayer().getAlias(),
@@ -353,6 +354,8 @@ class SendPlayerUpdatesThread extends Thread{
 			
 			synchronized(myGame.getLocalPlayer()){
 				myGame.getLocalPlayer().getHandler().handleOutgoingMessage(myGame, updateMessage);
+				if(myGame.getLocalPlayer().getHealth()<=0)
+					isAlive= false;
 			}
 			try {
 				Thread.sleep(500);
