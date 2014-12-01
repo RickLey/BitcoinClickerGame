@@ -81,7 +81,7 @@ public class GameStatistics extends JFrame {
 				if(resultSet.getInt("count(Winner)") > mostWins)
 				{
 					mostWins = resultSet.getInt("count(Winner)");
-					mostDominantUser = players[resultSet.getInt("Winner")-1];
+					mostDominantUser = resultSet.getString("Winner");
 				}
 			}
 			

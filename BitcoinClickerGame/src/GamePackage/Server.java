@@ -57,7 +57,15 @@ public class Server {
 			ArrayList<ObjectInputStream> iis = new ArrayList<ObjectInputStream>();
 			
 			itemUseCount = new HashMap<String, Integer>();
-			
+			itemUseCount.put("Firewall", 0);
+			itemUseCount.put("Encryption", 0);
+			itemUseCount.put("Virus", 0);
+			itemUseCount.put("EMP", 0);
+			itemUseCount.put("Norton", 0);
+			itemUseCount.put("Nokia Phone", 0);
+			itemUseCount.put("Health Pack", 0);
+			itemUseCount.put("Leech", 0);
+			itemUseCount.put("Click Reward", 0);
 			
 			playerItemUseCount = new HashMap<String, HashMap<String, Integer>>();
 			
@@ -297,10 +305,21 @@ public class Server {
 			
 			java.sql.PreparedStatement insertStatement = conn.prepareStatement("INSERT INTO CrossGameStats (Firewalls, Encryptions,"
 					+ " NokiaPhones, Viruses, Nortons, EMPs, HealthPacks, Leeches, ClickRewards, GameLength, Winner, CoinsGenerated, "
-					+ "HighestCombo)VALUES (" + itemUseCount.get("Firewall") + "," + itemUseCount.get("Encryption") + "," +
-					itemUseCount.get("Nokia Phone") + "," + itemUseCount.get("Virus") + "," + itemUseCount.get("Norton") + "," + 
-					itemUseCount.get("EMP") + "," + itemUseCount.get("Health Pack") + "," + itemUseCount.get("Leech") + "," +
-					itemUseCount.get("Click Reward") + "," + duration + "," + remainingPlayers.iterator().next() + "," + totalCoinsGenerated + "," + highestCombo + ")");		
+					+ "HighestCombo)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			System.out.println(insertStatement.toString());
+			insertStatement.setInt(1, itemUseCount.get("Firewall"));
+			insertStatement.setInt(2, itemUseCount.get("Encryption"));
+			insertStatement.setInt(3, itemUseCount.get("Nokia Phone"));
+			insertStatement.setInt(4, itemUseCount.get("Virus"));
+			insertStatement.setInt(5, itemUseCount.get("Norton"));
+			insertStatement.setInt(6, itemUseCount.get("EMP"));
+			insertStatement.setInt(7, itemUseCount.get("Health Pack"));
+			insertStatement.setInt(8, itemUseCount.get("Leech"));
+			insertStatement.setInt(9, itemUseCount.get("Click Reward"));
+			insertStatement.setInt(10, (int) duration);
+			insertStatement.setString(11, remainingPlayers.iterator().next());
+			insertStatement.setInt(12, (int) totalCoinsGenerated);
+			insertStatement.setInt(13, (int) highestCombo);
 			insertStatement.execute();
 			
 			for(Entry<String, HashMap<String, Integer>> entry : playerItemUseCount.entrySet())
