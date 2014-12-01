@@ -17,7 +17,7 @@ class Constants {
 	}
 
 	//==== Player Constants ====
-	public static final double COMBO_INCREMENT_AMOUNT = 0.75;
+	public static final double COMBO_INCREMENT_AMOUNT = 4000;
 	public static final int MAX_COIN_LIMIT = 100000;
 	
 	//==== Item Info ====
