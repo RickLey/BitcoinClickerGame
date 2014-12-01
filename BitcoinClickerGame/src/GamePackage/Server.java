@@ -80,7 +80,17 @@ public class Server {
 				iis.add(tempInput);
 				String alias = ((NetworkMessage)tempInput.readObject()).getSender();
 				
-				playerItemUseCount.put(alias, new HashMap<String, Integer>());
+				HashMap<String, Integer> temp = new HashMap<String, Integer>();
+				temp.put("Firewall", 0);
+				temp.put("Encryption", 0);
+				temp.put("Virus", 0);
+				temp.put("EMP", 0);
+				temp.put("Norton", 0);
+				temp.put("Nokia Phone", 0);
+				temp.put("Health Pack", 0);
+				temp.put("Leech", 0);
+				temp.put("Click Reward", 0);
+				playerItemUseCount.put(alias, temp);
 				
 				gameplayOutputs.put(alias, tempOutput);
 				remainingPlayers.add(alias);
@@ -277,9 +287,13 @@ public class Server {
 			Class.forName("com.mysql.jdbc.Driver");
 			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://10.121.87.127/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 			
+			
 			//updating item uses
-			java.sql.Statement statement = conn.createStatement();
-			ResultSet resultSet =  statement.executeQuery("SELECT SUM(Firewalls), SUM(Encryptions), "
+			java.sql.Statement statement;
+			ResultSet resultSet;
+			/*
+			= conn.createStatement();
+			=  statement.executeQuery("SELECT SUM(Firewalls), SUM(Encryptions), "
 					+ "SUM(NokiaPhones), SUM(Viruses), SUM(Nortons), SUM(EMPs), SUM(HealthPacks),"
 					+ " SUM(Leeches), SUM(ClickRewards) FROM CrossGameStats");
 			resultSet.next();
@@ -294,7 +308,7 @@ public class Server {
 				else
 					itemUseCount.put(items[i], itemUseCount.get(items[i]) + resultSet.getInt(i+1));
 			}
-			
+			*/
 			//add new crossgamestats row
 			
 			double totalCoinsGenerated =0;

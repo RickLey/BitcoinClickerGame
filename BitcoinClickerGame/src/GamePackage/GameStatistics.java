@@ -4,6 +4,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -51,7 +53,8 @@ public class GameStatistics extends JFrame {
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery("SELECT SUM(GameLength) FROM CrossGameStats");
 			resultSet.next();
-			double averageGameTime = resultSet.getInt(1)*1.0/gamesPlayed;
+			DecimalFormat df = new DecimalFormat("#.##");
+			String averageGameTime = df.format(resultSet.getInt(1)*1.0/gamesPlayed);
 			
 			/**** Find longest game time ****/
 			statement = conn.createStatement();
