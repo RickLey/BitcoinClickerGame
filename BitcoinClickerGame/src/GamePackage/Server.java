@@ -234,7 +234,16 @@ public class Server {
 	}
 
 	public void eliminatePlayer(String sender) {
+		
+		System.out.println("Size before elimination: " + remainingPlayers.size());
+		/*for(String current : remainingPlayers)
+		{
+			if(current.compareTo(sender)==0)
+				System.out.println("Removing " + current);
+				remainingPlayers.remove(current);
+		}*/
 		remainingPlayers.remove(sender);
+		System.out.println("Size after elimination: " + remainingPlayers.size());
 	}
 
 	public boolean onePlayerRemaining() {
@@ -413,7 +422,9 @@ class GamePlayThread extends Thread{
 	}
 	
 	public void run(){
-		while(!Thread.interrupted()){
+		
+		boolean endGame = false;
+		while(!endGame){
 			try {
 				Thread.sleep(Constants.frameRate);
 				NetworkMessage received = (NetworkMessage)ois.readObject();
@@ -429,13 +440,16 @@ class GamePlayThread extends Thread{
 						//one player left- end the game
 						if(parentServer.onePlayerRemaining()){
 							parentServer.endGame();
+							System.out.println("end game message sent from gameplay thread");
 							sendEndGame(received);
+							endGame = true;
 						}
 					}
 					
 					else if(playerUpdate.getMoney() == Constants.MAX_COIN_LIMIT){
 						parentServer.endGame();
 						sendEndGame(received);
+						endGame = true;
 					}
 					
 				}
