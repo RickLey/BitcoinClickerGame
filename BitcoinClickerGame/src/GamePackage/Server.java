@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -27,6 +28,7 @@ public class Server {
 	private HashMap<String, ObjectOutputStream> gameplayOutputs;
 	private HashMap<String, ObjectOutputStream> chatOutputs;
 	private HashSet<String> remainingPlayers;
+	private HashSet<String> allPlayers;
 	private Connection dbConnection;
 	private HashMap<String, Integer> itemUseCount;
 	private ArrayList<ChatThread> cThreads;
@@ -54,6 +56,7 @@ public class Server {
 			gameplayOutputs = new HashMap<String, ObjectOutputStream>();
 			chatOutputs = new HashMap<String, ObjectOutputStream>();
 			remainingPlayers = new HashSet<String>();
+			allPlayers = new HashSet<String>();
 			ArrayList<ObjectInputStream> iis = new ArrayList<ObjectInputStream>();
 			
 			itemUseCount = new HashMap<String, Integer>();
@@ -91,6 +94,8 @@ public class Server {
 				temp.put("Leech", 0);
 				temp.put("Click Reward", 0);
 				playerItemUseCount.put(alias, temp);
+				
+				allPlayers.add(alias);
 				
 				coinsGenerated.put(alias,0.0);
 				
@@ -277,7 +282,7 @@ public class Server {
 		double duration = (System.currentTimeMillis() - startTime)/60000.0;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
+			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://" + InetAddress.getLocalHost().getHostAddress() + "/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 			
 			
 			//updating item uses
@@ -310,21 +315,42 @@ public class Server {
 			insertStatement.setInt(13, (int) highestCombo);
 			insertStatement.execute();
 			
-			statement = conn.createStatement();
-			resultSet =  statement.executeQuery("SELECT Firewalls, Encryptions, NokiaPhones, Viruses, Nortons, EMPs, HealthPacks,"
-					+ " Leeches, ClickRewards FROM UserStats");
+			
 			
 			String [] items = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack", "Leech", "Click Reward"};
-			ResultSetMetaData rsmd = resultSet.getMetaData();
-			
-			while(resultSet.next())
+			for(String current : allPlayers)
 			{
-				for(Entry<String, HashMap<String,Integer>> entry : playerItemUseCount.entrySet())
+				statement = conn.createStatement();
+				resultSet = statement.executeQuery("SELECT 1 FROM UserStats WHERE Username='" + current + "'");
+				if(!resultSet.first())
 				{
-					for(int i = 0; i < rsmd.getColumnCount(); i ++)
-					{
-						entry.getValue().put(items[i], entry.getValue().get(items[i])+resultSet.getInt(i+1));
-					}
+					insertStatement = conn.prepareStatement("INSERT INTO UserStats (Username, GamesPlayed, TotalCoinsGenerated, Firewalls,"
+							+ " Encryptions, NokiaPhones, Viruses, Nortons, EMPs, HealthPacks, Leeches, ClickRewards, Wins)VALUES"
+							+ " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertStatement.setString(1, current);
+					insertStatement.setInt(2, 0);
+					insertStatement.setInt(3, 0);
+					insertStatement.setInt(4, 0);
+					insertStatement.setInt(5, 0);
+					insertStatement.setInt(6, 0);
+					insertStatement.setInt(7, 0);
+					insertStatement.setInt(8, 0);
+					insertStatement.setInt(9, 0);
+					insertStatement.setInt(10, 0);
+					insertStatement.setInt(11, 0);
+					insertStatement.setInt(12, 0);
+					insertStatement.setInt(13, 0);
+					insertStatement.execute();
+				}
+				
+				statement = conn.createStatement();
+				resultSet =  statement.executeQuery("SELECT Firewalls, Encryptions, NokiaPhones, Viruses, Nortons, EMPs, HealthPacks,"
+						+ " Leeches, ClickRewards FROM UserStats WHERE Username='" + current + "'");
+				resultSet.next();
+				ResultSetMetaData rsmd = resultSet.getMetaData();
+				for(int i = 0; i < rsmd.getColumnCount(); i ++)
+				{
+					playerItemUseCount.get(current).put(items[i], playerItemUseCount.get(current).get(items[i])+resultSet.getInt(i+1));
 				}
 			}
 			
@@ -372,10 +398,13 @@ public class Server {
 			
 				
 		} catch (ClassNotFoundException e) {
-			System.out.println("Class Not Found Exception" + e.toString());
+			//System.out.println("Class Not Found Exception" + e.toString());
 			e.printStackTrace();
 		} catch (SQLException e) {
 			//System.out.println("SQL Exception " + e.toString());
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -16,14 +16,14 @@ import javax.swing.JTable;
 @SuppressWarnings("serial")
 public class GameStatistics extends JFrame {
 	
-	public GameStatistics(HashMap<String, TruncatedPlayer> allPlayers)
+	public GameStatistics(HashMap<String, TruncatedPlayer> allPlayers, String hostname)
 	{
 		String [] itemArray = {"Firewall", "Encryption", "Nokia Phone", "Virus", "Norton", "EMP", "Health Pack",
 				"Leech", "Click Reward" };
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
+			java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://" + hostname + "/BitcoinClickerStats", "bitcoinuser2", "bitcoin");
 		
 			/**** Finding the most used item ****/
 			java.sql.Statement statement = conn.createStatement();
@@ -60,9 +60,7 @@ public class GameStatistics extends JFrame {
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery("SELECT MAX(GameLength) FROM CrossGameStats");
 			resultSet.next();
-			System.out.println(resultSet.getDouble(1));
 			String longestGameTime = df.format(resultSet.getDouble(1));
-			System.out.println(longestGameTime);
 			/**** Find the amount of coins generated ****/
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery("SELECT SUM(CoinsGenerated) FROM CrossGameStats");
@@ -147,7 +145,8 @@ public class GameStatistics extends JFrame {
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class not found exception: " + e);
 		} catch (SQLException e) {
-			System.out.println("SQL exception: " + e);
+			//System.out.println("SQL exception: " + e);
+			e.printStackTrace();
 		}
 		
 		
