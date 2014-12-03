@@ -34,7 +34,7 @@ class Constants {
 		//Cool down
 		public static final int EMPCooldown 		= 60;
 		public static final int leechCooldown 		= 60;
-		public static final int nokiaCooldown 		= 1;
+		public static final int nokiaCooldown 		= 0;
 		public static final int nortonCooldown 		= 5;
 		public static final int virusCooldown 		= 30;
 		public static final int encryptionCooldown 	= 20;
