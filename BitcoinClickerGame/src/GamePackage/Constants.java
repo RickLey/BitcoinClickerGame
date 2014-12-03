@@ -17,7 +17,7 @@ class Constants {
 	}
 
 	//==== Player Constants ====
-	public static final double COMBO_INCREMENT_AMOUNT = 4000;
+	public static final double COMBO_INCREMENT_AMOUNT = 0.75;
 	public static final int MAX_COIN_LIMIT = 100000;
 	
 	//==== Item Info ====
@@ -26,7 +26,7 @@ class Constants {
 		public static final int leechCost 		= 1000;
 		public static final int nokiaCost 		= 750;
 		public static final int nortonCost 		= 2000;
-		public static final int virusCost 		= 8000;
+		public static final int virusCost 		= 6000;
 		public static final int encryptionCost 	= 4000;
 		public static final int healthPackCost 	= 1600;
 		public static final int firewallCost 	= 2000;
